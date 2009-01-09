@@ -1,0 +1,23 @@
+export(reduce,constrReduce,SA,CSA,thresholdssetter,
+       cs_truthTable,fs_truthTable,fs_tt,
+       suffnec,coincid,
+       readURL.dta,endog_test,tsls2,coefchange)
+S3method(coefchange, default)
+S3method(coefchange, lm)
+S3method(coefchange, glm)
+S3method(endog_test, tsls)
+S3method(endog_test, tsls2)
+S3method(endog_test, ivreg)
+S3method(print, coefchange)
+S3method(print, coincid)
+S3method(print, endog_test)
+S3method(print, QCA)
+S3method(print, suffnec)
+S3method(print, summary.QCA)
+S3method(summary, QCA)
+#importFrom(car, lht)
+#importFrom(lpSolve, lp)
+#importFrom(MASS, ginv)
+#import(sem)
+
+
