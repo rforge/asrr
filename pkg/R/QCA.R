@@ -212,11 +212,20 @@ solvePIChart <- function (PIChart)
   sol.matrix ## now always return a matrix
 }
 
-cs_truthTable <- function(mydata, outcome = "", conditions = c(""),
-                         cutoff1=1,cutoff0=1,cutoffc=1,
+lowerLimite <- function(x, n, conf.level=0.95) {
+  ## If lowerLimite() > benchmark, then it the result supportes H1.
+  ## see Ragin (2001:109-115).
+  ans <- numeric(length(x))
+  idx <- which(x!=0)
+  ans[idx] <- qbeta(1 - conf.level, x[idx], n[idx] - x[idx] + 1)
+  ans
+}
+
+cs_truthTable <- function(mydata, outcome, conditions, method=c("deterministic","probabilistic"),
                          complete = FALSE,weight=NULL,
                          show.cases = TRUE,cases=NULL,
-                         nlevels=rep(2,length(conditions)))
+                         nlevels=rep(2,length(conditions)),
+                         cutoff1=1,cutoff0=1,benchmark=0.65,conf.level = 0.95)
 {
   if (outcome==""||conditions =="") stop("You must specific outcome and conditions first.")
   fulldata <- mydata[,c(outcome,conditions)]
@@ -224,6 +233,7 @@ cs_truthTable <- function(mydata, outcome = "", conditions = c(""),
   outcomeData <- mydata[,outcome]
   conditionsData <- mydata[,conditions]
   if (!is.null(weight)) weight <- mydata[[weight]] else weight <- rep(1, nrow(mydata))
+  method <- match.arg(method)
   getId <- function(implicant,nlevels){
     IDX <- cumprod(nlevels)/nlevels
     ans <- sum(implicant*IDX)+1
@@ -231,9 +241,6 @@ cs_truthTable <- function(mydata, outcome = "", conditions = c(""),
   }
   rowid <- apply(conditionsData,1,getId,nlevels=nlevels)
   N_total <- sum(weight,na.rm=TRUE)
-  cutoff1 <- ifelse(cutoff1<1,cutoff1*N_total,cutoff1)
-  cutoff0 <- ifelse(cutoff0<1,cutoff0*N_total,cutoff0)
-  cutoffc <- ifelse(cutoffc<1,cutoffc*N_total,cutoffc)
   Positive <- tapply(outcomeData,rowid,FUN=function(each) all(each==1))
   Pid <- names(Positive)[Positive]
   Negative <- tapply(outcomeData,rowid,FUN=function(each) all(each==0))
@@ -263,14 +270,38 @@ cs_truthTable <- function(mydata, outcome = "", conditions = c(""),
   allExpress$freq0[match(names(Ncase0),rownames(allExpress))] <- Ncase0
   ## out status
   allExpress$OUT <- "?"
-  pidx <- intersect(match(Pid,rownames(allExpress)), which(allExpress$freq1 >= cutoff1))
-  allExpress$OUT[pidx] <- "1"
-  nidx <- intersect(match(Nid,rownames(allExpress)),which(allExpress$freq0 >= cutoff0))
-  allExpress$OUT[nidx] <- "0"
-  cidx <- intersect(match(Cid,rownames(allExpress)),which(pmin(allExpress$freq1,allExpress$freq0)>= cutoffc))
-  allExpress$OUT[cidx]<-"C"
-  Dontcareid <- as.character(setdiff(rowid,rownames(allExpress)[c(pidx,nidx,cidx)])) ## with Ncases less then cutoff point.
-  allExpress$OUT[match(Dontcareid,rownames(allExpress))] <- "-"
+  if (method=="deterministic"){
+    cutoff1 <- ifelse(cutoff1<1,cutoff1*N_total,cutoff1)
+    cutoff0 <- ifelse(cutoff0<1,cutoff0*N_total,cutoff0)
+    pidx <- intersect(match(Pid,rownames(allExpress)), which(allExpress$freq1 >= cutoff1))
+    allExpress$OUT[pidx] <- "1"
+    nidx <- intersect(match(Nid,rownames(allExpress)),which(allExpress$freq0 >= cutoff0))
+    allExpress$OUT[nidx] <- "0"
+    cidx1 <- intersect(match(Cid,rownames(allExpress)),which(allExpress$freq1 >= cutoff1))
+    cidx0 <- intersect(match(Cid,rownames(allExpress)),which(allExpress$freq0 >= cutoff0))
+    cidx <- intersect(cidx1, cidx0)
+    allExpress$OUT[cidx]<-"C"
+    Dontcare1 <- intersect(match(Cid,rownames(allExpress)),which(allExpress$freq1 < cutoff1))
+    Dontcare0 <- intersect(match(Cid,rownames(allExpress)),which(allExpress$freq0 < cutoff0))
+    Dontcareid <- intersect(Dontcare1, Dontcare0)
+    allExpress$OUT[Dontcareid]<-"-"
+    allExpress$OUT[intersect(cidx1,Dontcare0)]<-"1"
+    allExpress$OUT[intersect(cidx0,Dontcare1)]<-"0"
+    ## Dontcareid <- as.character(setdiff(rowid,rownames(allExpress)[c(pidx,nidx,cidx)]))
+    ## with Ncases less then cutoff point.
+    ## allExpress$OUT[match(Dontcareid,rownames(allExpress))] <- "-"
+  }
+  if (method=="probabilistic"){
+    limit1 <- lowerLimite(allExpress$freq1,allExpress$NCase,conf.level)
+    limit0 <- lowerLimite(allExpress$freq0,allExpress$NCase,conf.level)
+    pidx <- intersect(which(limit1 >=benchmark),match(c(Pid,Cid),rownames(allExpress)))
+    nidx <- intersect(which(limit0 >=benchmark),match(c(Nid,Cid),rownames(allExpress)))
+    Dontcareid <- setdiff(match(c(Nid,Cid,Pid),rownames(allExpress)),c(pidx,nidx))
+    allExpress$OUT[pidx] <- "1"
+    allExpress$OUT[nidx] <- "0"
+    allExpress$OUT[Dontcareid] <- "-"
+    ## no contradictory cases when using probabilistic method???
+  }
   ## show.cases
   if (show.cases){
     if (is.null(cases)) casesNames <- rownames(mydata) else casesNames <- mydata[,cases]
