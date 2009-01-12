@@ -1,4 +1,4 @@
-\name{student}
+\name{Student}
 \alias{student}
 \docType{data}
 \title{Students dataset}
@@ -46,5 +46,6 @@ Limited Response Variables." John Wiley & Sons.p88, Table 3.1.
 \dontrun{
 data(student)
 }
+## see 'coefchange' for more examples
 }
 \keyword{datasets}
