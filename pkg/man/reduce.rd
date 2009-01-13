@@ -1,6 +1,7 @@
 \name{reduce}
 \alias{reduce}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\alias{print.QCA}
+\alias{summary.QCA}
 \title{ Boolean miniziation for csQCA, mvQCA and fsQCA }
 \description{
   This is the core funtion for QCA (Qualitative Comparative
@@ -17,8 +18,11 @@ reduce(mydata, outcome, conditions,
        dontcare = c("remainders", "positive", "negative"),
        preprocess = c("cs_truthTable","fs_truthTable", "pass"),
        nlevels = rep(2, length(conditions)), keepTruthTable = TRUE, ...)
+
+\method{print}{QCA}(x, traditional = TRUE, show.truthTable = TRUE, ...)
+
+\method{summary}{QCA}(object, traditional = TRUE, show.case = TRUE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{mydata}{a data frame}
   \item{outcome}{a character string to specify the outcome}
@@ -34,13 +38,25 @@ reduce(mydata, outcome, conditions,
     dontcare cases. Must one of "remainders", "positive", "negative"}
   \item{preprocess}{a character string specifying the function for
     preprocessing data, which turns raw data to a truthTable. Must one
-    of "cs_truthTable", "fs_truthTable" or "pass"}
+    of \code{cs_truthTable}, \code{fs_truthTable} or \code{pass}}
   \item{nlevels}{a integer vector, specifying number of levels for the
     corresponding conditions. For csQCA and fsQCA, it is always
     \code{rep(2,length(conditions))}}
   \item{keepTruthTable}{logical, when TRUE the returned object keeps
     the truthTable}
-  \item{\dots}{ Arguements passed to preprocess function}
+  \item{\dots}{ For \code{reduce}, arguements passed to preprocess
+    function; for \code{print.QCA} and \code{summary.QCA}, currently not
+    used.}
+  \item{x}{an object of class 'QCA', which is usually returned from
+    \code{reduce}.}
+  \item{traditional}{logical, use traditional symbol when it is
+    TRUE. Otherwise, use Tosmana-style symbol.}
+  \item{show.truthTable}{logical, show truthTable when it is TRUE. Of
+    course, it has effect only when the 'keepTruthTable' argument of
+    \code{reduce} is set to TRUE.}
+  \item{object}{an object of class 'QCA', which is usually returned from
+    \code{reduce}.}
+  \item{show.case}{logical, show case names when it is TRUE.}
 }
 \details{
   Outcome is the variable to be explained by the conditions. Conditions
@@ -58,6 +74,10 @@ reduce(mydata, outcome, conditions,
   necessary condition is a trivial necessary condition(Caramani,
   2009:62). It is not necessary to include trivial necessary condition
   in the final solutions.
+
+  The traditional way uses upper-case letters representing 1 and and
+  lower-case letters reprensenting 0. The Tosmana-style use
+  \code{condition{value}} to represent the prime implicants.
 }
 \value{
   An object of class "QCA". It is essentailly a list of 10 components.
@@ -83,7 +103,7 @@ reduce(mydata, outcome, conditions,
 
   
   Dusa, Adrian 2007 Enhancing Quine-McCluskey,
-  \url{http://www.compasss.org/Dusa2007a.pdf}
+  \url{http://www.compasss.org/files/wpfiles/Dusa2007a.pdf}
   
   Ragin, Charles. 2000. Fuzzy-Set Social Science. University Of Chicago Press.
 

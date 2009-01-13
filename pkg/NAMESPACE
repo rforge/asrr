@@ -15,9 +15,8 @@ S3method(print, QCA)
 S3method(print, suffnec)
 S3method(print, summary.QCA)
 S3method(summary, QCA)
-#importFrom(car, lht)
+S3method('[',QCA)
 #importFrom(lpSolve, lp)
-#importFrom(MASS, ginv)
 #import(sem)
 
 

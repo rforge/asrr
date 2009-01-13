@@ -4,7 +4,7 @@
 \alias{coefchange.lm}
 \alias{coefchange.glm}
 %\alias{coefchange_boot}
-%\alias{print.coefchange}
+\alias{print.coefchange}
 \title{Test of coef change}
 \description{
 Test if the coef will change significantly when additional variables are

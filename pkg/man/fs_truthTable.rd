@@ -6,8 +6,8 @@
 }
 \usage{
 fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
-consistency_cutoff = 0.8, complete = FALSE, show.cases = TRUE, quiet =
-FALSE, cases = NULL, ...)
+             consistency_cutoff = 0.8, complete = FALSE,
+             show.cases =TRUE,quiet =FALSE, cases = NULL, ...)
 }
 \arguments{
   \item{mydata}{ A fuzzy set score dataset. All the scores must range

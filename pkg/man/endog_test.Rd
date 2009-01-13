@@ -2,8 +2,7 @@
 \alias{endog_test}
 \alias{endog_test.tsls2}
 \alias{endog_test.ivreg}
-%\alias{print.endog_test}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\alias{print.endog_test}
 \title{Test of endogeneity.}
 \description{
 Test of endogeneity for single equation instrumental variable regression
@@ -11,13 +10,10 @@ Test of endogeneity for single equation instrumental variable regression
 }
 \usage{
 endog_test(object, ...)
-%# method for tsls2
 \method{endog_test}{tsls2}(object, robust = FALSE, type = c("hc2", "hc0", "hc1",
 "hc3", "hc4"),...)
-%# method for ivreg
 \method{endog_test}{ivreg}(object, robust = FALSE, type = c("hc2", "hc0", "hc1",
 "hc3", "hc4"),...)
-%# print method for endog_test
 \method{print}{endog_test}(x, ...)
 }
 
@@ -26,7 +22,7 @@ endog_test(object, ...)
     regression (two-stage regression) model.}
   \item{robust}{ Logic, use robust method when TRUE.}
   \item{type}{type of robust method. The details can be found in hccm in car package.}
-  \item{x}{The result from endog_test.}
+  \item{x}{The result from \code{endog_test}.}
   \item{\dots}{Not used for the time being. }
 }
 \details{
@@ -67,8 +63,4 @@ endog_test(fm6.2)
 endog_test(fm6.2,T)
 }
 }
-
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-%\keyword{ ~kwd1 }
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

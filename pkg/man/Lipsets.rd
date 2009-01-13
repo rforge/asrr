@@ -1,9 +1,9 @@
 \name{Lipsets}
 %\alias{Lipsets}
 \alias{Lipset}
-%\alias{Lipset_fs}
-%\alias{Lipset_cs}
-%\alias{Lipset_mv}
+\alias{Lipset_fs}
+\alias{Lipset_cs}
+\alias{Lipset_mv}
 \docType{data}
 \title{Breakdown/survival of democracy in inter-war Europe}
 \description{

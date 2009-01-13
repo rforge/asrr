@@ -8,8 +8,8 @@ the boolean minimization.
 }
 \usage{
 fs_tt(mydata, outcome = "", conditions = c(""),ncases_cutoff = 1,
-consistency_cutoff = 0.8, complete= FALSE, show.cases = TRUE, quiet =
-FALSE, cases =NULL)
+      consistency_cutoff = 0.8, complete= FALSE, show.cases = TRUE,
+      quiet =FALSE, cases =NULL)
 }
 
 \arguments{

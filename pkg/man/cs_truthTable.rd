@@ -10,10 +10,10 @@
 }
 \usage{
 cs_truthTable(mydata, outcome, conditions,
-method = c("deterministic","probabilistic"),
-complete = FALSE, weight = NULL, show.cases = TRUE,
-cases = NULL, nlevels = rep(2, length(conditions)),
-cutoff1 = 1, cutoff0 = 1, benchmark = 0.65, conf.level = 0.95)
+              method = c("deterministic","probabilistic"),
+              complete = FALSE, weight = NULL, show.cases = TRUE,
+              cases = NULL, nlevels = rep(2, length(conditions)),
+              cutoff1 = 1, cutoff0 = 1, benchmark = 0.65, conf.level = 0.95)
 }
 \arguments{
   \item{mydata}{data frame of the raw data.}
