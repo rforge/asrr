@@ -31,13 +31,15 @@ cutoff1 = 1, cutoff0 = 1, benchmark = 0.65, conf.level = 0.95)
     each conditions.}
   \item{cutoff1}{length one numeric vector.}
   \item{cutoff0}{length one numeric vector. }
-  \item{benchmark}{Benchmark for statistical test. Must equal or greater 0.5.}
+  \item{benchmark}{Benchmark for statistical test. Must equal or greater
+    than 0.5.}
   \item{conf.level}{confident level of statistical test.}
 }
 \details{
   Symbols of the outcome. '1' is postive configuration, '0' is negative
   configuration, 'C' is contraditory configuration, and '-' is don't
-  care configuration.
+  care configuration. When show.case is TRUE and a configuration is 'C',
+  then the name of case with negative outcome is highlighted by [].
 
   'cutoff1' and 'cutoff0' are only meaningful for'deterministic'
   method. They represent cutting point of positive case and negative
@@ -77,7 +79,7 @@ A truthTable.
   Ragin, Charles. 2000. Fuzzy-Set Social Science. Pp109-116. University Of Chicago Press.
 }
 \author{Ronggui HUANG}
-\seealso{\code{\link{fs_truthTable}}}
+\seealso{\code{\link{fs_truthTable}} \code{\link{reduce}}}
 \examples{
 ## truthTable for csQCA
 cs_truthTable(Lipset_cs,"SURVIVAL", c("GNPCAP", "URBANIZA", "LITERACY",

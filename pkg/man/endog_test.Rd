@@ -2,7 +2,7 @@
 \alias{endog_test}
 \alias{endog_test.tsls2}
 \alias{endog_test.ivreg}
-\alias{print.endog_test}
+%\alias{print.endog_test}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Test of endogeneity.}
 \description{

@@ -1,6 +1,6 @@
 \name{coincid}
 \alias{coincid}
-\alias{print.coincid}
+%\alias{print.coincid}
 \title{Produces a coincidence matrix}
 \description{
 Produce a coincidence matrix from a crip set or fuzzy set data.

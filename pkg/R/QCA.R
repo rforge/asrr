@@ -316,7 +316,7 @@ cs_truthTable <- function(mydata, outcome, conditions, method=c("deterministic",
 }
 
 
-fs_truthTable <- function(mydata, outcome = "", conditions = c(""),ncases_cutoff=1,consistency_cutoff=0.8,
+fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistency_cutoff=0.8,
                           complete = FALSE,show.cases = TRUE, quiet = FALSE,cases=NULL,...)
 {
   membership_cutoff=0.5

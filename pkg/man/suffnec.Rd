@@ -1,6 +1,6 @@
 \name{suffnec}
 \alias{suffnec}
-\alias{print.suffnec}
+%\alias{print.suffnec}
 \title{Produces a sufficiency and necessity matrix}
 \description{
 creates a matrix of the sufficiency and necessity scores for a crisp set
