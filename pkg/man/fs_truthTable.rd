@@ -35,7 +35,7 @@ fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
   the number of cases with strong membership in each corner (usually
   greater then 0.5), and the consistency of the empirical evidence for
   each corner. By specifying the frequency thresholds for fuzzy-set
-  assessments (the 'ncases_cutoff' argument), and assessing the
+  assessments (the \code{ncases_cutoff} argument), and assessing the
   consistency of fuzzy-set subset relations (the 'consistency_cutoff'
   argument), we can finally construct a truthTable.
 }

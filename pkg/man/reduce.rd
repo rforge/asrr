@@ -2,6 +2,7 @@
 \alias{reduce}
 \alias{print.QCA}
 \alias{summary.QCA}
+\alias{[.QCA}
 \title{ Boolean miniziation for csQCA, mvQCA and fsQCA }
 \description{
   This is the core funtion for QCA (Qualitative Comparative
@@ -22,6 +23,8 @@ reduce(mydata, outcome, conditions,
 \method{print}{QCA}(x, traditional = TRUE, show.truthTable = TRUE, ...)
 
 \method{summary}{QCA}(object, traditional = TRUE, show.case = TRUE, ...)
+
+\method{[}{QCA}(object, which)
 }
 \arguments{
   \item{mydata}{a data frame}
@@ -57,6 +60,9 @@ reduce(mydata, outcome, conditions,
   \item{object}{an object of class 'QCA', which is usually returned from
     \code{reduce}.}
   \item{show.case}{logical, show case names when it is TRUE.}
+  \item{which}{numeric vector, indices specifying elements to
+extract. Extraction of a solution or (prime implicant) is essentially a
+extraction on a list. you can refer to \code{[} for more details.}
 }
 \details{
   Outcome is the variable to be explained by the conditions. Conditions
@@ -76,7 +82,7 @@ reduce(mydata, outcome, conditions,
   in the final solutions.
 
   The traditional way uses upper-case letters representing 1 and and
-  lower-case letters reprensenting 0. The Tosmana-style use
+  lower-case letters reprensenting 0. The Tosmana-style uses
   \code{condition{value}} to represent the prime implicants.
 }
 \value{
