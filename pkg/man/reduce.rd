@@ -1,5 +1,7 @@
 \name{reduce}
 \alias{reduce}
+\alias{reduce.truthTable}
+\alias{reduce.default}
 \alias{print.QCA}
 \alias{summary.QCA}
 \alias{[.QCA}
@@ -12,7 +14,15 @@
   mvQCA, and fsQCA.
 }
 \usage{
-reduce(mydata, outcome, conditions,
+reduce(mydata,...)
+
+\method{reduce}{truthTable}(mydata, explain = c("positive", "negative"),
+       remainders = c("exclude","include"),
+       contradictions = c("remainders","positive","negative"),
+       dontcare = c("remainders", "positive", "negative"), 
+       keepTruthTable = TRUE,...)
+
+\method{reduce}{default}(mydata, outcome, conditions,
        explain = c("positive", "negative"),
        remainders = c("exclude", "include"),
        contradictions = c("remainders","positive", "negative"),

@@ -313,6 +313,9 @@ cs_truthTable <- function(mydata, outcome, conditions, method=c("deterministic",
     allExpress$Cases[allExpress$OUT!="C"] <- gsub("\\[|\\]","",allExpress$Cases[allExpress$OUT!="C"]) ## mark contr case
  }
   allExpress
+  ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=nlevels)
+  class(ans) <- c("truthTable","cs_truthTable")
+  ans
 }
 
 
@@ -327,7 +330,7 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
   if (any(fulldata<0)|| any(fulldata>1)) stop("Fuzzy set score must in [0,1].")
   ncases_cutoff <- ifelse(ncases_cutoff<1,ncases_cutoff*nrow(fulldata),ncases_cutoff)
   allExpress <- eval(parse(text=(sprintf("expand.grid(%s)",paste(conditions,"=1:0",sep="",collapse=",")))))
-  conditions <- mydata[,conditions]
+  conditionsData <- mydata[,conditions]
   
   getScore <- function(index,data){
     Negative <- which(index==0)
@@ -341,7 +344,7 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
     }
   }
   
-  score_mat <- apply(allExpress,1,function(x) getScore(x,data=conditions))
+  score_mat <- apply(allExpress,1,function(x) getScore(x,data=conditionsData))
   allExpress$NCase<- apply(score_mat,2,function(x) sum(x>membership_cutoff))
   allExpress$Consistency <- apply(score_mat,2,function(x,outcome) {sum(pmin(x,outcome))/sum(x)},outcome=mydata[,outcome])
   allExpress$OUT <- "?"
@@ -361,7 +364,15 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
   } ## else {  
   if (!complete) allExpress <- allExpress[allExpress$OUT != "?",,drop=FALSE]
   ##}
-  allExpress 
+  allExpress
+  ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=rep(2,length(conditions)))
+  class(ans) <- c("truthTable","fs_truthTable")
+  ans
+}
+
+print.truthTable <- function(x,...){
+x <- unclass(x)
+print(x$truthTable)
 }
 
 pass <- function(mydata,conditions,outcome,NCase=NULL,Cases=NULL,freq1=NULL,freq0=NULL,...) {## may need modification?
@@ -371,10 +382,29 @@ pass <- function(mydata,conditions,outcome,NCase=NULL,Cases=NULL,freq1=NULL,freq
     if (!is.null(freq0)) dat$freq1 <- mydata[[freq0]]
     if (is.null(NCase)) dat$NCases <- 1 else dat$NCase <- mydata[[NCase]]
     if (is.null(Cases)) dat$Cases <- rownames(mydata) else dat$Cases <- mydata[[Cases]]  
-    dat
+    dat <- list(truthTable=dat,outcome=outcome,conditions=conditions)
 }
 
-reduce <- function(mydata,outcome,conditions,
+reduce <- function(mydata,...){
+  UseMethod('reduce')
+}
+
+reduce.truthTable <- function(mydata,
+                              explain=c("positive","negative"),
+                              remainders=c("exclude","include"),
+                              contradictions=c("remainders","positive","negative"),
+                              dontcare=c("remainders","positive","negative"),
+                              keepTruthTable=TRUE,...){
+  call <- match.call()
+  ans <- reduce.default(mydata=mydata,outcome=mydata$outcome,conditions=mydata$conditions,
+                        explain=explain,remainders=remainders,dontcare=dontcare,nlevels=mydata$nlevels,
+                        keepTruthTable=keepTruthTable,...)
+  ans$call <- call
+  ans
+}
+
+
+reduce.default <- function(mydata,outcome,conditions,
                    explain=c("positive","negative"),
                    remainders=c("exclude","include"),
                    contradictions=c("remainders","positive","negative"),
@@ -389,9 +419,13 @@ reduce <- function(mydata,outcome,conditions,
   contradictions <- match.arg(contradictions)
   remainders <- match.arg(remainders)
   dontcare <- match.arg(dontcare)
-  preprocess <- match.arg(preprocess)
-  dots <- list(...)
-  mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
+  if (!"truthTable" %in% class(mydata)){
+    preprocess <- match.arg(preprocess)
+    dots <- list(...)
+    mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
+    mydata <- mydata$truthTable
+  } else mydata <- mydata$truthTable
+  
   ##  if (keepTruthTable) truthTable <- subset(mydata,OUT!="?") else truthTable <- NULL
   if (keepTruthTable) {
     truthTable <- mydata[mydata[["OUT"]]!="?",] ## subset(mydata,OUT!="?")
