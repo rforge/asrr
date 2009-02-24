@@ -229,9 +229,11 @@ cs_truthTable <- function(mydata, outcome, conditions, method=c("deterministic",
 {
   if (outcome==""||conditions =="") stop("You must specific outcome and conditions first.")
   fulldata <- mydata[,c(outcome,conditions)]
-  if (any(fulldata %in% c(0,1))) stop("data value must in [0,1].")
   outcomeData <- mydata[,outcome]
+  if (any(!outcomeData %in% c(0,1))) stop("outcome value must in [0,1].")
   conditionsData <- mydata[,conditions]
+  colmax <- sapply(conditionsData,max,na.rm=T)
+  if (any(colmax+1 > nlevels)) stop(sprintf("Mismatch of values of conditions and 'nlevels' argument.\n  possible value is c(%s)",paste(colmax+1,collapse=",")))
   if (!is.null(weight)) weight <- mydata[[weight]] else weight <- rep(1, nrow(mydata))
   method <- match.arg(method)
   getId <- function(implicant,nlevels){
@@ -424,6 +426,8 @@ reduce.default <- function(mydata,outcome,conditions,
     dots <- list(...)
     mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
     mydata <- mydata$truthTable
+    colmax <- sapply(mydata[,conditions],max,na.rm=T)
+    if (any(colmax+1 > nlevels)) stop("Mismatch of values of conditions and 'nlevels' argument.")
   } else mydata <- mydata$truthTable
   
   ##  if (keepTruthTable) truthTable <- subset(mydata,OUT!="?") else truthTable <- NULL

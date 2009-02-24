@@ -10,7 +10,7 @@
 
 \details{
  This functions is a modification of tsls in sem package. The modified
- tsls2 return the instrumental variables matrix, so can use endog_test
+ tsls2 return the instrumental variables matrix, so can use \code{endog_test}
  to conduct test of endogeneity. The usage of \code{tsls2} is the same
  as \code{\link[sem]{tsls}}.
 }

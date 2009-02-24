@@ -10,7 +10,7 @@ variable using cluster analysis (the default method is 'average linkage').
 }
 \usage{
 thresholdssetter(x, nthreshold = 1, value = TRUE, method ="average",
-thresholds=NULL,dismethod="euclidean",print.table=TRUE)
+                 thresholds=NULL,dismethod="euclidean",print.table=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -54,7 +54,9 @@ when value is TRUE.
 \author{Ronggui HUANG}
 %\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
-thresholdssetter(Lipset$GNPCAP,2,value=FALSE)
-thresholdssetter(Lipset$GNPCAP,2)
+cuttingPoint <- thresholdssetter(Lipset$GNPCAP,2,value=FALSE)
+thresholdssetter(Lipset$GNPCAP,thresholds=cuttingPoint)
+thresholdssetter(Lipset$GNPCAP,2)## the same as the previous one
+thresholdssetter(Lipset$GNPCAP,2,print=FALSE) ## print recoded variable rather than a table
 }
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
