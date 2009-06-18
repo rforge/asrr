@@ -1,2 +1,2 @@
-export(HTML.lm.list,HTMLtable)
-
+export(toHTML,modelList)
+S3method(toHTML,modelList)
