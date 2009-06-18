@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{toHTML}
 \title{
-%%  ~~function to do ... ~~
+Formats models to HTML according to American Journal of Sociology, which can be pasted to MS word directly from MS IE.
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
@@ -29,6 +29,9 @@ toHTML(x, ...)
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
+\note{
+To get the best effect, please use IE to open the html file rather than firefox etc.
+}
 \references{
 Guidelines for Tables,\url{http://www.journals.uchicago.edu/page/ajs/msprep-tables.html},retrieved on 18,June,2009.
 }
@@ -48,6 +51,6 @@ fm1 <- lm(formula = intensity ~ commerce + tradition, data = Chirot)
 fm2 <- lm(formula = intensity ~ commerce + tradition + midpeasant +
 inequality, data = Chirot)
 toHTML(modelList(fm1,fm2))
-toHTML(modelList(fm1,fm2),goffun=function(x) format(summary(x)$r.sq,digit=3)) ## add goodness of fit
+toHTML(modelList(fm1,fm2),goffun=function(x) paste("R<sup>2</sup> = ",format(summary(x)$r.sq,digit=3),collapse="")) ## add goodness of fit
 toHTML(modelList(fm1,fm2),relabel=list(midpeasant="Strength of middle peasantry")) ## relabel variable name
 }}
