@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{toHTML}
 \title{
-Formats models to HTML according to American Journal of Sociology, which can be pasted to MS word directly from MS IE.
+Formats models to HTML according to American Journal of Sociology.
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
@@ -30,7 +30,9 @@ toHTML(x, ...)
 %% ...
 }
 \note{
-To get the best effect, please use IE to open the html file rather than firefox etc.
+This table is in HTML format, which can be pasted to MS word directly
+from web browser. To get the best effect, MS IE is recommended to use to
+open the HTML file.
 }
 \references{
 Guidelines for Tables,\url{http://www.journals.uchicago.edu/page/ajs/msprep-tables.html},retrieved on 18,June,2009.
@@ -48,9 +50,11 @@ Ronggui HUANG
 \dontrun{
 data(Chirot,package="car")
 fm1 <- lm(formula = intensity ~ commerce + tradition, data = Chirot)
-fm2 <- lm(formula = intensity ~ commerce + tradition + midpeasant +
-inequality, data = Chirot)
-toHTML(modelList(fm1,fm2))
-toHTML(modelList(fm1,fm2),goffun=function(x) paste("R<sup>2</sup> = ",format(summary(x)$r.sq,digit=3),collapse="")) ## add goodness of fit
-toHTML(modelList(fm1,fm2),relabel=list(midpeasant="Strength of middle peasantry")) ## relabel variable name
+fm2 <- lm(formula = intensity ~ commerce + tradition + midpeasant + inequality, data = Chirot)
+toHTML(modelList(fm1,fm2),
+       caption="This is the title of table",## title of table
+       goffun=function(x) paste("R<sup>2</sup> = ",format(summary(x)$r.squared,digit=3),collapse=""), ## goodness of fit
+       relabel=list(midpeasant="Strength of middle peasantry",inequality="Inequality of land tenure"),## relabel variable names
+       note="Note:\n1. This is a note.\n2. Models are OLS regression." ## a note
+       )
 }}

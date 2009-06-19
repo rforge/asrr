@@ -122,7 +122,7 @@ HTMLcell <- function(
   ##                   col.title #
   ## row.title         bodycell  #
 ####################################
-  
+
   ## charmat, character matrix, maybe colnamed and rownamed .numeric matrix can format/formatC to become suitable matrix.
   ## isFirstcol,logical. 如果等于TRUE，则包括<TR>在开头
   ## row.title and col.title, character vector for row.tile and col.title
@@ -138,7 +138,7 @@ HTMLcell <- function(
     if (!is.null(row.title)) {
       charmat <- cbind(c("&nbsp;",row.title),charmat)##这里应该用一个空白符号而不是NA
     }
-  } else {                              
+  } else {
     if (!is.null(row.title)) {
       charmat <- cbind(row.title,charmat)
     }
@@ -179,7 +179,7 @@ toHTML.matrix <- function(
                           note=NULL,
                           tablewidth=600,
                           autobrowse=TRUE,
-                          msword=FALSE,                    
+                          msword=FALSE,
                           append=TRUE,
                           cgroup=NULL,
                           n.cgroup=NULL,
@@ -226,7 +226,7 @@ toHTML.matrix <- function(
 {
   ##如果分组，分组信息作为一部分，表的具体内容作为一个部分，将附加的内容作为一个新的部分，将注释作为最后一个部分。
   ##用于增加一个列，使得group之间的横线不相互连在一起。需要注意这一列的宽度设置很小。
-  
+
   CSS.def <- CSSgenerator(fontsize,indent,tablewidth,lwidth,firstline,...)
   HTML.def <- paste("<HTML lang=\"",lang,"\">\n",
                     "<HEAD> \n",
@@ -245,10 +245,10 @@ toHTML.matrix <- function(
   ##是否有对列进行分组，并计算组数
   hasgroup=FALSE
   if (!is.null(cgroup)) {
-    hasgroup <- TRUE 
+    hasgroup <- TRUE
     Ngroup <- length(cgroup)
   }
-  
+
   ##分配表格的列宽度
   x4w <- gsub("&nbsp;","",x)
   if (length(colwidth)==1){
@@ -275,11 +275,11 @@ toHTML.matrix <- function(
     colspan <- cbind(1,insertcol(t(n.cgroup),ncolgroup=rep(1,length(cgroup)),elements=1))
     cl.mat.stub <- matrix("CGROUP",nrow=nrow(colspan),ncol=ncol(colspan))
     nonbotind <- seq_len(ncol(cl.mat.stub)-1)[seq_len(ncol(cl.mat.stub)-1) %%2 ==1]##index，指出哪些列是不需要底边框的。
-    cl.mat.stub[,nonbotind] <- "SEPCOL" 
+    cl.mat.stub[,nonbotind] <- "SEPCOL"
     cl.mat.stub[1,1] <- "SEPCOLLEFT"
     STUBCOL1 <- HTMLcell(newcgroup,row.title=stub.title,colspan=colspan,class.mat=cl.mat.stub)
   }
-  
+
   ##表的主体部分
   if (!is.matrix(x)) stop("x must be a matrix.")
   if (mode(x)=="numeric") x <- gsub(" ","&nbsp;",format(formatC(x,digits=digits,format="f"),justify="right"),fixed=TRUE)
@@ -302,9 +302,9 @@ toHTML.matrix <- function(
   ##如果HTMLcell中的row.title和col.title为NULL，需要进一步处理
   cl.body1[1,]<- "BODYCELLBOTTOM"
   cl.body1[2:nrow(cl.body1),1]  <- "STUBCOLMAIN"
-  cl.body1[c(FALSE,rownames(new.x) %in% rgroup),1]  <- "STUBCOLRGROUP"  
+  cl.body1[c(FALSE,rownames(new.x) %in% rgroup),1]  <- "STUBCOLRGROUP"
   TBODY1 <- HTMLcell(new.x,row.title=rownames(new.x),col.title=colnames(new.x),class.mat=cl.body1,width.mat=matrix(colwidth,byrow=TRUE,nrow=nrow(new.x)+1,ncol=ncol(new.x)+1))
-  
+
   ##放用于增加例如样本数、模型拟合度等信息的部分。在表主体的下方每一个信息占据的列数等于n.cgroup
   if (!is.null(y)){
     if (!is.matrix(y)) stop("y must be a matrix.")
@@ -317,7 +317,7 @@ toHTML.matrix <- function(
     } else row.title.y <- rownames(new.y)
     cl.body2 <- matrix("BODYCELL",nrow=nrow(new.y),ncol=ncol(new.y)+1)
     cl.body2[,1]<- "STUBCOLRGROUP"
-    TBODY2 <- HTMLcell(new.y,row.title=row.title.y,colspan=cbind(1,colspan.y),class.mat=cl.body2)   
+    TBODY2 <- HTMLcell(new.y,row.title=row.title.y,colspan=cbind(1,colspan.y),class.mat=cl.body2)
   } else TBODY2 <- NULL
 
   ##放用于增加新的信息。x的列数与y2的列数相同
@@ -332,11 +332,11 @@ toHTML.matrix <- function(
     } else row.title.y2 <- rownames(new.y2)
     cl.body2b <- matrix("BODYCELL",nrow=nrow(new.y2),ncol=ncol(new.y2)+1)
     cl.body2b[,1]<- "STUBCOLRGROUP"
-                                        #TBODY2b <- HTMLcell(new.y2,row.title=row.title.y2,colspan=cbind(1,colspan.y2),class.mat=cl.body2)   
-    TBODY2b <- HTMLcell(new.y2,row.title=row.title.y2,class.mat=cl.body2b)   
+                                        #TBODY2b <- HTMLcell(new.y2,row.title=row.title.y2,colspan=cbind(1,colspan.y2),class.mat=cl.body2)
+    TBODY2b <- HTMLcell(new.y2,row.title=row.title.y2,class.mat=cl.body2b)
 
   } else TBODY2b <- NULL
-  
+
   ##处理表格的注释
   if (!is.null(note)) note <- gsub("\n","<br>",note,fixed=TRUE)#将\n换为HTML的换行符号
   totalcol <- if (hasgroup) sum(n.cgroup)+length(cgroup) else NCOL(x)+1 #因为有一列是从rownames来的。
@@ -347,10 +347,10 @@ toHTML.matrix <- function(
                     if (is.null(note)) "Note: ADD NOTES HERE, FIRST DATA SOURCE, SECOND IS GENERAL INFO, THEN IS CALLOUTS."
                     else note,
                     if (asterisk) "<BR>+ p<.10 <BR>* p<.05 <BR>** p<.01<BR>", "</td>")
-  
+
   ##结束表格
   END.def <- "</TABLE>"
-  
+
   ##打印到文件
   cat(
       if (!append) HTML.def,
@@ -364,7 +364,7 @@ toHTML.matrix <- function(
       END.def,
       file=file,append=append,sep="\n"
       )
-  
+
   ##是否自动在IE中打开
   if (autobrowse)  {
     fullpath <- if (basename(file)==file) file.path(getwd(),file) else file
@@ -393,7 +393,7 @@ toHTML.modelList <- function(
                              digits=2,
                              emptycell="...",
                              coeffun=function(x) summary(x)$coef,
-                             coefL2Mfun=cbindcoeflist1,
+                             coefL2Mfun=cbindCoef,
                              begin.numering=1,
                              asterisk=TRUE,
                              STUBCOL=rep(c("Coefficient","S.E."),times=length(x)),
@@ -405,15 +405,15 @@ toHTML.modelList <- function(
                              file=NULL,
                              ...
                              )
-                                        #x : named list of glm model. like x=list(model1=glm1...)
-                                        #prefix to the col title.
-                                        #digits, integer, the exact digits to report.
-                                        #character representing the emptycell.
-                                        #function to get the information to be reported. the result should be has colnames and rownames.
-                                        #begin.numering, integer, the numbering of col title, eg, model 1, model 2,...
+    ##x : named list of glm model. like x=list(model1=glm1...)
+    ##prefix to the col title.
+    ##digits, integer, the exact digits to report.
+    ##character representing the emptycell.
+    ##function to get the information to be reported. the result should be has colnames and rownames.
+    ##begin.numering, integer, the numbering of col title, eg, model 1, model 2,...
 {
-  
-                                        #get the basic info.
+
+    ##get the basic info.
   nmodel <- length(x)
   eachM2G <- ifelse(is.null(mgroup),TRUE,FALSE)#是否每个模型作为一组
   nobs <- sapply(x,function(x) nrow(x$model))
@@ -425,11 +425,11 @@ toHTML.modelList <- function(
     add.info <- rbind("&nbsp;",add.info,"&nbsp;",.gof)
   }
   if (is.null(gname))
-    {model_name <- paste(paste(prefix,seq_len(nmodel)+begin.numering-1,sep=" "),sapply(x,function(x) as.character(formula(x$call)[[2]])),sep="<br>") 
+    {model_name <- paste(paste(prefix,seq_len(nmodel)+begin.numering-1,sep=" "),sapply(x,function(x) as.character(formula(x$call)[[2]])),sep="<br>")
                                         # as the first level col title
-   }else model_name <- paste(paste(prefix,seq_len(nmodel)+begin.numering-1,sep=" "),gname,sep="<br>") 
+   }else model_name <- paste(paste(prefix,seq_len(nmodel)+begin.numering-1,sep=" "),gname,sep="<br>")
   model_summary_coef <- lapply(x,coeffun)
-  model_coef <- lapply(model_summary_coef,formatcoef,digits=digits)
+  model_coef <- lapply(model_summary_coef,formatCoef,digits=digits)
   model_coef[["COLNAMES"]] <-  STUBCOL
   ##这是的colnames 将会变成level 2的col title。可以根据需要改变。
   model.coef.total <- do.call(coefL2Mfun,model_coef) # turn a list to a whole matrix.
@@ -444,74 +444,52 @@ toHTML.modelList <- function(
   if (is.null(mgroup)){
     mgroup <- model_name
     n.mgroup <- rep(ncol.each,nmodel)
-  } 
+  }
   file <- ifelse(is.null(file),paste(tempfile(),".html",sep=""),file)
   if (eachM2G) {
     toHTML.matrix(x=model.coef.total,y=add.info,cgroup=mgroup,n.cgroup=n.mgroup,stub.title="Independent Variables",asterisk=asterisk,file=file,...)
   } else toHTML..matrix(x=model.coef.total,y2=add.info,cgroup=mgroup,n.cgroup=n.mgroup,stub.title="Independent Variables",asterisk=asterisk,file=file,...)
 }
 
-formatcoef <- function(
+formatCoef <- function(
                        x,
                        ...)
 {
-  ##格式化系数矩阵，包括补齐空白位以及增加显著性符号。
-  ##digits保留小数点后的位数（exact digits），很小的数会被trimmed为0。
-  has.p <- c("Pr(>|t|)","Pr(>|z|)") %in% colnames(x)
-  if (have.P <- any (has.p))  model_p <- x[,c("Pr(>|t|)","Pr(>|z|)")[which(has.p)]]
-  ##   x <- format(eval(substitute(formatC(x,digits=digits,format="f"),list(x=x)),parent.frame(2)),justif="right")
-  ##或者
-  x <- format(eval(quote(formatC(x,digits=digits,format="f")),list(x=x),parent.frame(2)),justif="right")
-
-  ##see S programming of p70, note the usage of substitute
-  ##值得多学习format和formatC这种格式化的函数
-  if (have.P){
-    x[model_p <0.01,"Estimate"]<- paste(x[model_p <0.01,"Estimate"],"**",sep="")
-    x[model_p<0.05 & model_p >0.01,"Estimate"]<- paste(x[model_p<0.05 & model_p >0.01,"Estimate"],"*&nbsp;",sep="")
-    x[model_p<0.1 & model_p >0.05,"Estimate"]<- paste(x[model_p<0.1 & model_p >0.05,"Estimate"],"+&nbsp;",sep="")
-    x[model_p>0.1,"Estimate"]<- paste(x[model_p>0.1,"Estimate"],"&nbsp;&nbsp;",sep="")
-  }
-  x <- gsub(" ","&nbsp;",x,fixed=TRUE) #补齐空白位,注意空格是&nbsp;，注意后面有一个分号
-  x
+    ##格式化系数矩阵，包括补齐空白位以及增加显著性符号。
+    ##digits保留小数点后的位数（exact digits），很小的数会被trimmed为0。
+    has.p <- c("Pr(>|t|)","Pr(>|z|)") %in% colnames(x)
+    if (have.P <- any (has.p))  model_p <- x[,c("Pr(>|t|)","Pr(>|z|)")[which(has.p)]]
+    ##   x <- format(eval(substitute(formatC(x,digits=digits,format="f"),list(x=x)),parent.frame(2)),justif="right")
+    x <- format(eval(quote(formatC(x,digits=digits,format="f")),list(x=x),parent.frame(2)),justif="right")
+    ##see S programming of p70, note the usage of substitute
+    ##值得多学习format和formatC这种格式化的函数
+    if (have.P){
+        x[model_p <0.01,"Estimate"]<- paste(x[model_p <0.01,"Estimate"],"**",sep="")
+        x[model_p<0.05 & model_p >0.01,"Estimate"]<- paste(x[model_p<0.05 & model_p >0.01,"Estimate"],"*&nbsp;",sep="")
+        x[model_p<0.1 & model_p >0.05,"Estimate"]<- paste(x[model_p<0.1 & model_p >0.05,"Estimate"],"+&nbsp;",sep="")
+        x[model_p>0.1,"Estimate"]<- paste(x[model_p>0.1,"Estimate"],"&nbsp;&nbsp;",sep="")
+    }
+    x <- gsub(" ","&nbsp;",x,fixed=TRUE) #补齐空白位,注意空格是&nbsp;，注意后面有一个分号
+    x
 }
 
 
-cbindcoeflist1 <- function(...,COLNAMES=NULL)
+cbindCoef <- function(...,COLNAMES=NULL)
 {
-                                        # helper function to combine model with common varaibles
-                                        #... is a list as cbind, but can deal with objects of different length.
-  input <- list(...) #input不会包含任何COLNAMES的信息。
-  row_name_list <- lapply(input,rownames)
-  all_row_name <- unique(unlist( row_name_list ))
-  emptycell <- eval(expression(emptycell),parent.frame()) #从parent frame获取该信息
-  x2 <- matrix(emptycell,ncol=2*length(input),nrow=length(all_row_name))
-  rownames(x2) <-  all_row_name
-  for (i in seq_along(input)) {
-    rownames2 <- rownames(input[[i]])
-    index <- match(rownames2,all_row_name)
-    value<-input[[i]][,c("Estimate","Std. Error")]
-    x2[index,(2*i-1):(2*i)] <- value
-  }
-  if (!is.null(COLNAMES)) colnames(x2) <- COLNAMES
-  x2
-}
-
-cbindcoeflist2 <- function(...,COLNAMES=NULL)
-{
-                                        # helper function to combine model with common varaibles
-                                        #... is a list as cbind, but can deal with objects of different length.
-  input <- list(...) #input不会包含任何COLNAMES的信息。
-  row_name_list <- lapply(input,rownames)
-  all_row_name <- unique(unlist( row_name_list ))
-  emptycell <- eval(expression(emptycell),parent.frame()) #从parent frame获取该信息
-  x2 <- matrix(emptycell,ncol=length(input),nrow=length(all_row_name))
-  rownames(x2) <-  all_row_name
-  for (i in seq_along(input)) {
-    rownames2 <- rownames(input[[i]])
-    index <- match(rownames2,all_row_name)
-    value<-as.matrix(paste(input[[i]][,c("Estimate")],"<br>(",gsub("&nbsp;","",input[[i]][,c("Std. Error")]),")",sep=""))
-    x2[index,i] <- value
-  }
-  if (!is.null(COLNAMES)) colnames(x2) <- COLNAMES
-  x2
+    ## helper function to combine model with common varaibles
+    ##... is a list as cbind, but can deal with objects of different length.
+    input <- list(...) #input不会包含任何COLNAMES的信息。
+    row_name_list <- lapply(input,rownames)
+    all_row_name <- unique(unlist( row_name_list ))
+    emptycell <- eval(expression(emptycell),parent.frame()) #从parent frame获取该信息
+    x2 <- matrix(emptycell,ncol=2*length(input),nrow=length(all_row_name))
+    rownames(x2) <-  all_row_name
+    for (i in seq_along(input)) {
+        rownames2 <- rownames(input[[i]])
+        index <- match(rownames2,all_row_name)
+        value<-input[[i]][,c("Estimate","Std. Error")]
+        x2[index,(2*i-1):(2*i)] <- value
+    }
+    if (!is.null(COLNAMES)) colnames(x2) <- COLNAMES
+    x2
 }
