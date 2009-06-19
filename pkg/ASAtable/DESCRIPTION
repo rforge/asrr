@@ -6,6 +6,7 @@ Date: 2009-01-10
 Author: Ronggui HUANG
 Maintainer: Ronggui HUANG<ronggui.huang@gmail.com>
 Depends: 
+Imports: car
 Description: Formats tables from one or more model objects, not unlike tables found in such journals as the American Sociological Review.
 License: GPL 2
 LazyLoad: yes
