@@ -47,7 +47,6 @@ Ronggui HUANG
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-%%\dontrun{
 ## report mutiple models in one table
 data(Chirot,package="car")
 fm1 <- lm(formula = intensity ~ commerce + tradition, data = Chirot)
@@ -55,13 +54,14 @@ fm2 <- lm(formula = intensity ~ commerce + tradition + midpeasant + inequality, 
 toHTML(modelList(fm1,fm2),
        caption="This is the title of table",## title of table
        goffun=function(x) paste("R<sup>2</sup> = ",format(summary(x)$r.squared,digit=3),collapse=""), ## goodness of fit
-       relabel=list(midpeasant="Strength of middle peasantry",inequality="Inequality of land tenure"),## relabel variable names
+       rgroup=list("Block A"=c("commerce","tradition"),"Block B"=c("midpeasant","inequality")), ## group of independent variables
+       relabel=list(midpeasant="Strength of middle peasantry",inequality="Inequality of land tenure"), ## relabel variable names
        note="Note:\n1. This is a note.\n2. Models are OLS regression.", ## a note
-       group.name=c("Group one","Group two") ## group name, following prefix.
+       group.name=c("Group one","Group two"), ## group name, following prefix.
        )
 ## data frame to HTLM
 toHTML(CO2[1:10,],cgroup=c("Col group one","Col group tow"),n.cgroup=c(2,3),stub.title="Stub title")
 ## with row groups.
-toHTML(CO2[1:10,],cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title",rgroup=c("Rgroup A","Rgroup B"),n.rgroup=c(4,6))
+toHTML(CO2[1:10,],cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title",rgroup=c("Rgroup A","Rgroup B"),n.rgroup=c(0,4,6))
+toHTML(CO2[1:10,],cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title",rgroup=c("Rgroup A","Rgroup B"),n.rgroup=c(1,3,6))
 }
-%%}

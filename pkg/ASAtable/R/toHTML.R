@@ -79,8 +79,8 @@ insertCol <- function(mat,ncolgroup=rep(2,NCOL(mat)/2),elements=NA,insertcolname
   }
   ans
 }
-##mat <- matrix(1:24,ncol=6)
-##insertCol(mat)
+mat <- matrix(1:24,ncol=6)
+insertCol(mat)
 
   
 R2HTMLtable <- function(
@@ -267,7 +267,7 @@ toHTML.default <- function(
     insertCol(mat=x,ncolgroup=n.cgroup,elements="&nbsp;",insertcolnames="&nbsp;")
   } else x ##如果对列分组，则需要先调整表的内容。
   if (!is.null(rgroup)) {
-    new.x <- t(insertCol(t(new.x),ncolgroup=c(0,n.rgroup),elements="&nbsp;",insertcolnames=rgroup))
+    new.x <- t(insertCol(t(new.x),ncolgroup=n.rgroup,elements="&nbsp;",insertcolnames=rgroup))
   }##如果对行分组，则需要调整表的内容
   cl.body1 <- matrix("BODYCELL",nrow=nrow(new.x)+1,ncol=ncol(new.x)+1)
   ##如果R2HTMLtable中的row.title和col.title为NULL，需要进一步处理
@@ -356,10 +356,11 @@ toHTML.modelList <- function(
                              stub.col=rep(c("Coefficient","S.E."),times=length(x)),
                              digits=2,
                              emptycell="...",
+                             rgroup=NULL,
                              relabel=NULL,
                              goffun=NULL,
                              file=NULL,
-                             coeffun=function(x) summary(x)$coef,
+                             coeffun=function(x) summary(x)$coef, ## write generic function of coeffun() and goffun()
                              asterisk=TRUE,
                              coefL2Mfun=cbindCoef,
                              ...
@@ -390,6 +391,18 @@ toHTML.modelList <- function(
   model.coef.total <- do.call(coefL2Mfun,model_coef) # turn a list to a whole matrix.
   nvar.total <- NROW(model.coef.total)
   ncol.each <- ncol(model.coef.total)/nmodel
+  if (!is.null(rgroup)) {
+  n.rgroup <- sapply(rgroup,length)
+  idx <- c(unlist(rgroup))
+  idx2 <- charmatch(idx,rownames(model.coef.total)) 
+  idx3 <- which (!rownames(model.coef.total) %in% idx)
+  if (!length(idx3)==0) {
+  rgroup <- c(names(rgroup),"Others")
+  n.rgroup <- c(n.rgroup,NROW(model.coef.total)-sum(n.rgroup))
+  idx2 <- c(idx2,idx3)
+  }
+  model.coef.total <- model.coef.total[idx2,]
+  } else n.rgroup <- NULL
   if (!is.null(relabel)) {
     rownames(model.coef.total)<-sub(":","-",rownames(model.coef.total))
     names(relabel)<-sub(":","-",names(relabel)) ##recode cannot handle ":"
@@ -398,7 +411,7 @@ toHTML.modelList <- function(
   }
   n.mgroup <- rep(ncol.each,nmodel)
   file <- ifelse(is.null(file),paste(tempfile(),".html",sep=""),file)
-  toHTML.default(x=model.coef.total,y=add.info,cgroup=model_name,n.cgroup=n.mgroup,stub.title="Independent Variables",asterisk=asterisk,file=file,...)
+  toHTML.default(x=model.coef.total,y=add.info,cgroup=model_name,n.cgroup=n.mgroup,rgroup=rgroup,n.rgroup=c(0,n.rgroup),stub.title="Independent Variables",asterisk=asterisk,file=file,...)
 }
 
 
@@ -420,7 +433,6 @@ formatCoef <- function(x,...)
   x <- gsub(" ","&nbsp;",x,fixed=TRUE) ## add blank when necessary. In HTML blank is tagged as "&nbsp". note the ";".
   x
 }
-
 
 cbindCoef <- function(...,COLNAMES=NULL)
 {
