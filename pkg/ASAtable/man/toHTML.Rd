@@ -58,5 +58,7 @@ toHTML(modelList(fm1,fm2),
        note="Note:\n1. This is a note.\n2. Models are OLS regression.", ## a note
        group.name=c("Group one","Group two") ## group name, following prefix.
        )
+## data frame to HTLM
+toHTML(CO2,cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title")
 }
 %%}

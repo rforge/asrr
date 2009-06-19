@@ -184,7 +184,7 @@ toHTML.default <- function(
   ##fontsize: numeric, the unit is pt. specified the fontsize for table entries.
   ##autobrowse: logical, if the file autobrowsed.
   ##append: logical, if the table appended to the current file.
-  ##cgroup,character vector specified the col title.
+  ##cgroup,character vector specified the col title. Works only when rownames is not null.
   ##n.cgroup, integer vector specified how many col a col group has.
   ##rgroup, not used now.
   ##n.rgoup, not used now.
