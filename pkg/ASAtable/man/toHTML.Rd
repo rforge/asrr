@@ -48,6 +48,7 @@ Ronggui HUANG
 }
 \examples{
 %%\dontrun{
+## report mutiple models in one table
 data(Chirot,package="car")
 fm1 <- lm(formula = intensity ~ commerce + tradition, data = Chirot)
 fm2 <- lm(formula = intensity ~ commerce + tradition + midpeasant + inequality, data = Chirot)
@@ -59,6 +60,8 @@ toHTML(modelList(fm1,fm2),
        group.name=c("Group one","Group two") ## group name, following prefix.
        )
 ## data frame to HTLM
-toHTML(CO2,cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title")
+toHTML(CO2[1:10,],cgroup=c("Col group one","Col group tow"),n.cgroup=c(2,3),stub.title="Stub title")
+## with row groups.
+toHTML(CO2[1:10,],cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title",rgroup=c("Rgroup A","Rgroup B"),n.rgroup=c(4,6))
 }
 %%}

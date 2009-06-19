@@ -169,7 +169,7 @@ toHTML.default <- function(
                           codepage="UTF-8",
                           digits=2
                           )
-  ##x,y: matrix,table,data frame but not vector,possible (row/col) named.
+  ##x,y: character matrix,table,data frame but not vector,possible (row/col) named.
   ##x is the main table
   ##y is appended to the end to the table,containg info such as number of case, goodness of fit.
   ##    NCOL(y)=length(cgroup).
@@ -184,10 +184,10 @@ toHTML.default <- function(
   ##fontsize: numeric, the unit is pt. specified the fontsize for table entries.
   ##autobrowse: logical, if the file autobrowsed.
   ##append: logical, if the table appended to the current file.
-  ##cgroup,character vector specified the col title. Works only when rownames is not null.
+  ##cgroup,character vector specified the col title.
   ##n.cgroup, integer vector specified how many col a col group has.
-  ##rgroup, not used now.
-  ##n.rgoup, not used now.
+  ##rgroup: character vector specified the row groups. Not be duplicated with any rownames.
+  ##n.rgoup: similar to n.rgroup.
   ##line style of the first line. "double","solid" ...
   ##stub.title: character specified the sub col title.
   ##    Default is "&nbsp" which is a html tag(means a space).
@@ -197,7 +197,8 @@ toHTML.default <- function(
   ##   vector of length NROW(x)+ (length(cgroup)-1)
   ##codepage: html's codepage.
 {  
-  x <- as.matrix(x)
+  if (!is.matrix(x)) x <- as.matrix(x)
+  x <- format(x,digits=digits) ## turn x to charater matrix anyway.
   ##如果分组，分组信息作为一部分，表的具体内容作为一个部分，附加的内容作为一个新的部分，将注释作为最后部分。
   ##用于增加一个列，使得group之间的横线不相互连在一起。需要注意这一列的宽度设置很小。
   CSS.def <- CSSgenerator(fontsize,indent,tablewidth,lwidth,firstline)
@@ -221,10 +222,11 @@ toHTML.default <- function(
     Ngroup <- length(cgroup)
   }
   ##分配表格的列宽度
-  x4w <- gsub("&nbsp;","",x)
+  x4w <- gsub(" ","",x) ## the space is due to format
+  x4w <- gsub("&nbsp;","",x4w)
   if (length(colwidth)==1){
     colwidth <- switch(colwidth,
-                       "prop"=c(max(nchar(rownames(x4w))),
+                       "prop"=c(max(nchar( gsub("&nbsp;","",c(rownames(x4w),stub.title,rgroup)))),
                          apply(rbind(x4w,colnames(x4w)),2,function(tab) max(nchar(tab),na.rm=T))),
                        "equal"=rep(1,NCOL(x)+1)
                        )
@@ -251,10 +253,9 @@ toHTML.default <- function(
     STUBCOL1 <- R2HTMLtable(newcgroup,row.title=stub.title,colspan=colspan,class.mat=cl.mat.stub)
   }
   ##表的主体部分
-  if (!is.matrix(x)) stop("x must be a matrix.")
   if (mode(x)=="numeric") x <- gsub(" ","&nbsp;",format(formatC(x,digits=digits,format="f"),justify="right"),fixed=TRUE)
   if (is.null(colnames(x))) {
-    warning("x does not have colnames, added by me.")
+    warning("x does not have colnames, added by toHTML().")
     colnames(x) <- if (is.null(colname)) paste("colname",as.character(seq_len(ncol(x))),sep=".") else colname
   }##如果没有colnames，则增加
   if (is.null(rownames(x))) {
