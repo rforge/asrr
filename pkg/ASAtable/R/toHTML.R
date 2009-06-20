@@ -272,7 +272,7 @@ toHTML.default <- function(
     ##  insertCol(mat=colspan,ncolgroup=n.cgroup,elements="1",insertcolnames="NA")
     ## } else {colspan}
     new.x <- rbind(new.x,rgroup)
-    idx <- order(c(apply(outer(seq_len(NROW(x)),i.rgroup,">="),1,sum) + seq_len(NROW(x)),i.rgroup+1))
+    idx <- order(c(apply(outer(seq_len(NROW(x)),i.rgroup+1,">="),1,sum) + seq_len(NROW(x)),i.rgroup+1))
     new.x <- new.x[idx,]
     ## idx2 <- idx[seq(from=length(idx)-NROW(x),to=length(idx))]
   }
@@ -369,6 +369,7 @@ toHTML.modelList <- function(
                              coeffun=function(x) summary(x)$coef, ## write generic function of coeffun() and goffun()
                              asterisk=TRUE,
                              coefL2Mfun=cbindCoef,
+                             append=FALSE,
                              ...
                              )
   ##x : named list of glm model. like x=list(model1=glm1...)
@@ -418,7 +419,7 @@ toHTML.modelList <- function(
   }
   n.mgroup <- rep(ncol.each,nmodel)
   file <- ifelse(is.null(file),paste(tempfile(),".html",sep=""),file)
-  toHTML.default(x=model.coef.total,y=add.info,cgroup=model_name,n.cgroup=n.mgroup,rgroup=rgroup,i.rgroup=i.rgroup,stub.title="Independent Variables",asterisk=asterisk,file=file,...)
+  toHTML.default(x=model.coef.total,y=add.info,cgroup=model_name,n.cgroup=n.mgroup,rgroup=rgroup,i.rgroup=i.rgroup,stub.title="Independent Variables",asterisk=asterisk,file=file,append=append,...)
 }
 
 
