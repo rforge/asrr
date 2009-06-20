@@ -61,7 +61,9 @@ toHTML(modelList(fm1,fm2),
        )
 ## data frame to HTLM
 toHTML(CO2[1:10,],cgroup=c("Col group one","Col group tow"),n.cgroup=c(2,3),stub.title="Stub title")
+## add additional info: ncol(y)==length(cgroup) and ncol(z)==nrow(x)
+toHTML(CO2[1:10,],cgroup=c("Col group one","Col group tow"),n.cgroup=c(2,3),stub.title="Stub title",y=matrix(c("a","b"),ncol=2),z=matrix(1:5,ncol=5))
 ## with row groups.
-toHTML(CO2[1:10,],cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title",rgroup=c("Rgroup A","Rgroup B"),n.rgroup=c(0,4,6))
-toHTML(CO2[1:10,],cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title",rgroup=c("Rgroup A","Rgroup B"),n.rgroup=c(1,3,6))
+toHTML(CO2[1:10,],cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title",rgroup=list("Rgroup A"=NULL,"Rgroup B"=NULL),i.rgroup=c(0,4))
+toHTML(CO2[1:10,],cgroup=c("group one","group tow"),n.cgroup=c(2,3),stub.title="Stub title",rgroup=list("Rgroup A"=c("A1",NA,NA,"A2",NA),"Rgroup B"=NULL),i.rgroup=c(1,3))
 }
