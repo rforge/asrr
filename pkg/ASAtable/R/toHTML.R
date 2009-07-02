@@ -264,17 +264,18 @@ toHTML.default <- function(
   if (!is.null(rgroup)) {
     rgroup <- lapply(rgroup,function(xx) if (is.null(xx)) rep(NA,NCOL(x)) else xx)
     rgroup <- t(as.data.frame(rgroup))
-    ## colspan <- matrix(1,nrow=NROW(rgroup),ncol=NCOL(rgroup))
+    ##colspan <- matrix(1,nrow=NROW(rgroup),ncol=NCOL(rgroup))
+    ##is.na(colspan) <- which(is.na(rgroup))
     rgroup <- if (hasgroup) {
       insertCol(mat=rgroup,ncolgroup=n.cgroup,elements="&nbsp;",insertcolnames="&nbsp;")
     } else {rgroup}
     ## colspan <- if (hasgroup) {
-    ##  insertCol(mat=colspan,ncolgroup=n.cgroup,elements="1",insertcolnames="NA")
-    ## } else {colspan}
+    ##   insertCol(mat=colspan,ncolgroup=n.cgroup,elements="1")
+    ##} else {colspan}
     new.x <- rbind(new.x,rgroup)
-    idx <- order(c(apply(outer(seq_len(NROW(x)),i.rgroup+1,">="),1,sum) + seq_len(NROW(x)),i.rgroup+1))
-    new.x <- new.x[idx,]
-    ## idx2 <- idx[seq(from=length(idx)-NROW(x),to=length(idx))]
+    idx <- c(apply(outer(seq_len(NROW(x)),i.rgroup+1,">="),1,sum) + seq_len(NROW(x)),i.rgroup+1)
+    new.x <- new.x[order(idx),]
+    ## idx2 <- idx[seq(from=NROW(x)+1,to=length(idx))]
   }
   cl.body1 <- matrix("BODYCELL",nrow=nrow(new.x)+1,ncol=ncol(new.x)+1)
   ##如果R2HTMLtable中的row.title和col.title为NULL，需要进一步处理
@@ -283,7 +284,8 @@ toHTML.default <- function(
   cl.body1[c(FALSE,rownames(new.x) %in% rownames(rgroup)),1]  <- "STUBCOLRGROUP"
   ## colspan.mat <- matrix(1,nrow=NROW(new.x),ncol=NCOL(new.x))
   ## colspan.mat[idx2,] <- colspan
-  TBODY1 <- R2HTMLtable(new.x,row.title=rownames(new.x),col.title=colnames(new.x),class.mat=cl.body1,width.mat=matrix(colwidth,byrow=TRUE,nrow=nrow(new.x)+1,ncol=ncol(new.x)+1))
+  ## colspan.mat <- cbind(1,colspan.mat) ## the first column is for rownames
+  TBODY1 <- R2HTMLtable(new.x,row.title=rownames(new.x),col.title=colnames(new.x),class.mat=cl.body1, width.mat=matrix(colwidth,byrow=TRUE,nrow=nrow(new.x)+1,ncol=ncol(new.x)+1))
   ##放用于增加例如样本数、模型拟合度等信息的部分。在表主体的下方每一个信息占据的列数等于n.cgroup
   if (!is.null(y)){
     if (!is.matrix(y)) stop("y must be a matrix.")
@@ -332,6 +334,7 @@ toHTML.default <- function(
       TBODY2,TBODY2b,
       NOTE.def,
       END.def,
+      "<br>",
       file=file,append=append,sep="\n"
       )
   if (autobrowse)  {
@@ -358,13 +361,14 @@ toHTML.modelList <- function(
                              x,
                              prefix="Model",
                              begin.numering=1,
-                             group.name=NULL,
+                             group.name=names(x),
                              stub.col=rep(c("Coefficient","S.E."),times=length(x)),
                              digits=2,
                              emptycell="...",
                              rgroup=NULL,
                              relabel=NULL,
                              goffun=NULL,
+                             Nfun=function(x) nrow(x$model),
                              file=NULL,
                              coeffun=function(x) summary(x)$coef, ## write generic function of coeffun() and goffun()
                              asterisk=TRUE,
@@ -380,7 +384,7 @@ toHTML.modelList <- function(
   ##begin.numering, integer, the numbering of col title, eg, model 1, model 2,...
 {
   nmodel <- length(x) ## number of model
-  nobs <- sapply(x,function(x) nrow(x$model)) ## number of obs for each model
+  nobs <- sapply(x,Nfun) ## number of obs for each model
   add.info <- matrix(nobs,byrow=TRUE,ncol=nmodel) ## additional info at the end of table
   rownames(add.info) <- "Number of cases"
   if (!is.null(goffun)){ ## goodness of fit for each model

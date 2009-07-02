@@ -1,7 +1,7 @@
 export(reduce,constrReduce,SA,CSA,thresholdssetter,
        cs_truthTable,fs_truthTable,fs_tt,
        suffnec,coincid,
-       readURL.dta,endog_test,tsls2,coefchange)
+       readURL.dta,renames,endog_test,tsls2,coefchange)
 S3method(coefchange, default)
 S3method(coefchange, lm)
 S3method(coefchange, glm)
@@ -17,9 +17,10 @@ S3method(print, summary.QCA)
 S3method(print, truthTable)
 S3method(reduce, truthTable)
 S3method(reduce, default)
+S3method(renames, data.frame)
 S3method(summary, QCA)
 S3method('[',QCA)
 #importFrom(lpSolve, lp)
-#import(sem)
+
 
 
