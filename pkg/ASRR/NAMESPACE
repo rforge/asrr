@@ -1,13 +1,15 @@
-export(reduce,constrReduce,SA,CSA,thresholdssetter,
-       cs_truthTable,fs_truthTable,fs_tt,
-       suffnec,coincid,
-       readURL.dta,renames,endog_test,tsls2,coefchange)
+export(coefchange, constrReduce,coincid, CSA, cs_truthTable,
+       endog_test, fs_tt, fs_truthTable, gdTau,listcoef,
+       readURL.dta,reduce,renames, SA,suffnec,
+       thresholdssetter, tsls2)
 S3method(coefchange, default)
 S3method(coefchange, lm)
 S3method(coefchange, glm)
 S3method(endog_test, tsls)
 S3method(endog_test, tsls2)
 S3method(endog_test, ivreg)
+S3method(listcoef, lm)
+S3method(listcoef, glm)
 S3method(print, coefchange)
 S3method(print, coincid)
 S3method(print, endog_test)
@@ -21,6 +23,3 @@ S3method(renames, data.frame)
 S3method(summary, QCA)
 S3method('[',QCA)
 #importFrom(lpSolve, lp)
-
-
-
