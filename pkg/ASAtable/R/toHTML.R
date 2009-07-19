@@ -368,7 +368,7 @@ toHTML.modelList <- function(
                              rgroup=NULL,
                              relabel=NULL,
                              goffun=NULL,
-                             Nfun=function(x) nrow(x$model),
+                             Nfun=N,
                              file=NULL,
                              coeffun=function(x) summary(x)$coef, ## write generic function of coeffun() and goffun()
                              asterisk=TRUE,
@@ -465,3 +465,10 @@ cbindCoef <- function(...,COLNAMES=NULL)
   if (!is.null(COLNAMES)) colnames(x2) <- COLNAMES
   x2
 }
+
+N <- function(x) {
+  UseMethod("N")
+}
+N.default <- function(x) length(x$y)
+N.lm <- function(x) sum(summary(x)$df[1:2])
+N.lme <- function(x) summary(fm2)$dims$N
