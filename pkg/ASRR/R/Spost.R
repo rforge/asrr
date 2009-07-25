@@ -1,5 +1,5 @@
 listcoef <- function(x,...) {
-  ## should take care model with weight
+  if (is.null(x$x) || is.null(x$y))  stop("set 'x=TRUE' and 'y=TRUE' when estimating the model.")
   UseMethod("listcoef")
 }
 
