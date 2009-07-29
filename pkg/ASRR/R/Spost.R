@@ -1,17 +1,34 @@
+weighted.summary <- function(x,wt=rep(1,length(x)),type="analytic"){
+  idx <- (!is.na(x)) & (!is.na(wt))
+  x <- x[idx]
+  wt <- wt[idx]
+  n <- length(x)
+  if (type=="analytic"){
+    wt <- wt*n/sum(wt)
+    mean <- sum(wt*x)/n
+    var <- sum(wt*((x-mean)^2))/(n-1)
+    sd <- sqrt(var)
+  }
+  ans <- list(mean=mean,var=var,sd=sd)
+  ans
+}
+
 listcoef <- function(x,...) {
-  if (is.null(x$x) || is.null(x$y))  stop("set 'x=TRUE' and 'y=TRUE' when estimating the model.")
+  if (is.null(x$x) || is.null(x$y)){
+    stop("Please set 'x=TRUE' and 'y=TRUE' when estimating the model.")
+  }
   UseMethod("listcoef")
 }
 
 listcoef.lm <- function(x,...){
   ##www.nd.edu/~rwilliam/stats1/x92b.pdf
   ## x is a lm model with x and y setted to TRUE.
-  ## SDofX <- apply(x$x,2,sd)
-  ## SDofY <- sd(x$y)
   if (is.null(x$weight)) wt <- rep(1/length(x$y), length(x$y)) else wt <- x$weight
-  SD <- sqrt(diag(cov.wt(cbind(x$y,x$x),wt=wt,method="ML")$cov))
-  SDofY <- SD[1]
-  SDofX <- SD[-1]
+  ##SD <- sqrt(diag(cov.wt(cbind(x$y,x$x),wt=wt,method="ML")$cov))
+  ##SDofY <- SD[1]
+  ##SDofX <- SD[-1]
+  SDofX <- apply(x$x,2,function(xx) weighted.summary(xx,wt)$sd)
+  SDofY <- weighted.summary(x$y,wt)$sd
   Coef <- summary(x)$coef
   Est <- Coef[,"Estimate"]
   bStdY <- Est/SDofY

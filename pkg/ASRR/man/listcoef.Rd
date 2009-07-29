@@ -18,7 +18,7 @@ listcoef(x, ...)
   \item{\dots}{Not used currently.}
 }
 \details{
-Currently, it supports linear regression model, logistic model, probit model and poisson model.
+Currently, it supports linear regression model, logistic model, probit model and poisson model. When the model is estimated, argument x and y must be set to TRUE.
 
 Definition of notation is as follow:
     \item{SDofX}{Standard deviation of X.}
