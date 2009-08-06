@@ -3,13 +3,18 @@ weighted.summary <- function(x,wt=rep(1,length(x)),type="analytic"){
   x <- x[idx]
   wt <- wt[idx]
   n <- length(x)
+  moment <- function(r,mu){
+    1/n * sum(wt*((x-mu)^r))
+  }
   if (type=="analytic"){
     wt <- wt*n/sum(wt)
     mean <- sum(wt*x)/n
-    var <- sum(wt*((x-mean)^2))/(n-1)
+    variance <- sum(wt*((x-mean)^2))/(n-1)
     sd <- sqrt(var)
+    skewness <- moment(3,mean)* (moment(2,mean)^(-3/2))
+    kurtosis <- moment(4,mean)* (moment(2,mean)^-2)
   }
-  ans <- list(mean=mean,var=var,sd=sd)
+  ans <- list(mean=mean,variance=variance,sd=sd,skewness=skewness,kurtosis=kurtosis)
   ans
 }
 
@@ -44,12 +49,12 @@ listcoef.glm <- function(x,...){
     ## http://www.nd.edu/~rwilliam/xsoc73994/L03.pdf
     ## http://www.nd.edu/~rwilliam/zsoc694/x04.pdf
     Xb <- predict(x)
-    ##SDofX <- apply(x$x,2,sd)
-    ##SDofY <- sd(x$y)
     if (is.null(x$weight)) wt <- rep(1/length(x$y), length(x$y)) else wt <- x$weight
-    SD <- sqrt(diag(cov.wt(cbind(x$y,x$x),wt=wt,method="ML")$cov))
-    SDofY <- SD[1]
-    SDofX <- SD[-1]
+    ##SD <- sqrt(diag(cov.wt(cbind(x$y,x$x),wt=wt,method="ML")$cov))
+    ##SDofY <- SD[1]
+    ##SDofX <- SD[-1]
+    SDofX <- apply(x$x,2,function(x) weighted.summary(x,wt)$sd)
+    SDofY <- weighted.summary(x$y)$sd
     SDofYstar <- sqrt(var(Xb)+pi^2/3)
     Coef <- summary(x)$coef
     Est <- Coef[,"Estimate"]
@@ -65,11 +70,11 @@ listcoef.glm <- function(x,...){
   listcoef_probit <- function(x,...){
     Xb <- predict(x)
     if (is.null(x$weight)) wt <- rep(1/length(x$y), length(x$y)) else wt <- x$weight
-    SD <- sqrt(diag(cov.wt(cbind(x$y,x$x),wt=wt,method="ML")$cov))
-    SDofY <- SD[1]
-    SDofX <- SD[-1]  
-    ##SDofX <- apply(x$x,2,sd)
-    ##SDofY <- sd(x$y)
+    ##SD <- sqrt(diag(cov.wt(cbind(x$y,x$x),wt=wt,method="ML")$cov))
+    ##SDofY <- SD[1]
+    ##SDofX <- SD[-1]  
+    SDofX <- apply(x$x,2,function(x) weighted.summary(x,wt)$sd)
+    SDofY <- weighted.summary(x$y)$sd
     SDofYstar <- sqrt(var(Xb)+1)
     Coef <- summary(x)$coef
     Est <- Coef[,"Estimate"]
@@ -83,7 +88,8 @@ listcoef.glm <- function(x,...){
   listcoef_poisson <- function(x,...){
     ##SDofX <- apply(x$x,2,sd)
     if (is.null(x$weight)) wt <- rep(1/length(x$y), length(x$y)) else wt <- x$weight
-    SDofX <- sqrt(diag(cov.wt(x$x,wt=wt,method="ML")$cov))
+    ##SDofX <- sqrt(diag(cov.wt(x$x,wt=wt,method="ML")$cov))
+    SDofX <- apply(x$x,2,function(x) weighted.summary(x,wt)$sd)
     Coef <- summary(x)$coef
     Est <- Coef[,"Estimate"]
     bStdX <- Est*SDofX

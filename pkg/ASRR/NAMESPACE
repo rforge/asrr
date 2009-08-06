@@ -1,7 +1,7 @@
 export(coefchange, constrReduce,coincid, CSA, cs_truthTable,
        endog_test, fs_tt, fs_truthTable, gdTau,listcoef,
        readURL.dta,reduce,renames, SA,suffnec,
-       thresholdssetter, tsls2)
+       thresholdssetter, tsls2,weighted.summary)
 S3method(coefchange, default)
 S3method(coefchange, lm)
 S3method(coefchange, glm)
