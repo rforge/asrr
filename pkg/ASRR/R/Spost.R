@@ -102,3 +102,22 @@ listcoef.glm <- function(x,...){
   if (x$family$family == "poisson" && x$family$link == "log") { ans <- listcoef_poisson(x) }
   ans
 }
+
+
+fitstat <- function(x,...) {
+  UseMethod("fitstat")
+}
+
+fitstat.lm <- function(x,...){
+  Deviance <- deviance(x)
+  LL <- logLik(x)[1]
+  sum_lm <- summary(x)
+  n <- sum(sum_lm$df[1:2])
+  aic <- AIC(x)
+  aicxn <- aic*n
+  bic <- AIC(x,k=log(n)) ## there are 3 versions of BIC, but the differences between two models are the same for all 3 BICs.
+  r.squared <- sum_lm$r.squared
+  adj.r.squared <- sum_lm$adj.r.squared
+  ans <- list(Deviance=Deviance,LL=LL,aic=aic,"aic*n"=aicxn,bic=bic,r.squared=r.squared,adj.r.squared=adj.r.squared)
+  ans
+}

@@ -1,3 +1,6 @@
+2009-08-08
+	* new function of fitstat.
+
 2009-08-06
 	* new function of weighted.summary.
 	* listcoef can handle models with weight now.
