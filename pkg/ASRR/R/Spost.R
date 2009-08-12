@@ -10,7 +10,7 @@ weighted.summary <- function(x,wt=rep(1,length(x)),type="analytic"){
     wt <- wt*n/sum(wt)
     mean <- sum(wt*x)/n
     variance <- sum(wt*((x-mean)^2))/(n-1)
-    sd <- sqrt(var)
+    sd <- sqrt(variance)
     skewness <- moment(3,mean)* (moment(2,mean)^(-3/2))
     kurtosis <- moment(4,mean)* (moment(2,mean)^-2)
   }
@@ -105,19 +105,25 @@ listcoef.glm <- function(x,...){
 
 
 fitstat <- function(x,...) {
+  if (is.null(x$y)){
+    stop("Please set 'y=TRUE' when estimating the model.")
+  }
   UseMethod("fitstat")
 }
 
 fitstat.lm <- function(x,...){
-  Deviance <- deviance(x)
+  mod0 <- lm(x$y~1)
+  LL0 <-  logLik(mod0)[1]
   LL <- logLik(x)[1]
+  Deviance <- -2*LL ## Deviance <- deviance(x)
   sum_lm <- summary(x)
   n <- sum(sum_lm$df[1:2])
-  aic <- AIC(x)
-  aicxn <- aic*n
-  bic <- AIC(x,k=log(n)) ## there are 3 versions of BIC, but the differences between two models are the same for all 3 BICs.
+  aic <- (Deviance+2*sum_lm$df[1])/n
+  aicxn <- Deviance+2*sum_lm$df[1]
+  bic <- Deviance - sum_lm$df[2]*log(n)
+  ## 3 versions of BIC, differences between two models are the same.
   r.squared <- sum_lm$r.squared
   adj.r.squared <- sum_lm$adj.r.squared
-  ans <- list(Deviance=Deviance,LL=LL,aic=aic,"aic*n"=aicxn,bic=bic,r.squared=r.squared,adj.r.squared=adj.r.squared)
+  ans <- list(Deviance=Deviance,LL=LL,LL0=LL0,aic=aic,"aic*n"=aicxn,bic=bic,r.squared=r.squared,adj.r.squared=adj.r.squared)
   ans
 }
