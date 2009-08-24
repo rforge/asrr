@@ -9,12 +9,26 @@ Formats models to HTML according to American Journal of Sociology.
 }
 \usage{
 toHTML(x, ...)
+
+\method{toHTML}{default}(x, y = NULL, z = NULL, file = paste(tempfile(), ".html", 
+    sep = ""), caption = "Add Table Title Here!", note = NULL, 
+    tablewidth = 600, autobrowse = TRUE, msword = FALSE, append = TRUE, 
+    cgroup = NULL, n.cgroup = NULL, rgroup = NULL, i.rgroup = NULL, 
+    stub.title = "&nbsp", colwidth = "prop", colname = NULL, 
+    firstline = "double", lwidth = "1pt", lang = "zh", fontsize = 10, 
+    indent = 1, asterisk = FALSE, sepwidth = 12, codepage = "UTF-8", 
+    digits = 2, ...)
+
+\method{toHTML}{modelList}(x, prefix = "Model", begin.numering = 1, group.name = names(x), 
+    stub.col = rep(c("Coefficient", "S.E."), times = length(x)), 
+    digits = 2, emptycell = "...", rgroup = NULL, relabel = NULL, 
+    goffun = gof, Nfun = N, file = NULL, coeffun = function(x) summary(x)$coef, 
+    asterisk = TRUE, coefL2Mfun = cbindCoef, append = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
-%%     ~~Describe \code{x} here~~
-}
+  \item{x}{For modelList method, x is usually a object of modelList. This is useful for
+           reporting multiple models. For the default method, x is a matrix.}
   \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
 }

@@ -61,6 +61,7 @@ CSSgenerator <-  function(fontsize,indent,tablewidth,lwidth,firstline,...)
 insertCol <- function(mat,ncolgroup=rep(2,NCOL(mat)/2),elements=NA,insertcolnames=NA)
 {
   ngrp <- length(ncolgroup)
+  if (ngrp>1){
   nr <- NROW(mat)
   nc <- NCOL(mat)
   if (sum(ncolgroup)!=nc) stop("Wrong ncolgroup argument.")
@@ -76,13 +77,17 @@ insertCol <- function(mat,ncolgroup=rep(2,NCOL(mat)/2),elements=NA,insertcolname
   if (!is.null(colnames(mat))){
     colnames(ans)[idx2.col] <- colnames(mat)
     colnames(ans)[idx3.col] <- insertcolnames
+  }} else {
+  ## warning("less than 1 column group, return the original matrix.")
+  ans <- mat
   }
   ans
 }
-mat <- matrix(1:24,ncol=6)
-insertCol(mat)
+#mat <- matrix(1:24,ncol=6)
+#insertCol(mat)
+#mat <- matrix(1:4,ncol=2)
+#insertCol(mat,c(1,1))
 
-  
 R2HTMLtable <- function(
                         charmat,
                         isFirstcol=TRUE,
@@ -167,7 +172,8 @@ toHTML.default <- function(
                           asterisk=FALSE,
                           sepwidth=12,
                           codepage="UTF-8",
-                          digits=2
+                          digits=2,
+                          ...
                            )
   ##x,y: character matrix,table,data frame but not vector,possible (row/col) named.
   ##x is the main table
@@ -322,7 +328,7 @@ toHTML.default <- function(
                     ">",
                     if (is.null(note)) "Note: ADD NOTES HERE, FIRST DATA SOURCE, SECOND IS GENERAL INFO, THEN IS CALLOUTS."
                     else note,
-                    if (asterisk) "<BR>+ p<.10 <BR>* p<.05 <BR>** p<.01<BR>", "</td>")
+                    if (asterisk) "<BR>+ p<.10&nbsp, * p<.05&nbsp, ** p<.01.", "</td>")
   END.def <- "</TABLE>" ## html tag of end of table
   cat(
       if (!append) HTML.def,
@@ -367,10 +373,10 @@ toHTML.modelList <- function(
                              emptycell="...",
                              rgroup=NULL,
                              relabel=NULL,
-                             goffun=NULL,
+                             goffun=gof,
                              Nfun=N,
                              file=NULL,
-                             coeffun=function(x) summary(x)$coef, ## write generic function of coeffun() and goffun()
+                             coeffun=coefTest,
                              asterisk=TRUE,
                              coefL2Mfun=cbindCoef,
                              append=FALSE,
@@ -466,9 +472,30 @@ cbindCoef <- function(...,COLNAMES=NULL)
   x2
 }
 
+## sample size.
 N <- function(x) {
   UseMethod("N")
 }
 N.default <- function(x) length(x$y)
 N.lm <- function(x) sum(summary(x)$df[1:2])
 N.lme <- function(x) summary(fm2)$dims$N
+
+## goodness of fit
+gof <- function(x) {
+  UseMethod("gof")
+}
+gof.default <- function(x) sprintf("AIC = %s",round(AIC(x),2))
+
+##
+coefTest <- function(x,...){
+  UseMethod("coefTest")
+}
+coefTest.default <- function(x,...) summary(x)$coef
+coefTest.negbin <- function(x,...) {
+require(MASS)
+ans <- summary(x)
+theta <- t(c(ans$theta,ans$SE.theta,NA,1))## the last 1 is meaningless.
+rownames(theta) <- "Theta"
+ans <- rbind(ans$coef,theta)
+ans
+}

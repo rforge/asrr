@@ -1,0 +1,4 @@
+2009-08-24
+	* fixbug of insertCol, so it works when reporting one model.
+	* Add new generic funtions of coefTest and gof.
+	

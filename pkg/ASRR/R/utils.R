@@ -22,7 +22,7 @@ renames.data.frame <- function(x, from, to, info=TRUE, envir=parent.frame(n=1)) 
 	}
 
 
-gdTau<-function(x){
+gkTau<-function(x){
   ##Goodman and Kruskal's tau.
   ##Measures of Proportional Reduction in Predictive Error.
   ##the variables are not interchangable, one is dependent variable.
@@ -42,11 +42,9 @@ tau<- function(x){
   ny <- w * cjsqs - cj2s
   tau <- ny/delta
   ##browser()
-  ##part1 <-  (ny - delta) * (colSums((apply(x,2,FUN=function(x) x*sum(x)))/ri) - cj)
-  ##part2 <-  w*delta*rowSums(apply(x,1,function(x) x^2/(sum(x)^2)) - apply(x,1,function(x) x/sum(x)))
-  ##dif <- (part1 - part2)^2
-  ##ASE <- sqrt(sum(apply(x,1,function(x) x*dif))*4/delta^4)
-  ##
+  ASE <- sqrt(sum(apply(x,1,function(f){
+    f*(((w*f^2/sum(f)-cj2s)-delta)*(1/sum(f)*f*cj-cj)-w*delta*(1/sum(f)^2*f^2-1/sum(f)*f))^2
+  })*4/delta^4))
   nc <- ncol(x)
   nr <- nrow(x)
   sta <-(w-1)*(nc-1)*tau
@@ -58,7 +56,7 @@ tau<- function(x){
 	}
   cond <- sprintf("(%s|%s)",nam[2],nam[1])
   cat(sprintf("Goodman and Kruskal's tau %s is %f \n",cond,tau))
-  cat("Approx. Sig. is",pvalue,"\n\n")
+  cat(sprintf("Approx. Sig. is %s and ASE is %s\n\n",pvalue,ASE))
   invisible(ans <- list(tau=tau,p.value=pvalue,condition=cond))
 }
 invisible(ans <- list(CR=tau(x),RC=tau(t(x))))
@@ -68,3 +66,5 @@ invisible(ans <- list(CR=tau(x),RC=tau(t(x))))
 #data(Arthritis)
 #tab <- xtabs(~Improved + Treatment, data = Arthritis)
 #tau(tab)
+x2<-matrix(c(14,6,9,11),2,byrow=T)
+gkTau(x2) ## ASE=0.55

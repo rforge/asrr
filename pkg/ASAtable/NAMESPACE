@@ -1,4 +1,7 @@
-export(toHTML,modelList,N)
+export(toHTML,modelList,N,coefTest,gof)
+S3method(coefTest,default)
+S3method(coefTest,negbin)
+S3method(gof,default)
 S3method(N,lm)
 S3method(N,default)
 S3method(toHTML,modelList)
