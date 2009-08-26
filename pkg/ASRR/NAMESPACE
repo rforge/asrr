@@ -1,5 +1,5 @@
 export(coefchange, constrReduce,coincid, CSA, cs_truthTable,
-       endog_test, fitstat, fs_tt, fs_truthTable, gdTau,listcoef,
+       endog_test, fitstat, fs_tt, fs_truthTable, listcoef,
        readURL.dta,reduce,renames, SA,suffnec,
        thresholdssetter, tsls2,weighted.summary)
 S3method(coefchange, default)
@@ -23,4 +23,3 @@ S3method(reduce, default)
 S3method(renames, data.frame)
 S3method(summary, QCA)
 S3method('[',QCA)
-#importFrom(lpSolve, lp)
