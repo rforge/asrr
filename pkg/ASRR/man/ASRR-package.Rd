@@ -6,9 +6,7 @@
 Applied Sociological Research with R
 }
 \description{
-Miscellaneous functions for sociological research. The most important
-set of functions is for Qulitative Comparative Analysis (QCA). It can be
-used for all three types of QCA.}
+Miscellaneous functions for sociological research.}
 \details{
 \tabular{ll}{
 Package: \tab ASRR\cr
@@ -27,7 +25,4 @@ URL: \tab \url{http://asrr.r-forge.r-project.org/} \cr
 }
 
 \keyword{ package }
-%\seealso{
-%~~ Optional links to other man pages, e.g. ~~
-%~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-%}
+

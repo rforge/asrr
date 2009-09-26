@@ -30,18 +30,13 @@ toHTML(x, ...)
   \item{x}{For modelList method, x is usually a object of modelList. This is useful for
            reporting multiple models. For the default method, x is a matrix.}
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A HTML file.
 }
 \note{
 This table is in HTML format, which can be pasted to MS word directly

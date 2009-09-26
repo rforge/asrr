@@ -5,8 +5,8 @@ Version: 0.0-1
 Date: 2009-01-10
 Author: Ronggui HUANG
 Maintainer: Ronggui HUANG<ronggui.huang@gmail.com>
-Depends: 
-Suggests: QCA, sem, boot
+Depends: QCA3, ASAtable
+Suggests: sem, boot
 Imports: lpSolve, foreign, MASS, car
 Description: Miscellaneous functions for sociological research. The most important set of functions is for Qulitative Comparative Analysis (QCA). It can be used for all three types of QCA. 
 License: BSD

@@ -20,3 +20,17 @@ renames.data.frame <- function(x, from, to, info=TRUE, envir=parent.frame(n=1)) 
 	invisible()
 	}
 	}
+
+mcor.test <- function (x,...)
+{
+    p <- ncol(x)
+    index <- t(combn(p, 2))
+    out <- apply(index,1,FUN=function(idx){ans=cor.test(x[,idx[1]],x[,idx[2]]);c(ans$estimate,ans$p.value)})
+    ans <- cbind(index,t(out))
+    colnames(ans) <- c("idx1","idx2","estimate","p.value")
+    vars <- names(x)
+    ans <- list(cormat=ans,variables=vars)
+    class(ans) <- "mcor.test"
+    ans
+}
+

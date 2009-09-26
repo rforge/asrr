@@ -1,7 +1,5 @@
-export(coefchange, constrReduce,coincid, CSA, cs_truthTable,
-       endog_test, fitstat, fs_tt, fs_truthTable, listcoef,
-       readURL.dta,reduce,renames, SA,suffnec,
-       thresholdssetter, tsls2,weighted.summary)
+export(coefchange, endog_test, fitstat, listcoef,
+       readURL.dta, renames, tsls2,weighted.summary)
 S3method(coefchange, default)
 S3method(coefchange, lm)
 S3method(coefchange, glm)
@@ -12,14 +10,6 @@ S3method(fitstat, lm)
 S3method(listcoef, lm)
 S3method(listcoef, glm)
 S3method(print, coefchange)
-S3method(print, coincid)
 S3method(print, endog_test)
-S3method(print, QCA)
-S3method(print, suffnec)
-S3method(print, summary.QCA)
-S3method(print, truthTable)
-S3method(reduce, truthTable)
-S3method(reduce, default)
 S3method(renames, data.frame)
-S3method(summary, QCA)
-S3method('[',QCA)
+
