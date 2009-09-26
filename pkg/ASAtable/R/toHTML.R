@@ -202,7 +202,7 @@ toHTML.default <- function(
   ##colwidth: specified the col width, can be "equal", "prop" or
   ##   vector of length NROW(x)+ (length(cgroup)-1)
   ##codepage: html's codepage.
-{  
+{
   if (!is.matrix(x)) x <- as.matrix(x)
   x <- format(x,digits=digits) ## turn x to charater matrix anyway.
   ##如果分组，分组信息作为一部分，表的具体内容作为一个部分，附加的内容作为一个新的部分，将注释作为最后部分。
@@ -357,6 +357,22 @@ toHTML.default <- function(
   }
 }
 
+toHTML.mcor.test <- function(x,digits=2,...){
+    p <- length(x$variables)
+    ans <- matrix("",p,p)
+    astarisk <- rep("&nbsp&nbsp",nrow(x$cormat))
+    two <- which (x$cormat[,4]<=0.05)
+    one <- which (x$cormat[,4]>0.05 & x$cormat[,4]<=0.1)
+    astarisk[two] <- "**"
+    astarisk[one] <- "*&nbsp"
+    ans[x$cormat[,c(2,1)]] <- paste(format(round(x$cormat[,3],digits=digits)),astarisk,sep="")
+    rownames(ans) <- x$variables
+    ans[,p] <- format(x$Means,digits=digits)
+    colnames(ans) <- c(x$variables[1:(p-1)],"Mean")
+    toHTML.default(ans,...)
+}
+
+
 modelList <- function(...){
   ans <- list(...)
   class(ans) <- "modelList"
@@ -412,7 +428,7 @@ toHTML.modelList <- function(
     n.rgroup <- sapply(rgroup,length)
     i.rgroup <- cumsum(c(0,n.rgroup))[1:length(n.rgroup)]
     idx <- c(unlist(rgroup))
-    idx2 <- charmatch(idx,rownames(model.coef.total)) 
+    idx2 <- charmatch(idx,rownames(model.coef.total))
     idx3 <- which (!rownames(model.coef.total) %in% idx)
     rgroup <- lapply(rgroup,function(x) NULL)
     if (!length(idx3)==0) {
@@ -485,6 +501,7 @@ gof <- function(x) {
   UseMethod("gof")
 }
 gof.default <- function(x) sprintf("AIC = %s",round(AIC(x),2))
+gof.lm <- function(x) sprintf("R<sup>2</sup> = %s",format(summary(x)$r.squared,digit=3))
 
 ##
 coefTest <- function(x,...){
