@@ -1,13 +1,13 @@
 Package: QCA3
 Type: Package
 Title: Qualitative Comparative Analaysis with R
-Version: 0.0-1
+Version: 0.0-2
 Date: 2009-09-28
 Author: Ronggui HUANG
 Maintainer: Ronggui HUANG<ronggui.huang@gmail.com>
 Imports: lpSolve
-Suggests: QCA
-Description: A set of functions is for Qulitative Comparative Analysis (QCA). It can be used for all three types of QCA. 
+Suggests: QCA, Vennerable
+Description: A set of functions for Qulitative Comparative Analysis (QCA). It can be used for all three types of QCA. It has methods for simplifying assumption, contradictory simplifying assumption. Moreover, it can return the constrained result by including or excluding specific conditions.
 License: BSD
 LazyLoad: yes
 LazyData: yes
