@@ -42,7 +42,7 @@ superSet <- function(implicant, include.itself=TRUE,rowId=TRUE,nlevels=rep(2,len
   ## superSet(c(1,0,1,1),nlevel=rep(2,4))
   Nvar <- length(implicant)
   index <- eval(parse(text = (sprintf("expand.grid(%s)", 
-                                      paste(rep("0:1",Nvar), sep = "", collapse = ",")))))
+                                      paste(rep("0:1",sum(!is.na(implicant))), sep = "", collapse = ",")))))
   if (include.itself) index <- index[-1,] else index <- index[-c(1,2^Nvar),]
   ans <- matrix(rep(unlist(implicant),nrow(index)),byrow=TRUE,ncol=Nvar)
   ans[index==0]<-NA
@@ -473,6 +473,80 @@ reduce.default <- function(mydata,outcome,conditions,
   ans
 }
 
+reduce.default2 <- function(mydata,outcome,conditions,
+                   explain=c("positive","negative"),
+                   remainders=c("exclude","include"),
+                   contradictions=c("remainders","positive","negative"),
+                   dontcare=c("remainders","positive","negative"),
+                   preprocess=c("cs_truthTable","fs_truthTable","pass"),
+                   nlevels=rep(2,length(conditions)),
+                   keepTruthTable=TRUE,
+                   ...)
+{
+  call <- match.call()
+  explain <- match.arg(explain)
+  contradictions <- match.arg(contradictions)
+  remainders <- match.arg(remainders)
+  dontcare <- match.arg(dontcare)
+  if (!"truthTable" %in% class(mydata)){
+    preprocess <- match.arg(preprocess)
+    dots <- list(...)
+    mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
+    mydata <- mydata$truthTable
+    colmax <- sapply(mydata[,conditions],max,na.rm=T)
+    if (any(colmax+1 > nlevels)) stop("Mismatch of values of conditions and 'nlevels' argument.")
+  } else mydata <- mydata$truthTable
+  
+  ##  if (keepTruthTable) truthTable <- subset(mydata,OUT!="?") else truthTable <- NULL
+  if (keepTruthTable) {
+    truthTable <- mydata[mydata[["OUT"]]!="?",] ## subset(mydata,OUT!="?")
+    ## to avoid unbined global variable of OUT, do not use subset(mydata, OUT...)
+  } else {truthTable <- NULL }
+  if (dontcare=="remainders") mydata <- mydata[mydata[["OUT"]]!="-",]
+  if (dontcare=="positive") mydata[['OUT']][mydata[['OUT']]=="-"] <- "1"
+  if (dontcare=="negative") mydata[['OUT']][mydata[['OUT']]=="-"] <- "0"
+  dat1 <- mydata[mydata[["OUT"]]=="1",conditions]
+  dat0 <- mydata[mydata[["OUT"]]=="0",conditions]
+  datC <- mydata[mydata[["OUT"]]=="C",conditions]
+  if (contradictions=="positive") dat1 <- rbind(dat1,datC)
+  if (contradictions=="negative") dat0 <- rbind(dat0,datC)
+  idExclude <- apply(dat0,1,implicant2Id,nlevels=nlevels)
+  if (explain=="positive") explained <- dat1
+  if (explain=="negative") explained <- dat0
+
+### revised to improve the speed
+    if (explain=="positive") primesId <- apply(dat1,1,implicant2Id,nlevels=nlevels)
+    if (explain=="negative") primesId <- apply(dat0,1,implicant2Id,nlevels=nlevels)
+    primesId <- reduce2(primesId,nlevels=nlevels)
+    primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
+
+  if (remainders=="include"){
+    if (explain=="positive") {
+    primesId2 <- unique(unlist(apply(primeImplicants, 1, superSet,nlevels=nlevels)))
+    excludedSuperSets <- unique(as.vector(apply(dat0, 1 , superSet,nlevels=nlevels)))
+    primesId3 <- setdiff(primesId2,excludedSuperSets)
+    }
+    if (explain=="negative") {
+    primesId2 <- unique(as.vector(apply(primeImplicants, 1, superSet,nlevels=nlevels)))
+    excludedSuperSets <- unique(as.vector(apply(dat1, 1 , superSet,nlevels=nlevels)))
+    primesId3 <- setdiff(primesId2,excludedSuperSets)
+   }
+    primesId <- reduce1(primesId3[primesId3!=1],nlevels=nlevels) ## exclude all NA
+  } 
+### revised to improve the speed
+
+  primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
+  ##  attr(primeImplicants,"explained") <- explained ## give it to argument of PIChart directly
+  PIChart <- PIChart(primeImplicants,explained)
+  sl <- solvePIChart(PIChart)
+  solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
+  commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
+  ans <- list(solutions=solutions,commonSolutions=commonSolutions,solutionsIDX=sl,primeImplicants=primeImplicants,
+              truthTable=truthTable,explained=explained,idExclude=idExclude,nlevels=nlevels,PIChart=PIChart,
+              call=call)
+  class(ans) <- c("QCA")
+  ans
+}
 
 prettyPI <- function(object,traditional=TRUE,...){
   

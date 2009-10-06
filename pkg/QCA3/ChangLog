@@ -1,3 +1,6 @@
+2009-10-06
+	* improve superSet, faster when implicant has NAs.
+
 2009-10-01
 	* fix bugs in *.Rd files.
 
