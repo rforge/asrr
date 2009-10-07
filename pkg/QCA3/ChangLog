@@ -1,4 +1,7 @@
 2009-10-06
+	* new function of consistency and coverage and overlap.
+
+2009-10-06
 	* improve superSet, faster when implicant has NAs.
 
 2009-10-01

@@ -501,6 +501,7 @@ gof <- function(x) {
   UseMethod("gof")
 }
 gof.default <- function(x) sprintf("AIC = %s",round(AIC(x),2))
+gof.glm <- function(x) sprintf("AIC = %s",round(AIC(x),2))
 gof.lm <- function(x) sprintf("R<sup>2</sup> = %s",format(summary(x)$r.squared,digit=3))
 
 ##

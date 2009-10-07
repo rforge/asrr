@@ -1,5 +1,50 @@
+consistency <- function(x,y,alternative=c("less","greater")){
+  ## consistency(x<=y) when alternative="less"
+  ## consistency(x>=y) when alternative="greater"
+  ## x and y must in [0,1]
+  allvalues <- !is.na(x) & !is.na(y)
+  x<-x[allvalues]
+  y<-y[allvalues]
+  alternative <- match.arg(alternative)
+  Sum <- switch(
+                alternative,
+                less=sum(x),
+                greater=sum(y),
+                )
+  Min <- pmin(x,y)
+  ans <- sum(Min)/Sum
+  return(ans)
+}
+
+overlap <- function(x,y){
+  ## x and y must in [0,1]
+  allvalues <- !is.na(x) & !is.na(y)
+  x<-x[allvalues]
+  y<-y[allvalues]
+  Min <- pmin(x,y)
+  ans <- sum(Min)
+  return(ans)
+}
+
+coverage <- function(x,y,alternative=c("less","greater")){
+  ## coverage(x<=y) when alternative="less"
+  ## coverage(x>=y) when alternative="greater"
+  ## x and y must in [0,1]
+  allvalues <- !is.na(x) & !is.na(y)
+  x<-x[allvalues]
+  y<-y[allvalues]
+  alternative <- match.arg(alternative)
+  Sum <- switch(
+                alternative,
+                less=sum(y),
+                greater=sum(x),
+                )
+  Min <- pmin(x,y)
+  ans <- sum(Min)/Sum
+  return(ans)
+}
+ 
 suffnec <- function(x,use=c("complete","pairwise")){
-  
   consistency_fn <- function(x,y,alternative=c("xley","ylex"),...){
     ## helper function
     allvalues <- !is.na(x) & !is.na(y)
@@ -51,4 +96,3 @@ print.suffnec <- function(x,digits=3,...)
   print(x$suff,digits=digits,na.print=" ",quote = FALSE,...)
 }
 
-#suffnec(nssf[,c("q43d","q43e","q43f","q43g")])

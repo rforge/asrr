@@ -1,5 +1,5 @@
-export(constrReduce,coincid, CSA, cs_truthTable,
-       fs_tt, fs_truthTable, reduce, SA,suffnec,
+export(constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,
+       fs_tt, fs_truthTable, overlap, reduce, SA,suffnec,
        thresholdssetter)
 S3method(print, coincid)
 S3method(print, QCA)
