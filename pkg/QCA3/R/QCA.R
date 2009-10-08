@@ -72,25 +72,34 @@ subSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant)
   ans
 }
 
+
 esubSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant))){
   ##enhanced version of subSet()
-  id <-  implicant2Id(implicant,nlevels=nlevels)
+  id <-  QCA3:::implicant2Id(implicant,nlevels=nlevels)
   idx1 <- which(is.na(implicant))
   idx2 <- idx1-1
-  incr1 <- (nlevels[idx2] + 1) ^ idx2
+
+  if (idx2[1]==0) {
+   incr1 <- c(1,cumprod(nlevels+1)[idx2[-1]])
+  } else  incr1 <- cumprod(nlevels+1)[idx2]
+
   incr2 <- incr1*nlevels[idx1]
   incr2 <- c(0,incr2[1:length(incr2)-1])
   incr <- incr1 - cumsum(incr2)
-  N <- prod(nlevels[which(is.na(im))]+1)
+  N <- prod(nlevels[idx1]+1)
   ans <- vector(mode = "integer", length = N-1)
-  idx3 <- 3^(0:length(idx1))
-  for (i in 1:length(idx1)){
-      ans[idx3[i]:(idx3[i+1]-1)] <- c(incr[i],ans[seq_len(idx3[i]-1)])
+  idx3 <-  cumprod(nlevels[idx1]+1) 
+  ans[1:(idx3[1]-1)] <- incr[1]
+  if (length(idx1) > 2) {
+  for (i in 2:length(idx1)){
+      ans[idx3[i-1]:(idx3[i]-1)] <- c(incr[i],ans[seq_len(idx3[i-1]-1)])
   }
+}
  ans <- id + cumsum(ans)
- if (include.itself) ans <- c(id,ans)
+ if (include.itself) ans <- c(id, ans)
  ans
 }
+
 
 complement1Id <- function(id,nlevels){
   IDX <- cumprod(nlevels+1)/(nlevels+1)

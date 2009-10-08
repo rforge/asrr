@@ -1,3 +1,6 @@
+2009-10-08
+	* fix bugs of esubSet(): correctly handling MV. need more tests.
+
 2009-10-07
 	* reduce.default(): set dim to NULL rather than use as.vector to speed it up.
 	* new function esubSet(), intended to superpose subSet(). It is much faster, but need more tests (seems ok for all 2-levels).
