@@ -7,7 +7,7 @@ data(mighty14)
 
 Rprof(NULL)
 Rprof()
-reduce(mighty14,"OUT",LETTERS[1:11],remaind="include")
+ans1 <- reduce(mighty14,"OUT",LETTERS[1:11],remaind="include",simplify=F)
 summaryRprof()
 
 system.time(reduce(mighty14,"OUT",LETTERS[1:12],remaind="include"))

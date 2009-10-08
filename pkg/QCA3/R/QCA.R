@@ -133,6 +133,22 @@ reduce1 <- function(IDs,nlevels){
   }
 }
 
+ereduce1 <- function(IDs,nlevels){
+  ## enchaned version of reduce1
+  ## Dusa(2007: part 4) about "finding the most parsimonious prime implicants"
+  IDs <- sort(IDs)
+  if (length(IDs) >1){
+    stop <- FALSE
+    i <- 1
+    while(!stop){
+      IDs <- setdiff(IDs,esubSet(id2Implicant(IDs[i],nlevels=nlevels),include.itself=FALSE,nlevels=nlevels))
+      if (length(IDs)==i) stop <- TRUE ## should be in frot of i <- i +1
+      i <- i +1
+    }
+    IDs
+  }
+}
+
 reduceByOne <- function(IDs,nlevels){
 ##reduceByOne(c(42,99),c(3,2,2,2))
   can_reduce <- rep(FALSE,length(IDs))
@@ -442,9 +458,83 @@ reduce.default <- function(mydata,outcome,conditions,
                    dontcare=c("remainders","positive","negative"),
                    preprocess=c("cs_truthTable","fs_truthTable","pass"),
                    nlevels=rep(2,length(conditions)),
+                   keepTruthTable=TRUE,simplify=FALSE,
+                   ...)
+{
+  call <- match.call()
+  explain <- match.arg(explain)
+  contradictions <- match.arg(contradictions)
+  remainders <- match.arg(remainders)
+  dontcare <- match.arg(dontcare)
+  if (!"truthTable" %in% class(mydata)){
+    preprocess <- match.arg(preprocess)
+    dots <- list(...)
+    mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
+    mydata <- mydata$truthTable
+    colmax <- sapply(mydata[,conditions],max,na.rm=T)
+    if (any(colmax+1 > nlevels)) stop("Mismatch of values of conditions and 'nlevels' argument.")
+  } else mydata <- mydata$truthTable
+
+  ##  if (keepTruthTable) truthTable <- subset(mydata,OUT!="?") else truthTable <- NULL
+  if (keepTruthTable) {
+    truthTable <- mydata[mydata[["OUT"]]!="?",] ## subset(mydata,OUT!="?")
+    ## to avoid unbined global variable of OUT, do not use subset(mydata, OUT...)
+  } else {truthTable <- NULL }
+  ##if (explain=="positive") explained <- subset(mydata,OUT=="1",conditions) ## dat1
+  ##if (explain=="negative") explained <- subset(mydata,OUT=="0",conditions) ## dat0
+  if (dontcare=="remainders") mydata <- mydata[mydata[["OUT"]]!="-",] ## subset(mydata,OUT!="-" )
+  if (dontcare=="positive") mydata[['OUT']][mydata[['OUT']]=="-"] <- "1"
+  if (dontcare=="negative") mydata[['OUT']][mydata[['OUT']]=="-"] <- "0"
+  dat1 <- mydata[mydata[["OUT"]]=="1",conditions] ## subset(mydata,OUT=="1",conditions)
+  dat0 <- mydata[mydata[["OUT"]]=="0",conditions] ## subset(mydata,OUT=="0",conditions)
+  datC <- mydata[mydata[["OUT"]]=="C",conditions] ## subset(mydata,OUT=="C",conditions)
+  if (contradictions=="positive") dat1 <- rbind(dat1,datC)
+  if (contradictions=="negative") dat0 <- rbind(dat0,datC)
+  idExclude <- apply(dat0,1,implicant2Id,nlevels=nlevels)
+  if (explain=="positive") explained <- dat1
+  if (explain=="negative") explained <- dat0
+  if (remainders=="include"){
+    ## if necessary conditons -> add some remainders to dat0
+    superSets1 <- apply(dat1, 1, superSet,nlevels=nlevels)
+    dim(superSets1) <- NULL ## set dim to NULL rather than use as.vector to speed it up.
+    superSets1 <- unique(superSets1)
+    superSets0 <- apply(dat0, 1, superSet,nlevels=nlevels)
+    dim(superSets0) <- NULL
+    superSets0 <- unique(superSets0)
+    if (explain=="positive") primesId <- setdiff(superSets1,superSets0)
+    if (explain=="negative") primesId <- setdiff(superSets0,superSets1)
+    primesId <- ereduce1(primesId,nlevels=nlevels)
+  } else if (remainders=="exclude") {
+    if (explain=="positive") primesId <- apply(dat1,1,implicant2Id,nlevels=nlevels)
+    if (explain=="negative") primesId <- apply(dat0,1,implicant2Id,nlevels=nlevels)
+    primesId <- reduce2(primesId,nlevels=nlevels)
+  }
+  primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
+  ##  attr(primeImplicants,"explained") <- explained ## give it to argument of PIChart directly
+  PIChart <- PIChart(primeImplicants,explained)
+  if (simplify) PIChart <- EssentialPI(PIChart) ## need more tests??
+  sl <- solvePIChart(PIChart)
+  solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
+  commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
+  ans <- list(solutions=solutions,commonSolutions=commonSolutions,solutionsIDX=sl,primeImplicants=primeImplicants,
+              truthTable=truthTable,explained=explained,idExclude=idExclude,nlevels=nlevels,PIChart=PIChart,
+              call=call)
+  class(ans) <- c("QCA")
+  ans
+}
+
+reduce2 <- function(mydata,outcome,conditions,
+                   explain=c("positive","negative"),
+                   remainders=c("exclude","include"),
+                   contradictions=c("remainders","positive","negative"),
+                   dontcare=c("remainders","positive","negative"),
+                   preprocess=c("cs_truthTable","fs_truthTable","pass"),
+                   nlevels=rep(2,length(conditions)),
                    keepTruthTable=TRUE,
                    ...)
 {
+## This is the original version of reduce.default, the result is accuate
+## The new reduce.default use ereduce1, faster, but need more tests.
   call <- match.call()
   explain <- match.arg(explain)
   contradictions <- match.arg(contradictions)
@@ -505,81 +595,6 @@ reduce.default <- function(mydata,outcome,conditions,
   class(ans) <- c("QCA")
   ans
 }
-
-## reduce.default2 <- function(mydata,outcome,conditions,
-##                    explain=c("positive","negative"),
-##                    remainders=c("exclude","include"),
-##                    contradictions=c("remainders","positive","negative"),
-##                    dontcare=c("remainders","positive","negative"),
-##                    preprocess=c("cs_truthTable","fs_truthTable","pass"),
-##                    nlevels=rep(2,length(conditions)),
-##                    keepTruthTable=TRUE,
-##                    ...)
-## {
-##   call <- match.call()
-##   explain <- match.arg(explain)
-##   contradictions <- match.arg(contradictions)
-##   remainders <- match.arg(remainders)
-##   dontcare <- match.arg(dontcare)
-##   if (!"truthTable" %in% class(mydata)){
-##     preprocess <- match.arg(preprocess)
-##     dots <- list(...)
-##     mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
-##     mydata <- mydata$truthTable
-##     colmax <- sapply(mydata[,conditions],max,na.rm=T)
-##     if (any(colmax+1 > nlevels)) stop("Mismatch of values of conditions and 'nlevels' argument.")
-##   } else mydata <- mydata$truthTable
-
-##   ##  if (keepTruthTable) truthTable <- subset(mydata,OUT!="?") else truthTable <- NULL
-##   if (keepTruthTable) {
-##     truthTable <- mydata[mydata[["OUT"]]!="?",] ## subset(mydata,OUT!="?")
-##     ## to avoid unbined global variable of OUT, do not use subset(mydata, OUT...)
-##   } else {truthTable <- NULL }
-##   if (dontcare=="remainders") mydata <- mydata[mydata[["OUT"]]!="-",]
-##   if (dontcare=="positive") mydata[['OUT']][mydata[['OUT']]=="-"] <- "1"
-##   if (dontcare=="negative") mydata[['OUT']][mydata[['OUT']]=="-"] <- "0"
-##   dat1 <- mydata[mydata[["OUT"]]=="1",conditions]
-##   dat0 <- mydata[mydata[["OUT"]]=="0",conditions]
-##   datC <- mydata[mydata[["OUT"]]=="C",conditions]
-##   if (contradictions=="positive") dat1 <- rbind(dat1,datC)
-##   if (contradictions=="negative") dat0 <- rbind(dat0,datC)
-##   idExclude <- apply(dat0,1,implicant2Id,nlevels=nlevels)
-##   if (explain=="positive") explained <- dat1
-##   if (explain=="negative") explained <- dat0
-
-## ### revised to improve the speed
-##     if (explain=="positive") primesId <- apply(dat1,1,implicant2Id,nlevels=nlevels)
-##     if (explain=="negative") primesId <- apply(dat0,1,implicant2Id,nlevels=nlevels)
-##     primesId <- reduce2(primesId,nlevels=nlevels)
-##     primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
-
-##   if (remainders=="include"){
-##     if (explain=="positive") {
-##     primesId2 <- unique(unlist(apply(primeImplicants, 1, superSet,nlevels=nlevels)))
-##     excludedSuperSets <- unique(as.vector(apply(dat0, 1 , superSet,nlevels=nlevels)))
-##     primesId3 <- setdiff(primesId2,excludedSuperSets)
-##     }
-##     if (explain=="negative") {
-##     primesId2 <- unique(as.vector(apply(primeImplicants, 1, superSet,nlevels=nlevels)))
-##     excludedSuperSets <- unique(as.vector(apply(dat1, 1 , superSet,nlevels=nlevels)))
-##     primesId3 <- setdiff(primesId2,excludedSuperSets)
-##    }
-##     primesId <- reduce1(primesId3[primesId3!=1],nlevels=nlevels) ## exclude all NA
-##   }
-## ### revised to improve the speed
-
-##   primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
-##   ##  attr(primeImplicants,"explained") <- explained ## give it to argument of PIChart directly
-##   PIChart <- PIChart(primeImplicants,explained)
-##   sl <- solvePIChart(PIChart)
-##   solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
-##   commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
-##   ans <- list(solutions=solutions,commonSolutions=commonSolutions,solutionsIDX=sl,primeImplicants=primeImplicants,
-##               truthTable=truthTable,explained=explained,idExclude=idExclude,nlevels=nlevels,PIChart=PIChart,
-##               call=call)
-##   class(ans) <- c("QCA")
-##   ans
-## }
 
 prettyPI <- function(object,traditional=TRUE,...){
 
@@ -878,6 +893,19 @@ thresholdssetter <- function(x,nthreshold=1,value=TRUE,method="average",threshol
     attr(ans,"threshold") <- threshold
   }
   if (print.table && value) invisible(ans) else ans
+}
+
+EssentialPI <- function(PI){
+  ## similar with QCA:::rowDominance2, but more greedy.
+  ## Some prime implicants are redundant because they are already covered by others,
+  ## so it is better to simplly eliminate them. 
+  ## This is what rowDominance2() function does: it gets rid of redundant PIs (by Adrian).
+  N <- nrow(PI)
+  sums <- colSums(PI)
+  Min <- min(sums)
+  ans <- sapply(1:N,FUN=function(ii) colSums(PI[-ii,,drop=FALSE]))
+  idx <- apply(ans,1,FUN=function(x) all (x >= Min))
+  PI[idx,,drop=FALSE]
 }
 
 necessary <- function(object,traditional=TRUE){
