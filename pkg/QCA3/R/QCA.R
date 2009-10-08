@@ -41,7 +41,7 @@ id2Implicant <- function(id,nlevels,names=NULL,to.data.frame=TRUE){
 superSet <- function(implicant, include.itself=TRUE,rowId=TRUE,nlevels=rep(2,length(implicant))){
   ## superSet(c(1,0,1,1),nlevel=rep(2,4))
   Nvar <- length(implicant)
-  index <- eval(parse(text = (sprintf("expand.grid(%s)", 
+  index <- eval(parse(text = (sprintf("expand.grid(%s)",
                                       paste(rep("0:1",sum(!is.na(implicant))), sep = "", collapse = ",")))))
   if (include.itself) index <- index[-1,] else index <- index[-c(1,2^Nvar),]
   ans <- matrix(rep(unlist(implicant),nrow(index)),byrow=TRUE,ncol=Nvar)
@@ -70,6 +70,26 @@ subSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant)
   } else ans <- id
   if (!include.itself) ans <- ans[-1]
   ans
+}
+
+esubSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant))){
+  ##enhanced version of subSet()
+  id <-  implicant2Id(implicant,nlevels=nlevels)
+  idx1 <- which(is.na(implicant))
+  idx2 <- idx1-1
+  incr1 <- (nlevels[idx2] + 1) ^ idx2
+  incr2 <- incr1*nlevels[idx1]
+  incr2 <- c(0,incr2[1:length(incr2)-1])
+  incr <- incr1 - cumsum(incr2)
+  N <- prod(nlevels[which(is.na(im))]+1)
+  ans <- vector(mode = "integer", length = N-1)
+  idx3 <- 3^(0:length(idx1))
+  for (i in 1:length(idx1)){
+      ans[idx3[i]:(idx3[i+1]-1)] <- c(incr[i],ans[seq_len(idx3[i]-1)])
+  }
+ ans <- id + cumsum(ans)
+ if (include.itself) ans <- c(id,ans)
+ ans
 }
 
 complement1Id <- function(id,nlevels){
@@ -131,7 +151,7 @@ reduceByOne <- function(IDs,nlevels){
       group_exists[j] <- all(exists[ridx])
     }
     can_reduce[i] <- any(group_exists)
-    ans_IDs[[i]] <- which(group_exists)  
+    ans_IDs[[i]] <- which(group_exists)
   }
   res <- list(reducable=can_reduce,index=ans_IDs)
   res
@@ -139,7 +159,7 @@ reduceByOne <- function(IDs,nlevels){
 
 
 reduce2 <- function(IDs,nlevels){
-  
+
   reduced <- function(IDs,nlevels){
     ## helper function
     index=reduceByOne(IDs,nlevels=nlevels)
@@ -158,7 +178,7 @@ reduce2 <- function(IDs,nlevels){
     res <- list(newIDs=ans, unreducible=unreducible)
     res
   } ## end of reduced()
-  
+
   stop <- FALSE
   final <- c()
   while(!stop){
@@ -193,15 +213,15 @@ PIChart <- function(primeImplicants,explained=NULL){
   ans
 }
 
-solvePIChart <- function (PIChart) 
+solvePIChart <- function (PIChart)
 {
-  ## modified version of QCA:::solveChart 
+  ## modified version of QCA:::solveChart
   if (!is.logical(PIChart)) {
     stop("Please use a logical matrix, such as an object returned by PIChart.\n")
   }
   if (all(dim(PIChart) > 1)) {
     lpobj <- lpSolve:::lp(direction="min", objective.in=rep(1, nrow(PIChart)),const.mat=t(PIChart),const.dir=">=",1,all.bin=TRUE)
-    if (lpobj$status!=0) stop("Can not solve this PMChart.") 
+    if (lpobj$status!=0) stop("Can not solve this PMChart.")
     k <- sum(lpobj$solution)  ## lpobj$solution is one possible solution, but not all.
     combos <- combn(nrow(PIChart), k)
     sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(PIChart[idx,,drop = FALSE])>0)),drop=FALSE]
@@ -333,7 +353,7 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
   ncases_cutoff <- ifelse(ncases_cutoff<1,ncases_cutoff*nrow(fulldata),ncases_cutoff)
   allExpress <- eval(parse(text=(sprintf("expand.grid(%s)",paste(conditions,"=1:0",sep="",collapse=",")))))
   conditionsData <- mydata[,conditions]
-  
+
   getScore <- function(index,data){
     Negative <- which(index==0)
     Positive <- which(index==1)
@@ -345,7 +365,7 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
       score <- apply(data[,Positive,drop=FALSE],1,min)
     }
   }
-  
+
   score_mat <- apply(allExpress,1,function(x) getScore(x,data=conditionsData))
   allExpress$NCase<- apply(score_mat,2,function(x) sum(x>membership_cutoff))
   allExpress$Consistency <- apply(score_mat,2,function(x,outcome) {sum(pmin(x,outcome))/sum(x)},outcome=mydata[,outcome])
@@ -363,7 +383,7 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
     cases <- gsub(",","_",cases)
     allExpress$Cases <- apply(score_mat,2,function(x) paste(cases[which( x > membership_cutoff)],sep="",collapse=","))
     ##  if (!complete) allExpress <- allExpress[allExpress$OUT != "?",,drop=FALSE]
-  } ## else {  
+  } ## else {
   if (!complete) allExpress <- allExpress[allExpress$OUT != "?",,drop=FALSE]
   ##}
   allExpress
@@ -383,7 +403,7 @@ pass <- function(mydata,conditions,outcome,NCase=NULL,Cases=NULL,freq1=NULL,freq
     if (!is.null(freq1)) dat$freq1 <- mydata[[freq1]]
     if (!is.null(freq0)) dat$freq1 <- mydata[[freq0]]
     if (is.null(NCase)) dat$NCases <- 1 else dat$NCase <- mydata[[NCase]]
-    if (is.null(Cases)) dat$Cases <- rownames(mydata) else dat$Cases <- mydata[[Cases]]  
+    if (is.null(Cases)) dat$Cases <- rownames(mydata) else dat$Cases <- mydata[[Cases]]
     dat <- list(truthTable=dat,outcome=outcome,conditions=conditions)
 }
 
@@ -429,7 +449,7 @@ reduce.default <- function(mydata,outcome,conditions,
     colmax <- sapply(mydata[,conditions],max,na.rm=T)
     if (any(colmax+1 > nlevels)) stop("Mismatch of values of conditions and 'nlevels' argument.")
   } else mydata <- mydata$truthTable
-  
+
   ##  if (keepTruthTable) truthTable <- subset(mydata,OUT!="?") else truthTable <- NULL
   if (keepTruthTable) {
     truthTable <- mydata[mydata[["OUT"]]!="?",] ## subset(mydata,OUT!="?")
@@ -450,10 +470,14 @@ reduce.default <- function(mydata,outcome,conditions,
   if (explain=="negative") explained <- dat0
   if (remainders=="include"){
     ## if necessary conditons -> add some remainders to dat0
-    superSets1 <- unique(as.vector(apply(dat1, 1, superSet,nlevels=nlevels)))
-    superSets0 <- unique(as.vector(apply(dat0, 1 , superSet,nlevels=nlevels)))
-    if (explain=="positive") primesId <- setdiff(superSets1,superSets0) 
-    if (explain=="negative") primesId <- setdiff(superSets0,superSets1) 
+    superSets1 <- apply(dat1, 1, superSet,nlevels=nlevels)
+    dim(superSets1) <- NULL ## set dim to NULL rather than use as.vector to speed it up.
+    superSets1 <- unique(superSets1)
+    superSets0 <- apply(dat0, 1, superSet,nlevels=nlevels)
+    dim(superSets0) <- NULL
+    superSets0 <- unique(superSets0)
+    if (explain=="positive") primesId <- setdiff(superSets1,superSets0)
+    if (explain=="negative") primesId <- setdiff(superSets0,superSets1)
     primesId <- reduce1(primesId,nlevels=nlevels)
   } else if (remainders=="exclude") {
     if (explain=="positive") primesId <- apply(dat1,1,implicant2Id,nlevels=nlevels)
@@ -473,83 +497,83 @@ reduce.default <- function(mydata,outcome,conditions,
   ans
 }
 
-reduce.default2 <- function(mydata,outcome,conditions,
-                   explain=c("positive","negative"),
-                   remainders=c("exclude","include"),
-                   contradictions=c("remainders","positive","negative"),
-                   dontcare=c("remainders","positive","negative"),
-                   preprocess=c("cs_truthTable","fs_truthTable","pass"),
-                   nlevels=rep(2,length(conditions)),
-                   keepTruthTable=TRUE,
-                   ...)
-{
-  call <- match.call()
-  explain <- match.arg(explain)
-  contradictions <- match.arg(contradictions)
-  remainders <- match.arg(remainders)
-  dontcare <- match.arg(dontcare)
-  if (!"truthTable" %in% class(mydata)){
-    preprocess <- match.arg(preprocess)
-    dots <- list(...)
-    mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
-    mydata <- mydata$truthTable
-    colmax <- sapply(mydata[,conditions],max,na.rm=T)
-    if (any(colmax+1 > nlevels)) stop("Mismatch of values of conditions and 'nlevels' argument.")
-  } else mydata <- mydata$truthTable
-  
-  ##  if (keepTruthTable) truthTable <- subset(mydata,OUT!="?") else truthTable <- NULL
-  if (keepTruthTable) {
-    truthTable <- mydata[mydata[["OUT"]]!="?",] ## subset(mydata,OUT!="?")
-    ## to avoid unbined global variable of OUT, do not use subset(mydata, OUT...)
-  } else {truthTable <- NULL }
-  if (dontcare=="remainders") mydata <- mydata[mydata[["OUT"]]!="-",]
-  if (dontcare=="positive") mydata[['OUT']][mydata[['OUT']]=="-"] <- "1"
-  if (dontcare=="negative") mydata[['OUT']][mydata[['OUT']]=="-"] <- "0"
-  dat1 <- mydata[mydata[["OUT"]]=="1",conditions]
-  dat0 <- mydata[mydata[["OUT"]]=="0",conditions]
-  datC <- mydata[mydata[["OUT"]]=="C",conditions]
-  if (contradictions=="positive") dat1 <- rbind(dat1,datC)
-  if (contradictions=="negative") dat0 <- rbind(dat0,datC)
-  idExclude <- apply(dat0,1,implicant2Id,nlevels=nlevels)
-  if (explain=="positive") explained <- dat1
-  if (explain=="negative") explained <- dat0
+## reduce.default2 <- function(mydata,outcome,conditions,
+##                    explain=c("positive","negative"),
+##                    remainders=c("exclude","include"),
+##                    contradictions=c("remainders","positive","negative"),
+##                    dontcare=c("remainders","positive","negative"),
+##                    preprocess=c("cs_truthTable","fs_truthTable","pass"),
+##                    nlevels=rep(2,length(conditions)),
+##                    keepTruthTable=TRUE,
+##                    ...)
+## {
+##   call <- match.call()
+##   explain <- match.arg(explain)
+##   contradictions <- match.arg(contradictions)
+##   remainders <- match.arg(remainders)
+##   dontcare <- match.arg(dontcare)
+##   if (!"truthTable" %in% class(mydata)){
+##     preprocess <- match.arg(preprocess)
+##     dots <- list(...)
+##     mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
+##     mydata <- mydata$truthTable
+##     colmax <- sapply(mydata[,conditions],max,na.rm=T)
+##     if (any(colmax+1 > nlevels)) stop("Mismatch of values of conditions and 'nlevels' argument.")
+##   } else mydata <- mydata$truthTable
 
-### revised to improve the speed
-    if (explain=="positive") primesId <- apply(dat1,1,implicant2Id,nlevels=nlevels)
-    if (explain=="negative") primesId <- apply(dat0,1,implicant2Id,nlevels=nlevels)
-    primesId <- reduce2(primesId,nlevels=nlevels)
-    primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
+##   ##  if (keepTruthTable) truthTable <- subset(mydata,OUT!="?") else truthTable <- NULL
+##   if (keepTruthTable) {
+##     truthTable <- mydata[mydata[["OUT"]]!="?",] ## subset(mydata,OUT!="?")
+##     ## to avoid unbined global variable of OUT, do not use subset(mydata, OUT...)
+##   } else {truthTable <- NULL }
+##   if (dontcare=="remainders") mydata <- mydata[mydata[["OUT"]]!="-",]
+##   if (dontcare=="positive") mydata[['OUT']][mydata[['OUT']]=="-"] <- "1"
+##   if (dontcare=="negative") mydata[['OUT']][mydata[['OUT']]=="-"] <- "0"
+##   dat1 <- mydata[mydata[["OUT"]]=="1",conditions]
+##   dat0 <- mydata[mydata[["OUT"]]=="0",conditions]
+##   datC <- mydata[mydata[["OUT"]]=="C",conditions]
+##   if (contradictions=="positive") dat1 <- rbind(dat1,datC)
+##   if (contradictions=="negative") dat0 <- rbind(dat0,datC)
+##   idExclude <- apply(dat0,1,implicant2Id,nlevels=nlevels)
+##   if (explain=="positive") explained <- dat1
+##   if (explain=="negative") explained <- dat0
 
-  if (remainders=="include"){
-    if (explain=="positive") {
-    primesId2 <- unique(unlist(apply(primeImplicants, 1, superSet,nlevels=nlevels)))
-    excludedSuperSets <- unique(as.vector(apply(dat0, 1 , superSet,nlevels=nlevels)))
-    primesId3 <- setdiff(primesId2,excludedSuperSets)
-    }
-    if (explain=="negative") {
-    primesId2 <- unique(as.vector(apply(primeImplicants, 1, superSet,nlevels=nlevels)))
-    excludedSuperSets <- unique(as.vector(apply(dat1, 1 , superSet,nlevels=nlevels)))
-    primesId3 <- setdiff(primesId2,excludedSuperSets)
-   }
-    primesId <- reduce1(primesId3[primesId3!=1],nlevels=nlevels) ## exclude all NA
-  } 
-### revised to improve the speed
+## ### revised to improve the speed
+##     if (explain=="positive") primesId <- apply(dat1,1,implicant2Id,nlevels=nlevels)
+##     if (explain=="negative") primesId <- apply(dat0,1,implicant2Id,nlevels=nlevels)
+##     primesId <- reduce2(primesId,nlevels=nlevels)
+##     primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
 
-  primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
-  ##  attr(primeImplicants,"explained") <- explained ## give it to argument of PIChart directly
-  PIChart <- PIChart(primeImplicants,explained)
-  sl <- solvePIChart(PIChart)
-  solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
-  commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
-  ans <- list(solutions=solutions,commonSolutions=commonSolutions,solutionsIDX=sl,primeImplicants=primeImplicants,
-              truthTable=truthTable,explained=explained,idExclude=idExclude,nlevels=nlevels,PIChart=PIChart,
-              call=call)
-  class(ans) <- c("QCA")
-  ans
-}
+##   if (remainders=="include"){
+##     if (explain=="positive") {
+##     primesId2 <- unique(unlist(apply(primeImplicants, 1, superSet,nlevels=nlevels)))
+##     excludedSuperSets <- unique(as.vector(apply(dat0, 1 , superSet,nlevels=nlevels)))
+##     primesId3 <- setdiff(primesId2,excludedSuperSets)
+##     }
+##     if (explain=="negative") {
+##     primesId2 <- unique(as.vector(apply(primeImplicants, 1, superSet,nlevels=nlevels)))
+##     excludedSuperSets <- unique(as.vector(apply(dat1, 1 , superSet,nlevels=nlevels)))
+##     primesId3 <- setdiff(primesId2,excludedSuperSets)
+##    }
+##     primesId <- reduce1(primesId3[primesId3!=1],nlevels=nlevels) ## exclude all NA
+##   }
+## ### revised to improve the speed
+
+##   primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
+##   ##  attr(primeImplicants,"explained") <- explained ## give it to argument of PIChart directly
+##   PIChart <- PIChart(primeImplicants,explained)
+##   sl <- solvePIChart(PIChart)
+##   solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
+##   commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
+##   ans <- list(solutions=solutions,commonSolutions=commonSolutions,solutionsIDX=sl,primeImplicants=primeImplicants,
+##               truthTable=truthTable,explained=explained,idExclude=idExclude,nlevels=nlevels,PIChart=PIChart,
+##               call=call)
+##   class(ans) <- c("QCA")
+##   ans
+## }
 
 prettyPI <- function(object,traditional=TRUE,...){
-  
+
   toString <- function(implicant, traditional,nlevels,name){
     nm <- name[!is.na(implicant)]
     implicant <- implicant[!is.na(implicant)]
@@ -576,7 +600,7 @@ prettyPI <- function(object,traditional=TRUE,...){
       ans <- list(PI=PI,N=length(PIs))
     }
   }
-  
+
   ans <- lapply(solutions,toPI)
   ans
   }
@@ -681,7 +705,7 @@ subCombination <- function(implicant,nlevels=rep(2,length(implicant)))
     exp <- sprintf("c(1:%i)",nlevels[idx])
     dat <- eval(parse(text = sprintf("expand.grid(%s)",paste(exp,sep="",collapse=","))))
     ans <- apply(dat,1,function(x) sum(IDX*x))
-    ids <- implicant2Id(implicant,nlevels=nlevels) + ans 
+    ids <- implicant2Id(implicant,nlevels=nlevels) + ans
     ids
   } else {
     ids <- implicant2Id(implicant,nlevels=nlevels)
@@ -744,7 +768,7 @@ CSA <- function(object1,object0){
   attrs <- object[-idx]
   solutions <- list(solutions=object$solutions[which])
   ans <- c(solutions,attrs)
-  class(ans) <- old_class 
+  class(ans) <- old_class
   ans
 }
 
@@ -799,13 +823,13 @@ constrReduce <- function(object,exclude=NULL,include=NULL,necessary=NULL){
   object
 }
 
-update.QCA <- function (object, ..., evaluate = TRUE) 
+update.QCA <- function (object, ..., evaluate = TRUE)
 {
     call <- object$call
     extras <- match.call(expand.dots = FALSE)$...
-    argsList <- c("mydata", "outcome", "conditions", "cutoff1", "cutoff0", "cutoffc", 
-                  "complete", "weight", "show.cases", "cases", "nlevels", "ncases_cutoff", 
-                  "consistency_cutoff", "quiet", "explain", "remainders", 
+    argsList <- c("mydata", "outcome", "conditions", "cutoff1", "cutoff0", "cutoffc",
+                  "complete", "weight", "show.cases", "cases", "nlevels", "ncases_cutoff",
+                  "consistency_cutoff", "quiet", "explain", "remainders",
                   "contradictions", "dontcare", "preprocess", "keepTruthTable")
     IDX <- pmatch(names(extras),argsList)
     if (any(is.na(IDX))) stop("multiple arguments are matched.")
@@ -820,7 +844,7 @@ update.QCA <- function (object, ..., evaluate = TRUE)
         call <- as.call(call)
       }
     }
-    if (evaluate) 
+    if (evaluate)
       eval(call, parent.frame())
     else call
   }
