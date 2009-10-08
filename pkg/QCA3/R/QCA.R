@@ -76,7 +76,7 @@ subSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant)
 esubSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant))){
   ##enhanced version of subSet()
   id <-  QCA3:::implicant2Id(implicant,nlevels=nlevels)
-  idx1 <- which(is.na(implicant))
+  idx1 <- which(is.na(implicant)) ## if there is no NA?
   idx2 <- idx1-1
 
   if (idx2[1]==0) {
@@ -90,7 +90,7 @@ esubSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant
   ans <- vector(mode = "integer", length = N-1)
   idx3 <-  cumprod(nlevels[idx1]+1) 
   ans[1:(idx3[1]-1)] <- incr[1]
-  if (length(idx1) > 2) {
+  if (length(idx1) > 1) {
   for (i in 2:length(idx1)){
       ans[idx3[i-1]:(idx3[i]-1)] <- c(incr[i],ans[seq_len(idx3[i-1]-1)])
   }
