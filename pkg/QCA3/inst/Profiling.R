@@ -3,15 +3,16 @@
 
 library(QCA3)
 library(QCA)
-data(mighty14)
+data(MI.15)
 
 Rprof(NULL)
 Rprof()
-ans1 <- reduce(mighty14,"OUT",LETTERS[1:11],remaind="include",simplify=F)
+ans1 <- reduce(MI.15,"OUT",LETTERS[1:14],remaind="include")
 summaryRprof()
+Rprof(NULL)
 
-system.time(reduce(mighty14,"OUT",LETTERS[1:12],remaind="include"))
-system.time(eqmcc(mighty14,"OUT",LETTERS[1:12],expl.1=T,incl.rem=T))
+system.time(reduce(MI.15,"OUT",LETTERS[1:12],remaind="include"))
+system.time(eqmcc(MI.15,"OUT",LETTERS[1:12],expl.1=T,incl.rem=T))
 
 ## test esubSet() 
 im <- c(1,NA,NA,0)

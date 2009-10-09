@@ -4,7 +4,7 @@
 
 allGroup <- function(nlevels,names=NULL){
   ## Ragin(2000:127), see the calculation of groupings (not combinations)
-  ## allGroup(rep(2,5))
+  ## The total number of groupings are prod(nlevels+1); for csQCA, that is 3^k
   if (is.null(names)) names <- paste("var.",seq_len(length(nlevels)),sep="")
   exp <- sprintf("c(NA,0:%i)",nlevels-1)
   ans <- eval(parse(text = sprintf("expand.grid(%s)",paste(names,"=",exp,sep="",collapse=","))))
@@ -13,6 +13,7 @@ allGroup <- function(nlevels,names=NULL){
 
 allCombination <- function(nlevels,names=NULL){
   ## Ragin(2000:127), see the calculation of combinations.
+  ## The total number of groupings are prod(nlevels); for csQCA, that is 2^k
   if (is.null(names)) names <- paste("var.",seq_len(length(nlevels)),sep="")
   exp <- sprintf("c(0:%i)",nlevels-1)
   ans <- eval(parse(text = sprintf("expand.grid(%s)",paste(names,"=",exp,sep="",collapse=","))))
@@ -56,39 +57,40 @@ superSet <- function(implicant, include.itself=TRUE,rowId=TRUE,nlevels=rep(2,len
 }
 
 subSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant))){
-  ## new version of subSet()
-  ## subSet(c(1,0,1,NA),nlevel=rep(2,4))
-  idx  <- which(is.na(implicant))
-  IDX <- cumprod(nlevels+1)/(nlevels+1)
-  id <-  implicant2Id(implicant,nlevels=nlevels)
-  if (length(idx)>0){
-  nn <- nlevels[idx]
-  IDX <- IDX[idx]
-  exp <- sprintf("c(0:%i)",nlevels[idx])
-  dat<-eval(parse(text = sprintf("expand.grid(%s)",paste(exp,sep="",collapse=","))))
-  ans <- apply(dat,1,function(each) sum(IDX*each)) + id
-  } else ans <- id
-  if (!include.itself) ans <- ans[-1]
-  ans
+    ## new version of subSet()
+    ## subSet(c(1,0,1,NA),nlevel=rep(2,4))
+    idx  <- which(is.na(implicant))
+    IDX <- cumprod(nlevels+1)/(nlevels+1)
+    id <-  implicant2Id(implicant,nlevels=nlevels)
+    if (length(idx)>0){
+        nn <- nlevels[idx]
+        IDX <- IDX[idx]
+        exp <- sprintf("c(0:%i)",nlevels[idx])
+        dat<-eval(parse(text = sprintf("expand.grid(%s)",paste(exp,sep="",collapse=","))))
+        ans <- apply(dat,1,function(each) sum(IDX*each)) + id
+    } else ans <- id
+    if (!include.itself) ans <- ans[-1]
+    ans
 }
 
 
 esubSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant))){
-  ##enhanced version of subSet()
-  id <-  QCA3:::implicant2Id(implicant,nlevels=nlevels)
-  idx1 <- which(is.na(implicant)) ## if there is no NA?
+  ##enhanced version of subSet(), by using math regularity between ids. speed improved by a factor of 2 at least.
+  id <-  implicant2Id(implicant,nlevels=nlevels)
+  idx1 <- which(is.na(implicant)) ## index of NA
+  N <- prod(nlevels[idx1]+1)
+  ans <- vector(mode = "numeric", length = N-1)
+  ## if there is no NA, skip to the result.
+  ## use "numeric" to keep it consistent with subSet
+  if ((N-1)>0) {
   idx2 <- idx1-1
-
   if (idx2[1]==0) {
    incr1 <- c(1,cumprod(nlevels+1)[idx2[-1]])
   } else  incr1 <- cumprod(nlevels+1)[idx2]
-
   incr2 <- incr1*nlevels[idx1]
   incr2 <- c(0,incr2[1:length(incr2)-1])
   incr <- incr1 - cumsum(incr2)
-  N <- prod(nlevels[idx1]+1)
-  ans <- vector(mode = "integer", length = N-1)
-  idx3 <-  cumprod(nlevels[idx1]+1) 
+  idx3 <-  cumprod(nlevels[idx1]+1)
   ans[1:(idx3[1]-1)] <- incr[1]
   if (length(idx1) > 1) {
   for (i in 2:length(idx1)){
@@ -96,6 +98,7 @@ esubSet <- function(implicant,include.itself=TRUE,nlevels=rep(2,length(implicant
   }
 }
  ans <- id + cumsum(ans)
+}
  if (include.itself) ans <- c(id, ans)
  ans
 }
@@ -134,7 +137,7 @@ reduce1 <- function(IDs,nlevels){
 }
 
 ereduce1 <- function(IDs,nlevels){
-  ## enchaned version of reduce1
+  ## enchaned version of reduce1, use esubSet rather than subSet
   ## Dusa(2007: part 4) about "finding the most parsimonious prime implicants"
   IDs <- sort(IDs)
   if (length(IDs) >1){
@@ -248,7 +251,8 @@ solvePIChart <- function (PIChart)
     lpobj <- lpSolve:::lp(direction="min", objective.in=rep(1, nrow(PIChart)),const.mat=t(PIChart),const.dir=">=",1,all.bin=TRUE)
     if (lpobj$status!=0) stop("Can not solve this PMChart.")
     k <- sum(lpobj$solution)  ## lpobj$solution is one possible solution, but not all.
-    combos <- combn(nrow(PIChart), k)
+    ## combos <- combn(nrow(PIChart), k)
+    options(expressions=500000); combos <- t(gtools:::combinations(nrow(PIChart), k)) ## faster?
     sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(PIChart[idx,,drop = FALSE])>0)),drop=FALSE]
   }
   else {
@@ -458,7 +462,7 @@ reduce.default <- function(mydata,outcome,conditions,
                    dontcare=c("remainders","positive","negative"),
                    preprocess=c("cs_truthTable","fs_truthTable","pass"),
                    nlevels=rep(2,length(conditions)),
-                   keepTruthTable=TRUE,simplify=FALSE,
+                   keepTruthTable=TRUE,
                    ...)
 {
   call <- match.call()
@@ -512,7 +516,6 @@ reduce.default <- function(mydata,outcome,conditions,
   primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
   ##  attr(primeImplicants,"explained") <- explained ## give it to argument of PIChart directly
   PIChart <- PIChart(primeImplicants,explained)
-  if (simplify) PIChart <- EssentialPI(PIChart) ## need more tests??
   sl <- solvePIChart(PIChart)
   solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
   commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
@@ -895,18 +898,18 @@ thresholdssetter <- function(x,nthreshold=1,value=TRUE,method="average",threshol
   if (print.table && value) invisible(ans) else ans
 }
 
-EssentialPI <- function(PI){
-  ## similar with QCA:::rowDominance2, but more greedy.
-  ## Some prime implicants are redundant because they are already covered by others,
-  ## so it is better to simplly eliminate them. 
-  ## This is what rowDominance2() function does: it gets rid of redundant PIs (by Adrian).
-  N <- nrow(PI)
-  sums <- colSums(PI)
-  Min <- min(sums)
-  ans <- sapply(1:N,FUN=function(ii) colSums(PI[-ii,,drop=FALSE]))
-  idx <- apply(ans,1,FUN=function(x) all (x >= Min))
-  PI[idx,,drop=FALSE]
-}
+## EssentialPI <- function(PI){
+##   ## similar with QCA:::rowDominance2, but more greedy.
+##   ## Some prime implicants are redundant because they are already covered by others,
+##   ## so it is better to simplly eliminate them.
+##   ## This is what rowDominance2() function does: it gets rid of redundant PIs (by Adrian).
+##   N <- nrow(PI)
+##   sums <- colSums(PI)
+##   Min <- min(sums)
+##   ans <- sapply(1:N,FUN=function(ii) colSums(PI[-ii,,drop=FALSE]))
+##   idx <- apply(ans,1,FUN=function(x) all (x >= Min))
+##   PI[idx,,drop=FALSE]
+## }
 
 necessary <- function(object,traditional=TRUE){
   solutions <- object$solutions
@@ -932,4 +935,9 @@ necessary <- function(object,traditional=TRUE){
   res <- lapply(solutions,is.necessary)
   res
 }
+
+necessaryIndex <- function(object){
+    which(unlist(necessary(object)!="None"))
+}
+
 
