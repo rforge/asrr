@@ -241,7 +241,7 @@ PIChart <- function(primeImplicants,explained=NULL){
   ans
 }
 
-solvePIChart <- function (PIChart)
+solvePIChart <- function (PIChart,method=c("combn","combinations"))
 {
   ## modified version of QCA:::solveChart
   if (!is.logical(PIChart)) {
@@ -251,8 +251,11 @@ solvePIChart <- function (PIChart)
     lpobj <- lpSolve:::lp(direction="min", objective.in=rep(1, nrow(PIChart)),const.mat=t(PIChart),const.dir=">=",1,all.bin=TRUE)
     if (lpobj$status!=0) stop("Can not solve this PMChart.")
     k <- sum(lpobj$solution)  ## lpobj$solution is one possible solution, but not all.
-    ## combos <- combn(nrow(PIChart), k)
-    options(expressions=500000); combos <- t(gtools:::combinations(nrow(PIChart), k)) ## faster?
+    method <- match.arg(method)
+    if (method=="combn")  combos <- combn(nrow(PIChart), k) else if (method=="combinations"){
+        options(expressions=500000)
+        combos <- t(gtools:::combinations(nrow(PIChart), k))
+    }
     sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(PIChart[idx,,drop = FALSE])>0)),drop=FALSE]
   }
   else {
@@ -589,7 +592,7 @@ reduceOld <- function(mydata,outcome,conditions,
   primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
   ##  attr(primeImplicants,"explained") <- explained ## give it to argument of PIChart directly
   PIChart <- PIChart(primeImplicants,explained)
-  sl <- solvePIChart(PIChart)
+  sl <- solvePIChart(PIChart,"combn")
   solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
   commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
   ans <- list(solutions=solutions,commonSolutions=commonSolutions,solutionsIDX=sl,primeImplicants=primeImplicants,
