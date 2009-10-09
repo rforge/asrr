@@ -526,7 +526,7 @@ reduce.default <- function(mydata,outcome,conditions,
   ans
 }
 
-reduce2 <- function(mydata,outcome,conditions,
+reduceOld <- function(mydata,outcome,conditions,
                    explain=c("positive","negative"),
                    remainders=c("exclude","include"),
                    contradictions=c("remainders","positive","negative"),

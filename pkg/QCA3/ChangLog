@@ -1,6 +1,6 @@
 2009-10-09
 	* use gtools:::combinations instead of combn in solvePIChart can speed it up by 15%.
-	* use esubSet in reduce.default, and rename original reduce.default to reduce2 for calibration purpose.
+	* use esubSet in reduce.default, and rename original reduce.default to reduceOld for calibration purpose.
 	* minor change of esubSet to handle implicant without NAs.
 	* new function necessaryIndex.
 
