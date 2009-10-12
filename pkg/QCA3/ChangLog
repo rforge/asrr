@@ -1,3 +1,6 @@
+2009-10-13
+	* new function of bestSubsets().
+
 2009-10-09
 	* use gtools:::combinations instead of combn in solvePIChart can speed it up by 15%.
 	* use esubSet in reduce.default, and rename original reduce.default to reduceOld for calibration purpose.
