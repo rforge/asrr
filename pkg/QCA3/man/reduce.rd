@@ -134,10 +134,10 @@ extraction on a list. you can refer to \code{[} for more details.}
   to get the solution when there are more conditions. You may use
   \code{\link[QCA]{eqmcc}} if speed becomes an issue for
   \code{\link{reduce}}. The disparity is due to the fact that
-  \code{reduce} gets ride of redundant PIs before solving the PIChart,
-  but \code{reduce} does not (Thanks Adrian).\code{reduce} is a bit
-  greedy in terms of memory usage, for 15 conditions, it uses
-  proximately 500 to 600 Mb memory.
+  \code{eqmcc} eliminates redundant PIs before solving the PIChart
+  (Thanks Adrian for pointting it out), but \code{reduce} does not (HUANG, 2009).
+  \code{reduce} is a bit greedy in terms of memory usage, for 15 conditions, it
+  uses proximately 500 to 600 Mb memory.
 }
 \seealso{  \code{\link[QCA]{factorize}}, \code{\link{SA}},
   \code{\link{CSA}}, \code{\link{constrReduce}}}
