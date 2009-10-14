@@ -1,4 +1,4 @@
-bestSubsets <- function(x,y, noCSA=TRUE){
+findNoCSA <- function(x,y, noCSA=TRUE){
     nx <- length(x$solutions)
     ny <- length(y$solutions)
     idx <- expand.grid(x=seq(1,nx),y=seq(1,ny))
@@ -16,3 +16,10 @@ bestSubsets <- function(x,y, noCSA=TRUE){
 }
 
 ##bestSubsets(ans1,ans0)
+
+
+findParsimonious <- function(x) {
+    ans <- sapply(x$solutions, function(i) sum(!is.na(i)))
+    idx <- which(ans == min(ans))
+    idx
+}

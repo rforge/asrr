@@ -1,4 +1,4 @@
-export(bestSubsets, constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,esubSet,
+export(constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,esubSet,findNoCSA,findParsimonious,
        fs_tt, fs_truthTable, overlap, necessaryIndex, reduce,reduceOld, SA,suffnec,
        thresholdssetter)
 S3method(print, coincid)
