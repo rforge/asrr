@@ -22,7 +22,9 @@ On-line forum and homeowners' collective resistance
 }
 %\details{}
 \source{
-HUANG Ronggui, GUI Yong, forthcoming, Internet and homeowners' collective resistance: a comparative qualitative analysis in Shanghai". Sociological Research.(In Chinese)
+HUANG Ronggui, GUI Yong, 2009, Internet and homeowners' collective
+resistance: a comparative qualitative analysis in
+Shanghai". Sociological Research.(5):29-56.(In Chinese)
 }
 \examples{
 data(HuangGui2009)

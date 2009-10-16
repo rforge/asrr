@@ -36,6 +36,10 @@ cs_truthTable(mydata, outcome, conditions,
   \item{conf.level}{confident level of statistical test.}
 }
 \details{
+  The value of all the conditions should start from 0. For example, in
+  cript set QCA, it is always be 0 or 1. For mvQCA with 3 levels, it
+  should be 0,1 or 2.
+  
   Symbols of the outcome. '1' is postive configuration, '0' is negative
   configuration, 'C' is contraditory configuration, and '-' is don't
   care configuration. When show.case is TRUE and a configuration is 'C',

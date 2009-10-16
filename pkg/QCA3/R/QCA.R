@@ -280,12 +280,17 @@ cs_truthTable <- function(mydata, outcome, conditions, method=c("deterministic",
                          cutoff1=1,cutoff0=1,benchmark=0.65,conf.level = 0.95)
 {
   if (outcome==""||conditions =="") stop("You must specific outcome and conditions first.")
+  mydata <- mydata[,c(outcome,conditions,weight,cases)]
+  mydata <- na.exclude(mydata) # eliminate missing data
   fulldata <- mydata[,c(outcome,conditions)]
-  outcomeData <- mydata[,outcome]
+  outcomeData <- fulldata[,outcome]
   if (any(!outcomeData %in% c(0,1))) stop("outcome value must in [0,1].")
-  conditionsData <- mydata[,conditions]
+  conditionsData <- fulldata[,conditions]
   colmax <- sapply(conditionsData,max,na.rm=T)
-  if (any(colmax+1 > nlevels)) stop(sprintf("Mismatch of values of conditions and 'nlevels' argument.\n  possible value is c(%s)",paste(colmax+1,collapse=",")))
+  if (any(colmax+1 > nlevels)) {
+      warning(sprintf("Mismatch of values of conditions and 'nlevels' argument. \n Replace it with possible value c(%s)",paste(colmax+1,collapse=",")))
+      nlevels <- colmax + 1
+  }
   if (!is.null(weight)) weight <- mydata[[weight]] else weight <- rep(1, nrow(mydata))
   method <- match.arg(method)
   getId <- function(implicant,nlevels){
@@ -380,6 +385,8 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
   if (consistency_cutoff>1 || consistency_cutoff<0) stop("consistency_cutoff should be in [0,1].")
   if (consistency_cutoff<0.75) warning("It is suggested that consistency_cutoff be >= 0.75.")
   if (outcome==""||conditions=="") stop("You must specific outcome and conditions first.")
+  mydata <- mydata[,c(outcome,conditions,cases)]
+  mydata <- na.exclude(mydata) # eliminate missing data
   fulldata <- mydata[,c(outcome,conditions)]
   if (any(fulldata<0)|| any(fulldata>1)) stop("Fuzzy set score must in [0,1].")
   ncases_cutoff <- ifelse(ncases_cutoff<1,ncases_cutoff*nrow(fulldata),ncases_cutoff)
@@ -474,13 +481,19 @@ reduce.default <- function(mydata,outcome,conditions,
   remainders <- match.arg(remainders)
   dontcare <- match.arg(dontcare)
   if (!"truthTable" %in% class(mydata)){
-    preprocess <- match.arg(preprocess)
-    dots <- list(...)
-    mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
-    mydata <- mydata$truthTable
-    colmax <- sapply(mydata[,conditions],max,na.rm=T)
-    if (any(colmax+1 > nlevels)) stop("Mismatch of values of conditions and 'nlevels' argument.")
-  } else mydata <- mydata$truthTable
+      preprocess <- match.arg(preprocess)
+      dots <- list(...)
+      mydata <- do.call(preprocess,c(list(mydata=mydata,nlevels=nlevels,outcome=outcome,conditions=conditions),dots))
+      mydata <- mydata$truthTable
+      colmax <- sapply(mydata[,conditions],max,na.rm=T)
+      ## if (any(colmax+1 > nlevels)) stop("Mismatch of values of conditions and 'nlevels' argument.")
+      if (any(colmax+1 > nlevels)) {
+          warning(sprintf("Mismatch of values of conditions and 'nlevels' argument. \n Replace it with possible value c(%s)",paste(colmax+1,collapse=",")))
+          nlevels <- colmax + 1
+      }
+  } else {
+      mydata <- mydata$truthTable
+  }
 
   ##  if (keepTruthTable) truthTable <- subset(mydata,OUT!="?") else truthTable <- NULL
   if (keepTruthTable) {

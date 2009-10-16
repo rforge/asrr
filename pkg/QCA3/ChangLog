@@ -1,3 +1,8 @@
+2009-10-16
+	* improve doc of cs_truthTable
+	* eliminate missing data automatically in cs_truthTable and fs_truthTable.
+	* when nlevels is mismatched, throw a warning and use possible value instead of stop.
+
 2009-10-13
 	* new function of bestSubsets(), changed to findNoCSA().
 	* change version number to 0.1-3 (0.1-2 is a bugfix version for R-2.10-0).
