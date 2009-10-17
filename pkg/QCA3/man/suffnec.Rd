@@ -41,7 +41,6 @@ Their Consistency and Coverage." Political Analysis 14 (3) : 291-310
 
  \author{Ronggui HUANG}
  \seealso{ \code{\link[QCA3]{coincid}}}
-% \examples{
-%}
-%\keyword{ ~kwd1 }
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+ \examples{
+suffnec(CoD[,c('cod',"econdev","ethnolin","nocom")]) 
+}
