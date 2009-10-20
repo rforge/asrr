@@ -63,13 +63,12 @@ data(Osa,package="QCA") ## QCA package is required to run this example
 conditions <- c("DYNA","ACCES","INFLU","ELITE","SOCIAL")
 a <- reduce(mydata = Osa, outcome = "OUT", conditions = conditions, explain = "negative", remainders = "ex", contradictions = "negative")
 b <- reduce(mydata = Osa, outcome = "OUT", conditions = conditions, explain = "negative", remainders = "include", contradictions = "negative")
-sa <- SA(b) ## simplifying assumptions
-constrReduce(a,inc=sa$solutions[[1]]) ## == b
-constrReduce(b,exc=sa$solutions[[1]]) ## == a
-constrReduce(b,necess=list(ACCES=0,ELITE=0,social=0)) ## method 1 of imposing necessary conditions
-## inspect the SAs (that is sa), 3-6 SAs are against the necessary conditions
-constrReduce(b,exclude=sa$solutions[[1]][3:6,]) ## method 2 of imposing necessary conditions
-constrReduce(a,include=sa$solutions[[1]][1:2,]) ## the same.
+
+# there are two solutions in b, let's focus on the first only.
+b1 <- b[1]
+sa <- SA(b1) ## simplifying assumptions
+constrReduce(a,inc=sa$solutions[[1]]) ## == b1
+constrReduce(b1,exc=sa$solutions[[1]]) ## == a
 }
 }
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
