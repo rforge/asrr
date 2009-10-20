@@ -651,7 +651,7 @@ prettyPI <- function(object,traditional=TRUE,...){
 print.QCA <- function(x,traditional=TRUE,show.truthTable=TRUE,...){
   cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
   PIs <- prettyPI(x,traditional=traditional)
-  Nec <- necessary(x,traditional=traditional)
+  Nec <- commonConfiguration(x,traditional=traditional)
   if (!is.null(truthTable <- x$truthTable) && show.truthTable){
     cat(sprintf("truthTable with %i configuration(s)\n\n",nrow(truthTable)))
     print(truthTable)
@@ -660,7 +660,7 @@ print.QCA <- function(x,traditional=TRUE,show.truthTable=TRUE,...){
     cat("\n----------------\n")
     cat(sprintf("Prime implicant No. %i with %i implicant(s)\n\n",i,PIs[[i]]$N))
     writeLines(strwrap(PIs[[i]]$PI))
-    cat(sprintf("\nNecessary condition: %s\n",Nec[[i]]))
+    cat(sprintf("\nCommon configuration: %s\n",Nec[[i]]))
   }
 }
 
@@ -927,33 +927,31 @@ thresholdssetter <- function(x,nthreshold=1,value=TRUE,method="average",threshol
 ##   PI[idx,,drop=FALSE]
 ## }
 
-necessary <- function(object,traditional=TRUE){
-  solutions <- object$solutions
-  conditions <- names(object$explained)
-  is.necessary <- function(x){
-    if (is.null(x)) {
-      ans <- "None"
+commonConfiguration <- function(object,traditional=TRUE){
+    solutions <- object$solutions
+    conditions <- names(object$explained)
+    is.commonConfiguration <- function(x){
+        if (is.null(x)) {
+            ans <- "None"
+        }
+        else {
+            ans <- apply(x,2,function(idx) length(unique(idx))==1 & !all(is.na(idx)))
+            if (any(ans)){
+                neccond <- conditions[ans]
+                val <- x[1,ans] ## values of condition
+                if (traditional && all(object$nlevels==2)){
+                    neccond[which(val==1)] <- toupper(neccond[which(val==1)])
+                    neccond[which(val==0)] <- tolower(neccond[which(val==0)])
+                    ans <- paste(neccond,collapse="*")
+                } else ans <- paste(neccond,"{",val,"}",sep="",collapse="*")
+            } else ans <- "None"
+            ans
+        }
     }
-    else {
-    ans <- apply(x,2,function(idx) length(unique(idx))==1 & !all(is.na(idx)))
-    if (any(ans)){
-      neccond <- conditions[ans]
-      val <- x[1,ans] ## values of condition
-      if (traditional && all(object$nlevels==2)){
-        neccond[which(val==1)] <- toupper(neccond[which(val==1)])
-        neccond[which(val==0)] <- tolower(neccond[which(val==0)])
-        ans <- paste(neccond,collapse="*")
-      } else ans <- paste(neccond,"{",val,"}",sep="",collapse="*")
-    } else ans <- "None"
-    ans
-  }
-  }
-  res <- lapply(solutions,is.necessary)
-  res
+    res <- lapply(solutions,is.commonConfiguration)
+    res
 }
 
-necessaryIndex <- function(object){
-    which(unlist(necessary(object)!="None"))
+which.commonConfiguration <- function(object){
+    which(unlist(commonConfiguration(object)!="None"))
 }
-
-

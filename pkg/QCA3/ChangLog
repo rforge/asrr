@@ -1,3 +1,7 @@
+2009-10-20
+	* change "neccessary condition" to "common configuration" to avoid confusion (Thanks Carsten Schneider).
+	* export simplifyingAssumption.
+
 2009-10-16
 	* improve doc of cs_truthTable
 	* eliminate missing data automatically in cs_truthTable and fs_truthTable.
