@@ -1,7 +1,7 @@
 \name{HIVChange}
 \alias{HIVChange}
 \docType{data}
-\title{HIV prevalence in Sub-Saharan Africa}
+\title{data about HIV prevalence in Sub-Saharan Africa}
 \description{
 Data set from Cronqvist and Berg-Schlosser(2006), examining the HIV
 prevalence in Sub-Saharan Africa.

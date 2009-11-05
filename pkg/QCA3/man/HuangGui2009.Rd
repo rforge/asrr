@@ -3,7 +3,7 @@
 \alias{HuangGui2009}
 \docType{data}
 \title{
-On-line forum and homeowners' collective resistance
+data about on-line forum and homeowners' collective resistance
 }
 \description{Dataset used in Huang and Gui's (2009) study of Internet and homeowners' collective resistance.
 }

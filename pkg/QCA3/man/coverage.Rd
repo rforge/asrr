@@ -1,14 +1,18 @@
 \name{coverage}
 \alias{coverage}
+\alias{consistency}
 \title{
-Coverage of x by y.
+Coverage and consistency of x by y.
 }
 \description{
-  Given two fuzzy set score variables x and y, the function returns the coverage
-  of x by y, given their relationship.
+  Given two fuzzy set score variables x and y, coverage returns the coverage
+  of x by y, given their relationship; and consistency returns  the
+  consistency of x by y.
 }
 \usage{
 coverage(x, y, alternative = c("less", "greater"))
+
+consistency(x, y, alternative = c("less", "greater"))
 }
 \arguments{
   \item{x}{
@@ -36,7 +40,10 @@ coverage(x, y, alternative = c("less", "greater"))
   a length-1 numeric vector.
 }
 \references{
-Ragin, C. 2008, Redesigning social inquiry: fuzzy set and
+  Ragin, C. 2006. Set Relations in Social Research: Evaluating Their
+  Consistency and Coverage Political Analysis,14(3):291-310.
+  
+  Ragin, C. 2008, Redesigning social inquiry: fuzzy set and
   beyond. Chicago: The University of Chicago Press.
 }
 \author{
