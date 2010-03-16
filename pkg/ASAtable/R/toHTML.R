@@ -20,6 +20,11 @@ CSSgenerator <-  function(fontsize,indent,tablewidth,lwidth,firstline,...)
      text-align:left;
      text-indent:ptindentpt;
     }
+   TD.STUBCOLMAINBOTTOM{
+     text-align:left;
+     text-indent:ptindentpt;
+     border-bottom:solid windowtext lwidth;
+    }
    TD.STUBCOLRGROUP{
      text-align:left;
     }
@@ -294,6 +299,10 @@ toHTML.default <- function(
   ## colspan.mat <- matrix(1,nrow=NROW(new.x),ncol=NCOL(new.x))
   ## colspan.mat[idx2,] <- colspan
   ## colspan.mat <- cbind(1,colspan.mat) ## the first column is for rownames
+  if (is.null(y) && is.null(z)) {
+      Nrow <- nrow(cl.body1)
+      cl.body1[Nrow,] <- paste(cl.body1[Nrow,],"BOTTOM",sep="")
+  }
   TBODY1 <- R2HTMLtable(new.x,row.title=rownames(new.x),col.title=colnames(new.x),class.mat=cl.body1, width.mat=matrix(colwidth,byrow=TRUE,nrow=nrow(new.x)+1,ncol=ncol(new.x)+1))
   ##放用于增加例如样本数、模型拟合度等信息的部分。在表主体的下方每一个信息占据的列数等于n.cgroup
   if (!is.null(y)){
@@ -307,8 +316,12 @@ toHTML.default <- function(
     } else row.title.y <- rownames(new.y)
     cl.bodyY <- matrix("BODYCELL",nrow=nrow(new.y),ncol=ncol(new.y)+1)
     cl.bodyY[,1]<- "STUBCOLRGROUP"
+    if (is.null(z)) {
+        Nrow <- nrow(cl.bodyY)
+        cl.bodyY[Nrow,] <- paste(cl.bodyY[Nrow,],"BOTTOM",sep="")
+    }
     TBODYY <- R2HTMLtable(new.y,row.title=row.title.y,colspan=cbind(1,colspan.y),class.mat=cl.bodyY)
-  } else TBODYY <- NULL
+} else TBODYY <- NULL
   ##放用于增加新的信息。x的列数与z的列数相同
   if (!is.null(z)){
     if (!is.matrix(z)) stop("z must be a matrix.")
@@ -320,6 +333,8 @@ toHTML.default <- function(
     } else row.title.z <- rownames(new.z)
     cl.bodyZ <- matrix("BODYCELL",nrow=nrow(new.z),ncol=ncol(new.z)+1)
     cl.bodyZ[,1]<- "STUBCOLRGROUP"
+    Nrow <- nrow(cl.bodyZ)
+    cl.bodyZ[Nrow,] <- paste(cl.bodyZ[Nrow,],"BOTTOM",sep="")
     TBODYZ <- R2HTMLtable(new.z,row.title=row.title.z,class.mat=cl.bodyZ)
   } else TBODYZ <- NULL
   ##处理表格的注释
