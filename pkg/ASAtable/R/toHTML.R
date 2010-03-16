@@ -16,6 +16,13 @@ CSSgenerator <-  function(fontsize,indent,tablewidth,lwidth,firstline,...)
      border-bottom:solid windowtext lwidth;
      border-right:'none';
     }
+   TD.BODYCELLBOTH{
+     text-align:center;
+     border-top:firstline windowtext 1.5pt;
+     border-left:none;
+     border-bottom:solid windowtext lwidth;
+     border-right:'none';
+    }
    TD.STUBCOLMAIN{
      text-align:left;
      text-indent:ptindentpt;
@@ -270,7 +277,7 @@ toHTML.default <- function(
   }##如果没有colnames，则增加
   if (is.null(rownames(x))) {
     warning("x does not have rownames, added by me.")
-    rownames(x) <- paste("rowname",as.character(seq_len(nrow(x))),sep=".")
+    rownames(x) <- as.character(seq_len(nrow(x)))
   }##如果没有rownames，则增加
   new.x <- if (hasgroup){
     insertCol(mat=x,ncolgroup=n.cgroup,elements="&nbsp;",insertcolnames="&nbsp;")
@@ -293,7 +300,8 @@ toHTML.default <- function(
   }
   cl.body1 <- matrix("BODYCELL",nrow=nrow(new.x)+1,ncol=ncol(new.x)+1)
   ##如果R2HTMLtable中的row.title和col.title为NULL，需要进一步处理
-  cl.body1[1,]<- "BODYCELLBOTTOM"
+  if (hasgroup) cl.body1[1,]<- "BODYCELLBOTTOM"
+  if (!hasgroup) cl.body1[1,]<- "BODYCELLBOTH"
   cl.body1[2:nrow(cl.body1),1]  <- "STUBCOLMAIN"
   cl.body1[c(FALSE,rownames(new.x) %in% rownames(rgroup)),1]  <- "STUBCOLRGROUP"
   ## colspan.mat <- matrix(1,nrow=NROW(new.x),ncol=NCOL(new.x))
@@ -308,7 +316,7 @@ toHTML.default <- function(
   if (!is.null(y)){
     if (!is.matrix(y)) stop("y must be a matrix.")
     if (mode(y)=="numeric") y <- gsub(" ","&nbsp;",format(formatC(y,digits=digits,format="f"),justify="right"),fixed=TRUE)
-    new.y <- insertCol(y,ncolgroup=rep(1,length(cgroup)),elements=" ")
+    new.y <- insertCol(y,ncolgroup=rep(1,length(cgroup)),elements="&nbsp;")
     colspan.y <- insertCol(matrix(n.cgroup,ncol=ncol(y),nrow=nrow(y),byrow=T),ncolgroup=rep(1,length(cgroup)),elements=1)
     if (is.null(rownames(new.y)))  {
       warning("y should have rownames.")
