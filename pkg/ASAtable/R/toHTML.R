@@ -346,7 +346,7 @@ toHTML.default <- function(
                     ">",
                     if (is.null(note)) "Note: ADD NOTES HERE, FIRST DATA SOURCE, SECOND IS GENERAL INFO, THEN IS CALLOUTS."
                     else note,
-                    if (asterisk) "<BR>+ p<.10&nbsp, * p<.05&nbsp, ** p<.01.", "</td>")
+                    if (asterisk) "<BR>+ p<.10, * p<.05, ** p<.01.", "</td>")
   END.def <- "</TABLE>" ## html tag of end of table
   cat(
       if (!append) HTML.def,
@@ -427,7 +427,7 @@ toHTML.modelList <- function(
   nmodel <- length(x) ## number of model
   nobs <- sapply(x,Nfun) ## number of obs for each model
   add.info <- matrix(nobs,byrow=TRUE,ncol=nmodel) ## additional info at the end of table
-  rownames(add.info) <- "Number of case"
+  rownames(add.info) <- "N"
   if (!is.null(goffun)){ ## goodness of fit for each model
     gof <- sapply(x,goffun)
     add.info <- rbind(add.info,gof)
