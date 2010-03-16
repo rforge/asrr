@@ -23,6 +23,10 @@ CSSgenerator <-  function(fontsize,indent,tablewidth,lwidth,firstline,...)
    TD.STUBCOLRGROUP{
      text-align:left;
     }
+   TD.STUBCOLRGROUPBOTTOM{
+     text-align:left;
+     border-bottom:solid windowtext lwidth;
+    }
    TD.CGROUP{
       border-top:firstline windowtext 1.5pt;
       border-left:none;
@@ -45,7 +49,7 @@ CSSgenerator <-  function(fontsize,indent,tablewidth,lwidth,firstline,...)
       text-align:left;
     }
   TD.FOOTNOTE{
-      border-top:solid windowtext lwidth;
+      border-top:none;
       text-align:left;
     }
   </STYLE>"
@@ -301,23 +305,23 @@ toHTML.default <- function(
       warning("y should have rownames.")
       row.title.y <- "&nbsp;"
     } else row.title.y <- rownames(new.y)
-    cl.body2 <- matrix("BODYCELL",nrow=nrow(new.y),ncol=ncol(new.y)+1)
-    cl.body2[,1]<- "STUBCOLRGROUP"
-    TBODY2 <- R2HTMLtable(new.y,row.title=row.title.y,colspan=cbind(1,colspan.y),class.mat=cl.body2)
-  } else TBODY2 <- NULL
+    cl.bodyY <- matrix("BODYCELL",nrow=nrow(new.y),ncol=ncol(new.y)+1)
+    cl.bodyY[,1]<- "STUBCOLRGROUP"
+    TBODYY <- R2HTMLtable(new.y,row.title=row.title.y,colspan=cbind(1,colspan.y),class.mat=cl.bodyY)
+  } else TBODYY <- NULL
   ##放用于增加新的信息。x的列数与z的列数相同
   if (!is.null(z)){
     if (!is.matrix(z)) stop("z must be a matrix.")
     if (mode(z)=="numeric") z <- gsub(" ","&nbsp;",format(formatC(z,digits=digits,format="f"),justify="right"),fixed=TRUE)
-    new.z <- insertCol(z,ncolgroup=n.cgroup,elements=" ")
+    new.z <- insertCol(z,ncolgroup=n.cgroup,elements="&nbsp;")
     if (is.null(rownames(new.z)))  {
       warning("z should have rownames.")
       row.title.z <- "&nbsp;"
     } else row.title.z <- rownames(new.z)
-    cl.body2b <- matrix("BODYCELL",nrow=nrow(new.z),ncol=ncol(new.z)+1)
-    cl.body2b[,1]<- "STUBCOLRGROUP"
-    TBODY2b <- R2HTMLtable(new.z,row.title=row.title.z,class.mat=cl.body2b)
-  } else TBODY2b <- NULL
+    cl.bodyZ <- matrix("BODYCELL",nrow=nrow(new.z),ncol=ncol(new.z)+1)
+    cl.bodyZ[,1]<- "STUBCOLRGROUP"
+    TBODYZ <- R2HTMLtable(new.z,row.title=row.title.z,class.mat=cl.bodyZ)
+  } else TBODYZ <- NULL
   ##处理表格的注释
   if (!is.null(note)) note <- gsub("\n","<br>",note,fixed=TRUE)#将\n换为HTML的换行符号
   totalcol <- if (hasgroup) sum(n.cgroup)+length(cgroup) else NCOL(x)+1 #因为有一列是从rownames来的。
@@ -336,8 +340,8 @@ toHTML.default <- function(
       TBEGIN.def,
       STUBCOL1,
       TBODY1,
-      TBODY2,
-      TBODY2b,
+      TBODYY,
+      TBODYZ,
       NOTE.def,
       END.def,
       "<br>",
@@ -408,7 +412,7 @@ toHTML.modelList <- function(
   nmodel <- length(x) ## number of model
   nobs <- sapply(x,Nfun) ## number of obs for each model
   add.info <- matrix(nobs,byrow=TRUE,ncol=nmodel) ## additional info at the end of table
-  rownames(add.info) <- "Number of cases"
+  rownames(add.info) <- "Number of case"
   if (!is.null(goffun)){ ## goodness of fit for each model
     gof <- sapply(x,goffun)
     add.info <- rbind(add.info,gof)
