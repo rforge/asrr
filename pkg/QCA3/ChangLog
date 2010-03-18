@@ -1,3 +1,9 @@
+2010-03-18
+	* minor bugfix of constrReduce: update component of primeImplicants in the returned object.
+
+2010-03-17
+	* update examples section in CoD.Rd.
+
 2009-12-29
 	* update CoD data set.
 

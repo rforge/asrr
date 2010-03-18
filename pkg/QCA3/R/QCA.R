@@ -739,7 +739,7 @@ print.summary.QCA <- function(x,digits=3,traditional=FALSE,...){
 
 
 subCombination <- function(implicant,nlevels=rep(2,length(implicant)))
-{
+{ 
   if (any(na.id <- is.na(implicant))){
     IDX <- cumprod(nlevels+1)/(nlevels+1)
     idx <- which(na.id)
@@ -826,6 +826,8 @@ constrReduce <- function(object,exclude=NULL,include=NULL,necessary=NULL){
   solution <- solutions[[1]]
   ##  ids1 <- unique(unlist(as.vector(apply(solution,1,subSet,nlevels=nlevels))))
   ids1 <- unique(unlist(as.vector(apply(solution,1,subCombination ,nlevels=nlevels))))
+  idsExplained <- apply(explained,1,implicant2Id,nlevels)
+  ## ids1 might include remainders, use idsExplained instead
   if (!is.null(exclude)){
     ## double check when there is NA in exclude???
     if (class(exclude)!="data.frame") stop("exclude should be a data.frame.")
@@ -861,6 +863,7 @@ constrReduce <- function(object,exclude=NULL,include=NULL,necessary=NULL){
   sl <- solvePIChart(PIChart(primeImplicants,explained))
   solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
   commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
+  object$primeImplicants <- primeImplicants
   object$solutions <- solutions
   object$commonSolutions <- commonSolutions
   object

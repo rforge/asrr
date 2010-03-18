@@ -44,12 +44,7 @@ Schneider, 2009, "The consolidation of democracy: comparing Europe and Latin Ame
 }
 \examples{
 data(CoD)
-%round(apply(CoD[,c("econdev","eduhi","ethnolin","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) coverage(x,CoD$cod)),3)
-%reduce(CoD,'cod',c('econdev','ethnolin','close','demex','nocom'),'positive','include',case='label',pre='fs_truthTable')
-%round(apply(CoD[,c("econdev","ethnolin","nocom")],2,FUN=function(x) consistency(x,CoD$cod,'less')),3)
-%round(apply(CoD[,c("econdev","ethnolin","nocom")],2,FUN=function(x) coverage(x,CoD$cod,'less')),3)
-%reduce(CoD,'cod',c('econdev','ethnolin','nocom','parlia','efpahi','decent'),'positive','include',case='label',pre='fs_truthTable')
-Examples from Chapter 7
+# Examples from Chapter 7
 ### table 6.2 in p77
 round(apply(CoD[,c("econdev","eduhi","ethnolin","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(x,CoD$cod,'great')),3)
 round(apply(CoD[,c("econdev","eduhi","ethnolin","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(1-x,CoD$cod,'great')),3)
