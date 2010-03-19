@@ -542,6 +542,8 @@ reduce.default <- function(mydata,outcome,conditions,
   ans
 }
 
+qca <- reduce ## alias of reduce
+
 reduceOld <- function(mydata,outcome,conditions,
                    explain=c("positive","negative"),
                    remainders=c("exclude","include"),
@@ -824,7 +826,6 @@ constrReduce <- function(object,exclude=NULL,include=NULL,necessary=NULL){
   solutions <- object$solutions
   if (length(solutions)>1) stop("There are multiple solutions.You can use '[' to select one.")
   solution <- solutions[[1]]
-  ##  ids1 <- unique(unlist(as.vector(apply(solution,1,subSet,nlevels=nlevels))))
   ids1 <- unique(unlist(as.vector(apply(solution,1,subCombination ,nlevels=nlevels))))
   idsExplained <- apply(explained,1,implicant2Id,nlevels)
   ## ids1 might include remainders, use idsExplained instead

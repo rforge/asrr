@@ -5,8 +5,8 @@ Version: 0.0-3
 Date: 2009-09-28
 Author: Ronggui HUANG
 Maintainer: Ronggui HUANG<ronggui.huang@gmail.com>
-Imports: lpSolve, gtools
-Suggests: QCA, Vennerable
+Imports: lpSolve
+Suggests: QCA, Vennerable, gtools
 Description: A set of functions for Qulitative Comparative Analysis (QCA). It can be used for all three types of QCA. It has methods for simplifying assumption, contradictory simplifying assumption. Moreover, it can return the constrained result by including or excluding specific conditions.
 License: BSD
 LazyLoad: yes

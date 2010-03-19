@@ -1,8 +1,9 @@
 export(constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,esubSet,findNoCSA,findParsimonious,
        fs_tt, fs_truthTable, overlap, reduce,reduceOld, SA, simplifyingAssumption, suffnec,
-       thresholdssetter,which.commonConfiguration)
+       thresholdssetter,which.commonConfiguration, qca)
 S3method(print, coincid)
 S3method(print, QCA)
+S3method(plot, QCA)
 S3method(print, suffnec)
 S3method(print, summary.QCA)
 S3method(print, truthTable)
@@ -10,3 +11,5 @@ S3method(reduce, truthTable)
 S3method(reduce, default)
 S3method(summary, QCA)
 S3method('[',QCA)
+import(gtools)
+import(lpSolve)

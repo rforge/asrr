@@ -28,7 +28,7 @@ cs_truthTable(mydata, outcome, conditions,
   \item{cases}{character, variable specifying the case names. When it is
   NUll, then use row names of mydata as case names.}
   \item{nlevels}{a integer vector, specifying the number of levels of
-    each conditions.}
+    each condition.}
   \item{cutoff1}{length one numeric vector.}
   \item{cutoff0}{length one numeric vector. }
   \item{benchmark}{Benchmark for statistical test. Must equal or greater

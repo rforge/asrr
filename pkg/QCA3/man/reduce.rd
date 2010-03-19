@@ -1,5 +1,6 @@
 \name{reduce}
 \alias{reduce}
+\alias{qca}
 \alias{reduce.truthTable}
 \alias{reduce.default}
 \alias{print.QCA}
@@ -35,6 +36,9 @@ reduce(mydata,...)
 \method{summary}{QCA}(object, traditional = TRUE, show.case = TRUE, ...)
 
 \method{[}{QCA}(object, which)
+
+## alias of reduce
+qca(mydata,...)
 }
 \arguments{
   \item{mydata}{a data frame}
@@ -97,6 +101,16 @@ extraction on a list. you can refer to \code{[} for more details.}
 }
 \value{
   An object of class "QCA". It is essentailly a list of 10 components.
+  \item{solutions}{ a list of data.frame, each data frame represents one solution.}
+  \item{commonSolutions}{}
+  \item{solutionsIDX}{}
+  \item{primeImplicants}{}
+  \item{truthTable}{a truthTable if keepTruthTable is TRUE, otherwise NULL.}
+  \item{explained}{}
+  \item{idExclude}{}
+  \item{nlevels}{a integer vector, the number of levels of each condition.}
+  \item{PIChart}{}
+  \item{call}{the matched call.}
 }
 \references{
   Caramani, Daniele 2009. "Introduction to the comparative method with
