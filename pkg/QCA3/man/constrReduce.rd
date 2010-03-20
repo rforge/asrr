@@ -1,6 +1,5 @@
 \name{constrReduce}
 \alias{constrReduce}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{ Impose constraints on a QCA solution}
 \description{
 \code{constrReduce} allows you to include a set of configurations
@@ -42,11 +41,9 @@ constrReduce(object, exclude = NULL, include = NULL,necessary = NULL)
 }
 \value{
   An object of class "QCA". It is esentailly a list of 10
-  components. See \code{reduce} for more details.
+  components. See \code{\link{reduce}} for more details.
 }
-%\references{ ~put references to the literature/web site here ~ }
 \author{ Rongggui HUANG}
-%\note{ ~~further notes~~ }
 \seealso{ \code{\link{reduce}}}
 \examples{
 \dontrun{

@@ -1,4 +1,9 @@
 2010-03-18
+	* cs_truthTable return a component of call.
+	* drop1 method for truthTable for exploration of conditions.
+	* improvement of suffnec.Rd.
+
+2010-03-18
 	* minor bugfix of constrReduce: update component of primeImplicants in the returned object.
 
 2010-03-17

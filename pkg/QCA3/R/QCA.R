@@ -372,7 +372,7 @@ cs_truthTable <- function(mydata, outcome, conditions, method=c("deterministic",
     allExpress$Cases[allExpress$OUT!="C"] <- gsub("\\[|\\]","",allExpress$Cases[allExpress$OUT!="C"]) ## mark contr case
  }
   allExpress
-  ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=nlevels)
+  ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=nlevels,call=match.call())
   class(ans) <- c("truthTable","cs_truthTable")
   ans
 }
@@ -426,7 +426,7 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
   if (!complete) allExpress <- allExpress[allExpress$OUT != "?",,drop=FALSE]
   ##}
   allExpress
-  ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=rep(2,length(conditions)))
+  ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=rep(2,length(conditions)),call=match.call())
   class(ans) <- c("truthTable","fs_truthTable")
   ans
 }
@@ -958,4 +958,20 @@ commonConfiguration <- function(object,traditional=TRUE){
 
 which.commonConfiguration <- function(object){
     which(unlist(commonConfiguration(object)!="None"))
+}
+
+
+drop1.truthTable <- function(object,scope,...){
+  cl <- object$call
+  conds <- as.list(cl$conditions)
+  Nconds <- length(conds)-1
+  idx <- c()
+  for (i in seq(from=2,to=Nconds)){
+   condsN <- as.call(conds[-i])
+   cl$conditions <- condsN
+   ans <- eval(cl, parent.frame())
+   if (all(ans$truthTable$OUT!="C")){idx <- c(idx,i)}
+ }
+  return(unlist(conds[idx]))
+  ## condition which is drop can still return truthTable without contradiction
 }

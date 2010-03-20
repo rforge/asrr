@@ -1,6 +1,7 @@
 export(constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,esubSet,findNoCSA,findParsimonious,
        fs_tt, fs_truthTable, overlap, reduce,reduceOld, SA, simplifyingAssumption, suffnec,
        thresholdssetter,which.commonConfiguration, qca)
+S3method(drop1, truthTable)
 S3method(print, coincid)
 S3method(print, QCA)
 S3method(plot, QCA)

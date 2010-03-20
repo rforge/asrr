@@ -12,7 +12,7 @@ plot.QCA <- function(x,...){
     ids[ids %in% common]
   }
                     )
-  names(Coverage)<- paste("solution.",seq_len(length(Coverage)))
+  names(Coverage)<- paste("IM",seq_len(length(Coverage)),sep=".")
   CovList <- lapply(Coverage,as.character)
   require(Vennerable)
   plot(Venn(Sets=CovList),doWeights=TRUE)

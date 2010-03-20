@@ -8,7 +8,9 @@
 }
 \usage{
 simplifyingAssumption(object, ...) 
-SA(object, ...) ## shortcut of simplifyingAssumption
+
+SA(object, ...) ## alias of simplifyingAssumption
+
 CSA(object1, object0)
 }
 

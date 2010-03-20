@@ -17,6 +17,9 @@
 \usage{
 reduce(mydata,...)
 
+## alias of reduce
+qca(mydata,...)
+
 \method{reduce}{truthTable}(mydata, explain = c("positive", "negative"),
        remainders = c("exclude","include"),
        contradictions = c("remainders","positive","negative"),
@@ -36,9 +39,6 @@ reduce(mydata,...)
 \method{summary}{QCA}(object, traditional = TRUE, show.case = TRUE, ...)
 
 \method{[}{QCA}(object, which)
-
-## alias of reduce
-qca(mydata,...)
 }
 \arguments{
   \item{mydata}{a data frame}
@@ -106,14 +106,14 @@ extraction on a list. you can refer to \code{[} for more details.}
   \item{solutionsIDX}{}
   \item{primeImplicants}{}
   \item{truthTable}{a truthTable if keepTruthTable is TRUE, otherwise NULL.}
-  \item{explained}{}
+  \item{explained}{The configuration of conditions for explained cases. Note it is not on basis of case but basis of configuration.}
   \item{idExclude}{}
   \item{nlevels}{a integer vector, the number of levels of each condition.}
   \item{PIChart}{}
   \item{call}{the matched call.}
 }
 \references{
-  Caramani, Daniele 2009. "Introduction to the comparative method with
+  Caramani, Daniele. 2009. "Introduction to the comparative method with
   Boolean algebra." SAGE.
 
   Cronqvist, Lasse and  Berg-Schlosser, Dirk. 2009. Multi-Value QCA
@@ -132,7 +132,7 @@ extraction on a list. you can refer to \code{[} for more details.}
   and Charles Ragin. Sage.
 
 
-  Dusa, Adrian 2007 Enhancing Quine-McCluskey,
+  Dusa, Adrian. 2007. Enhancing Quine-McCluskey,
   \url{http://www.compasss.org/files/WPfiles/Dusa2007a.pdf}
 
   Ragin, Charles. 2000. Fuzzy-Set Social Science. University Of Chicago Press.
@@ -221,4 +221,3 @@ reduce(mydata=Lipset_fs,"Survived.FZ",conditions,explain="negative",remaind="exc
 reduce(mydata=Lipset_fs,"Survived.FZ",conditions,explain="negative",remaind="include",prepro="fs",consistency=0.7)
 ## Formula 6 in Ragin (2009:117)
 }
-
