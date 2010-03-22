@@ -377,6 +377,9 @@ cs_truthTable <- function(mydata, outcome, conditions, method=c("deterministic",
   ans
 }
 
+mv_truthTable <- cs_truthTable
+formals(mv_truthTable)$nlevels <- alist(sapply(mydata[,conditions], function(x) max(x,na.rm = T)+1))[[1]]
+## generated mv_truthTable with different default value of nlevels
 
 fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistency_cutoff=0.8,
                           complete = FALSE,show.cases = TRUE, quiet = FALSE,cases=NULL,...)
