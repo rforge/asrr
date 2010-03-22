@@ -42,6 +42,11 @@ A HTML file.
 This table is in HTML format, which can be pasted to MS word directly
 from web browser. To get the best effect, MS IE is recommended to use to
 open the HTML file.
+
+The table cannot display correctly if pasted to open office directly. To
+work around this problem, the author suggests paste the table into word,
+save it as word 2003 document (word 2007 format does not work), then
+open the word 2003 document with open office (but not by paste).
 }
 \references{
 Guidelines for Tables,\url{http://www.journals.uchicago.edu/page/ajs/msprep-tables.html},retrieved on 18,June,2009.
