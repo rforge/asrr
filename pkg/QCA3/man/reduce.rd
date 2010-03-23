@@ -183,6 +183,9 @@ reduce(Osa,"OUT",conditions[1:4],explain="pos",contradictions="neg",remaind="exc
 ## csQCA
 conditions <- c("GNPCAP", "URBANIZA", "LITERACY", "INDLAB", "GOVSTAB")
 reduce(Lipset_cs,"SURVIVAL",conditions,explain="positive",remainder="exclude",case="CASEID")
+## or use formula
+reduce(SURVIVAL~GNPCAP+URBANIZA+LITERACY+INDLAB+GOVSTAB,Lipset_cs,
+       explain="positive",remainder="exclude",case="CASEID")
 ## Formula 1 in Rihoux and De Meur(2009:57)
 reduce(Lipset_cs,"SURVIVAL",conditions,explain="negative",remainder="exclude",case="CASEID")
 ## Formula 3 in Rihoux and De Meur(2009:59)

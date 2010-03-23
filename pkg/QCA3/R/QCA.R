@@ -459,10 +459,35 @@ reduce.truthTable <- function(mydata,
                               contradictions=c("remainders","positive","negative"),
                               dontcare=c("remainders","positive","negative"),
                               keepTruthTable=TRUE,...){
-  call <- match.call()
   ans <- reduce.default(mydata=mydata,outcome=mydata$outcome,conditions=mydata$conditions,
                         explain=explain,remainders=remainders,dontcare=dontcare,nlevels=mydata$nlevels,
                         keepTruthTable=keepTruthTable,...)
+  call <- match.call()
+  ans$call <- call
+  ans
+}
+
+reduce.formula <- function(formula,data,
+                           explain=c("positive","negative"),
+                           remainders=c("exclude","include"),
+                           contradictions=c("remainders","positive","negative"),
+                           dontcare=c("remainders","positive","negative"),
+                           preprocess=c("cs_truthTable","fs_truthTable","pass"),
+                           nlevels=rep(2,length(conditions)),
+                           keepTruthTable=TRUE,...
+                           )
+{
+  term <- terms(formula)
+  if (attr(term,"response")==0) {stop("formula in the lef hand side is empty.")}
+  outcome <- all.vars(attr(term,"variables")[[attr(term,"response")+1]])
+  if (length(outcome)!=1) {stop("only one outcome variable is allowed.")}
+  conditions <- setdiff(all.vars(formula),outcome)
+  if (length(conditions)<=1) stop("more conditions are needed.")
+  ans <- reduce.default(mydata=data,outcome=outcome,conditions=conditions,
+                        explain=explain,remainders=remainders,dontcare=dontcare,
+                        preprocess=preprocess, nlevels=nlevels,
+                        keepTruthTable=keepTruthTable,...)
+  call <- match.call()
   ans$call <- call
   ans
 }
