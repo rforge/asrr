@@ -1,4 +1,5 @@
-export(coefchange, endog_test, fitstat, listcoef, mcor.test,
+export(associations,
+       coefchange, endog_test, fitstat, listcoef, mcor.test,
        readURL.dta, renames, tsls2, weighted.summary)
 S3method(coefchange, default)
 S3method(coefchange, lm)
