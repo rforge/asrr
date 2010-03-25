@@ -1,7 +1,7 @@
 \name{listcoef}
 \Rdversion{1.1}
 \alias{listcoef}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 List transformed regression coefficients.
 }
@@ -21,8 +21,8 @@ listcoef(x, ...)
 Currently, it supports linear regression model, logistic model, probit model and poisson model. When the model is estimated, argument x and y must be set to TRUE.
 
 Definition of notation is as follow:
-    \item{SDofX}{Standard deviation of X.}
-    \item{SDofY}{Standard deviation of Y.}
+SDofX is the standard deviation of X.
+SDofY is the standard deviation of Y.
 }
 \value{
 A data frame containing relevant components.}
