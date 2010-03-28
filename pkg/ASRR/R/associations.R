@@ -6,10 +6,10 @@ associations <- function(x,y){
 ## x, y are vectors, passed to table
 ## This function packs codes to make easy call to CoCo::partialAssociations
     require(CoCo)
-    xname <- substitute(x)
-    xname <- gsub("[$]", "_", deparse(xname))
-    yname <- substitute(y)
-    yname <- gsub("[$]", "_", deparse(yname))
+    xname <- deparse(substitute(x))
+    xname <- gsub("[$\\.]", "_", xname)
+    yname <- deparse(substitute(y))
+    yname <- gsub("[$\\.]", "_", yname)
     tab <- table(x, y)
     ## create a contingency table
     names(dimnames(tab)) <- c(xname,yname)
