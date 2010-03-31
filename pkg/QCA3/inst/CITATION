@@ -1,11 +1,11 @@
-citHeader("To cite package 'ASRR' in publications use:")
+citHeader("To cite package 'QCA3' in publications use:")
      
      year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
      vers <- paste("R package version", meta$Version)
      url  <- meta$URL
 
      citEntry(entry="Manual",
-              title = "Applied Sociological Research with R",
+              title = "QCA3: Qualitative Comparative Analysis with R",
               author = personList(as.person("Ronggui HUANG")),
               year = year,
               note = vers,
@@ -13,5 +13,5 @@ citHeader("To cite package 'ASRR' in publications use:")
 
               textVersion =
               paste("HUANG, Ronggui. ",
-                    "(",year,"). Applied Sociological Research with R. ",
+                    "(",year,"). QCA3: Qualitative Comparative Analysis with R. ",
                     vers, ". URL ", url, ".", sep=""))
