@@ -1,5 +1,7 @@
 csrPlot <- function(x,...){
   ## x is a coxph model fitted by survial::coxph
+  ## see Box-Steffensmier and Jones(2004:124-145)
+  require(survival)
   martingale <- residuals(x,type="martingale")
   coxSnellResidual <- 1- martingale
   ## Tableman and Kim (2003) about relationship between two types of residuals

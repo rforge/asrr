@@ -1,7 +1,8 @@
 \name{listcoef}
 \Rdversion{1.1}
 \alias{listcoef}
-
+\alias{listcoef.lm}
+\alias{listcoef.glm}
 \title{
 List transformed regression coefficients.
 }
@@ -37,7 +38,9 @@ The method of weighted covariance is 'ML', and the result is slightly different 
 }
 %\seealso{}
 \examples{
+\dontrun{
 data(Chirot,package="car")
 lm1 <- lm(intensity~inequality+commerce,data=Chirot,x=T,y=T)
 listcoef(lm1)
+}
 }
