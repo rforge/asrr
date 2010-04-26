@@ -1,7 +1,6 @@
 \name{reduce}
 \alias{reduce}
 \alias{reduceOld}
-%\alias{qca}
 \alias{reduce.truthTable}
 \alias{reduce.default}
 \alias{print.QCA}
@@ -11,7 +10,7 @@
 \description{
   This is the core funtion for QCA (Qualitative Comparative
   Analysis). Given the outcome and conditions, it returns an object of
-  class PI, which contains all the possible configurations leading to
+  class 'QCA', which contains all the possible configurations leading to
   the outcome. It can handle all three kinds of QCA., namely csQCA,
   mvQCA, and fsQCA.
 }

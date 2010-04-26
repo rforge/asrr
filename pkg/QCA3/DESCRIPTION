@@ -2,7 +2,7 @@ Package: QCA3
 Type: Package
 Title: Qualitative Comparative Analysis with R
 Version: 0.0-3
-Date: 2009-09-28
+Date: 2010-04-26
 Author: Ronggui HUANG
 Maintainer: Ronggui HUANG<ronggui.huang@gmail.com>
 Imports: lpSolve
