@@ -1,3 +1,9 @@
+2010-04-26
+	* unexport several functions.
+	* revert solvePIChart's method argument to previous one (so gtools is not required).
+	* improvement of reduce.Rd and minor bugfix of CoD.rd and suffnec.Rd.
+	* to make it pass R CMD check.
+
 2010-03-23
 	* forumla method of reduce.
 

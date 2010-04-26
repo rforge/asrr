@@ -20,7 +20,7 @@ Data used in "The consolidation of democracy: comparing Europe and Latin America
     \item{\code{EDUCATION}}{a numeric vector}
     \item{\code{eduhi}}{a numeric vector}
     \item{\code{ETHNOLING}}{a numeric vector}
-    \item{\code{ethnolin}}{a numeric vector}
+    \item{\code{ethlihom}}{a numeric vector}
     \item{\code{DIST}}{a numeric vector}
     \item{\code{close}}{a numeric vector}
     \item{\code{DEMYEARS}}{a numeric vector}
@@ -46,27 +46,28 @@ Schneider, 2009, "The consolidation of democracy: comparing Europe and Latin Ame
 data(CoD)
 # Examples from Chapter 7
 ### table 6.2 in p77
-round(apply(CoD[,c("econdev","eduhi","ethnolin","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(x,CoD$cod,'great')),3)
-round(apply(CoD[,c("econdev","eduhi","ethnolin","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(1-x,CoD$cod,'great')),3)
-round(apply(CoD[,c("econdev","eduhi","ethnolin","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(x,1-CoD$cod,'great')),3)
-round(apply(CoD[,c("econdev","eduhi","ethnolin","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(1-x,1-CoD$cod,'great')),3)
+round(apply(CoD[,c("econdev","eduhi","ethlihom","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(x,CoD$cod,'great')),3)
+round(apply(CoD[,c("econdev","eduhi","ethlihom","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(1-x,CoD$cod,'great')),3)
+round(apply(CoD[,c("econdev","eduhi","ethlihom","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(x,1-CoD$cod,'great')),3)
+round(apply(CoD[,c("econdev","eduhi","ethlihom","close","demex","nocom","parlia","efpahi","decent")],2,FUN=function(x) consistency(1-x,1-CoD$cod,'great')),3)
 round(apply(CoD[,c("econdev","demex")],2,FUN=function(x) coverage(1-x,1-CoD$cod,'great')),3)
 round(consistency(apply(1-CoD[,c("econdev","demex")],1,min),1-CoD$cod,'great'),3)
 round(coverage(apply(1-CoD[,c("econdev","demex")],1,min),1-CoD$cod,'great'),3)
 
 ## QCA of remote conditions
-reduce(CoD,'cod',c('econdev','ethnolin','close','demex','nocom'),'positive','include',case='label',pre='fs_truthTable',keep=F)
+reduce(CoD,'cod',c('econdev','ethlihom','close','demex','nocom'),'positive','include',case='label',pre='fs_truthTable',keep=FALSE)
 
 ## consitency of remote conditions as sufficent condition (table 6.4 in p82)
-round(apply(CoD[,c("econdev","ethnolin","nocom")],2,FUN=function(x) consistency(x,CoD$cod,'less')),3)
-round(apply(CoD[,c("econdev","ethnolin","nocom")],2,FUN=function(x) coverage(x,CoD$cod,'less')),3)
-round(consistency(apply(CoD[,c("econdev","ethnolin","nocom")],1,max),CoD$cod),3)
-round(coverage(apply(CoD[,c("econdev","ethnolin","nocom")],1,max),CoD$cod),3)
+round(apply(CoD[,c("econdev","ethlihom","nocom")],2,FUN=function(x) consistency(x,CoD$cod,'less')),3)
+round(apply(CoD[,c("econdev","ethlihom","nocom")],2,FUN=function(x) coverage(x,CoD$cod,'less')),3)
+round(consistency(apply(CoD[,c("econdev","ethlihom","nocom")],1,max),CoD$cod),3)
+round(coverage(apply(CoD[,c("econdev","ethlihom","nocom")],1,max),CoD$cod),3)
 
 ## table 6.6 in page 86
 reduce(CoD,'cod',c('parlia','efpahi','decent'),'positive','include',case='label',pre='fs_truthTable')
-reduce(CoD,'cod',c('econdev','ethnolin','nocom','parlia','efpahi','decent'),'positive','include',case='label',pre='fs_truthTable')
+reduce(CoD,'cod',c('econdev','ethlihom','nocom','parlia','efpahi','decent'),'positive','include',case='label',pre='fs_truthTable')
 ## table 6.7 in pp87-88
-fs_truthTable(CoD,'cod',c('econdev','ethnolin','nocom','parlia','efpahi','decent'),case='label')
+fs_truthTable(CoD,'cod',c('econdev','ethlihom','nocom','parlia','efpahi','decent'),case='label')
+
 }
 \keyword{datasets}

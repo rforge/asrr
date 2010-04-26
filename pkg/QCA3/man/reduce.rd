@@ -1,6 +1,7 @@
 \name{reduce}
 \alias{reduce}
-\alias{qca}
+\alias{reduceOld}
+%\alias{qca}
 \alias{reduce.truthTable}
 \alias{reduce.default}
 \alias{print.QCA}
@@ -17,9 +18,6 @@
 \usage{
 reduce(mydata,...)
 
-## alias of reduce
-qca(mydata,...)
-
 \method{reduce}{truthTable}(mydata, explain = c("positive", "negative"),
        remainders = c("exclude","include"),
        contradictions = c("remainders","positive","negative"),
@@ -27,6 +25,15 @@ qca(mydata,...)
        keepTruthTable = TRUE,...)
 
 \method{reduce}{default}(mydata, outcome, conditions,
+       explain = c("positive", "negative"),
+       remainders = c("exclude", "include"),
+       contradictions = c("remainders","positive", "negative"),
+       dontcare = c("remainders", "positive", "negative"),
+       preprocess = c("cs_truthTable","fs_truthTable", "pass"),
+       nlevels = rep(2, length(conditions)), keepTruthTable = TRUE, ...)
+
+## previous version of default method of reduce.
+reduceOld(mydata, outcome, conditions,
        explain = c("positive", "negative"),
        remainders = c("exclude", "include"),
        contradictions = c("remainders","positive", "negative"),
@@ -98,18 +105,32 @@ extraction on a list. you can refer to \code{[} for more details.}
   The traditional way uses upper-case letters representing 1 and and
   lower-case letters reprensenting 0. The Tosmana-style uses
   \code{condition{value}} to represent the prime implicants.
+
+  Since version 0.0-3, reduce uses enhanced internal function ereduce1
+(which in uses enhanced internal function esubset). Yet, original
+version of reduce is kept and renamed as reduceOld, thus it can used to
+double check the new reduce function.
+
 }
 \value{
   An object of class "QCA". It is essentailly a list of 10 components.
   \item{solutions}{ a list of data.frame, each data frame represents one solution.}
-  \item{commonSolutions}{}
-  \item{solutionsIDX}{}
-  \item{primeImplicants}{}
+  \item{commonSolutions}{A list of lenth nrow(solutionsIDX). For each
+  row of solutionsIDX, if the primeImplicants index are the same for all
+  solutions, then the index is return. Otherwise, it is NULL.}
+  \item{solutionsIDX}{a matrix. Each column represents one
+  solution. The number of the matrix is row index of primeImplicants.}
+  \item{primeImplicants}{A matrix of prime implicants.}
   \item{truthTable}{a truthTable if keepTruthTable is TRUE, otherwise NULL.}
   \item{explained}{The configuration of conditions for explained cases. Note it is not on basis of case but basis of configuration.}
-  \item{idExclude}{}
+  \item{idExclude}{integer vector. id of observed configurations that are
+  excluded from minimization. The meaning of id is equivalent to the
+  line number of a configuration discussed in Dusa (2007).} 
   \item{nlevels}{a integer vector, the number of levels of each condition.}
-  \item{PIChart}{}
+  \item{PIChart}{a prime implicants charts, constructed according to
+  primeImplicants and explained. It is a logic matrix with dimension of
+  nrow(primeImplicants)x ncol(explained). It is TRUE if the
+  corresponding primeImplicant covers the corresponding explained.}
   \item{call}{the matched call.}
 }
 \references{
@@ -151,10 +172,14 @@ extraction on a list. you can refer to \code{[} for more details.}
   \code{eqmcc} eliminates redundant PIs before solving the PIChart
   (Thanks Adrian for pointting it out), but \code{reduce} does not (HUANG, 2009).
   \code{reduce} is a bit greedy in terms of memory usage, for 15 conditions, it
-  uses proximately 500 to 600 Mb memory.
+  uses proximately 500 to 600 Mb memory in typical QCA study. I emphasis
+  "typical" because the exact scenario also depends on the number of
+  observed configurations.
 }
-\seealso{  \code{\link[QCA]{factorize}}, \code{\link{SA}},
-  \code{\link{CSA}}, \code{\link{constrReduce}}}
+\seealso{
+\code{\link[QCA]{factorize}}, \code{\link{SA}}, \code{\link{CSA}},
+  \code{\link{constrReduce}}
+}
 \examples{
 \dontrun{
 data(Osa,package="QCA")

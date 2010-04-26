@@ -241,27 +241,34 @@ PIChart <- function(primeImplicants,explained=NULL){
   ans
 }
 
-solvePIChart <- function (PIChart,method=c("combn","combinations"))
+solvePIChart <- function (PIChart, method=c("combn"))
+    ## method=c("combn","combinations")
+    ## for large number of conditions, gtolls may be faster
+    ## until it is necessary, used combn only since combn doesn't depend on third party package
 {
-  ## modified version of QCA:::solveChart
-  if (!is.logical(PIChart)) {
-    stop("Please use a logical matrix, such as an object returned by PIChart.\n")
-  }
-  if (all(dim(PIChart) > 1)) {
-    lpobj <- lpSolve:::lp(direction="min", objective.in=rep(1, nrow(PIChart)),const.mat=t(PIChart),const.dir=">=",1,all.bin=TRUE)
-    if (lpobj$status!=0) stop("Can not solve this PMChart.")
-    k <- sum(lpobj$solution)  ## lpobj$solution is one possible solution, but not all.
-    method <- match.arg(method)
-    if (method=="combn")  combos <- combn(nrow(PIChart), k) else if (method=="combinations"){
-        options(expressions=500000)
-        combos <- t(gtools:::combinations(nrow(PIChart), k))
+    ## modified version of QCA:::solveChart
+    if (!is.logical(PIChart)) {
+        stop("Please use a logical matrix, such as an object returned by PIChart.\n")
     }
-    sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(PIChart[idx,,drop = FALSE])>0)),drop=FALSE]
-  }
-  else {
-    sol.matrix <- matrix(seq_len(nrow(PIChart)),ncol=1)
-  }
-  sol.matrix ## now always return a matrix
+    if (all(dim(PIChart) > 1)) {
+        lpobj <- lpSolve:::lp(direction="min", objective.in=rep(1, nrow(PIChart)),const.mat=t(PIChart),const.dir=">=",1,all.bin=TRUE)
+        if (lpobj$status!=0) stop("Can not solve this PMChart.")
+        k <- sum(lpobj$solution)  ## lpobj$solution is one possible solution, but not all.
+        method <- match.arg(method)
+        if (method=="combn")  {
+            combos <- combn(nrow(PIChart), k)
+        }
+        ## else if (method=="combinations") {
+        ##     options(expressions=500000)
+        ##     combos <- t(gtools:::combinations(nrow(PIChart), k))
+        ## }
+        ## until it is necessary, used combn only since combn doesn't depend on third party package
+        sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(PIChart[idx,,drop = FALSE])>0)),drop=FALSE]
+    }
+    else {
+        sol.matrix <- matrix(seq_len(nrow(PIChart)),ncol=1)
+    }
+    sol.matrix ## now always return a matrix
 }
 
 lowerLimite <- function(x, n, conf.level=0.95) {
@@ -570,7 +577,7 @@ reduce.default <- function(mydata,outcome,conditions,
   ans
 }
 
-qca <- reduce ## alias of reduce
+## qca <- reduce ## alias of reduce
 
 reduceOld <- function(mydata,outcome,conditions,
                    explain=c("positive","negative"),
@@ -769,7 +776,7 @@ print.summary.QCA <- function(x,digits=3,traditional=FALSE,...){
 
 
 subCombination <- function(implicant,nlevels=rep(2,length(implicant)))
-{ 
+{
   if (any(na.id <- is.na(implicant))){
     IDX <- cumprod(nlevels+1)/(nlevels+1)
     idx <- which(na.id)

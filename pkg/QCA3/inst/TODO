@@ -1,1 +1,9 @@
-procedure of MSDO/MDSO in p29
+* implement procedure of MSDO/MDSO in p29
+
+* implement TQCA?
+
+* undocumented functions include findNoCSA, findParsimonious, overlap, and which.commonConfiguration.
+
+* plot method for QCA object with aids from Vennerable packages.
+
+* Can use gtools to improve speed of solvePIChart(), but not use it until necessary.

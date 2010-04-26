@@ -45,5 +45,5 @@ Their Consistency and Coverage." Political Analysis 14 (3) : 291-310
  \author{Ronggui HUANG}
  \seealso{ \code{\link[QCA3]{coincid}}}
  \examples{
-suffnec(CoD[,c('cod',"econdev","ethnolin","nocom")]) 
+suffnec(CoD[,c('cod',"econdev","ethlihom","nocom")]) 
 }
