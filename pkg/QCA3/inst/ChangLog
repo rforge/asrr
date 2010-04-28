@@ -1,3 +1,7 @@
+2010-04-28
+	* update method for QCA is exported.
+	* minor bugfix of reduce.truthTable.
+
 2010-04-27
 	* bugfix of reduce2 (configurations can be used more than one time to yield simpler solution).
 	* dontcare case is denoted by value of -9 now.
@@ -5,6 +9,7 @@
 	* argument complete is defunct (in cs_truthTable and fs_truthTable)
 	* new function of mv_truthTable (based on cs_truthTable).
 	* reduce function has been tidied with change of argument.
+	* change track can be found in rev 92.
 
 2010-04-26
 	* unexport several functions.

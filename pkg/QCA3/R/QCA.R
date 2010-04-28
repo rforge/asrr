@@ -1047,7 +1047,7 @@ update.QCA <- function (object, ..., evaluate = TRUE)
     argsList <- c("mydata", "outcome", "conditions", "cutoff1", "cutoff0", "cutoffc",
                   "complete", "weight", "show.cases", "cases", "nlevels", "ncases_cutoff",
                   "consistency_cutoff", "quiet", "explain", "remainders",
-                  "contradictions", "dontcare", "preprocess", "keepTruthTable")
+                  "contradictions", "dontcare", "preprocess", "keepTruthTable","missing")
     IDX <- pmatch(names(extras),argsList)
     if (any(is.na(IDX))) stop("multiple arguments are matched.")
     names(extras) <- argsList[IDX]
