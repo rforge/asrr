@@ -15,7 +15,7 @@
 \usage{
 reduce(x,...)
 
-## No meaningful default method is defined.
+## default method is an alias of truthTable method.
 
 \method{reduce}{truthTable}(x, explain = c("positive", "negative"),
        remainders = c("exclude","include"),
@@ -76,6 +76,9 @@ reduce(x,...)
   necessary condition is a trivial necessary condition(Caramani,
   2009:62). It is not necessary to include trivial necessary condition
   in the final solutions.
+
+  It is good practices to generate and examine a truthTable, then use
+  truthTable method of reduce to do the boolean minimization.
 
   Since version 0.0-3, reduce uses enhanced internal function ereduce1
   (which uses enhanced internal function esubset). It has been tested

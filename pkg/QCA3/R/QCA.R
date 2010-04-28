@@ -592,10 +592,10 @@ reduce <- function(x,...){
     UseMethod('reduce')
 }
 
-reduce.default <- function(x,...){
-    stop("No default method of reduce since 0.0-3 version.")
-}
-
+## reduce.default <- function(x,...){
+##     stop("No default method of reduce since 0.0-3 version.")
+## }
+reduce.default <-
 reduce.truthTable <- function(x,
                               explain=c("positive","negative"),
                               remainders=c("exclude","include"),
@@ -603,6 +603,7 @@ reduce.truthTable <- function(x,
                               dontcare=c("remainders","positive","negative"),
                               keepTruthTable=TRUE,...)
 {
+    if (!"truthTable"  %in% class(x) ) stop("x is not a truthTable.")
     mydata <- x$truthTable
     conditions <- x$conditions
     nlevels <- x$nlevels
@@ -625,6 +626,7 @@ reduce.truthTable <- function(x,
     idExclude <- apply(dat0,1,implicant2Id,nlevels=nlevels)
     if (explain=="positive") explained <- dat1
     if (explain=="negative") explained <- dat0
+    if (nrow(explained)==0) stop("No configuration is associated with the explained outcome.")
     if (remainders=="include"){
         ## if necessary conditons -> add some remainders to dat0
         superSets1 <- apply(dat1, 1, superSet,nlevels=nlevels)
