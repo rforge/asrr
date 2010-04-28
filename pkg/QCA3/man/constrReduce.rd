@@ -26,9 +26,9 @@ constrReduce(object, exclude = NULL, include = NULL,necessary = NULL)
 
   Either case you can use constrReduce. Usually, the exclude and include
   argument should repsent a set of configurations. In these case, there
-  should be no 'NA' in the data frame. However, it is NOT wrong to
-  include NA in the data frame. When there is NA, it means a multiple
-  configurations.
+  should be no '-9' in the data frame. However, it is NOT wrong to
+  include -9 in the data frame. When there is -9, it means a multiple
+  configurations because -9 denotes "dont' care".
 
   If you attain a solution without including remainders, you can see if
   there is necessary condition. If it does, then you may want to include
@@ -68,4 +68,4 @@ constrReduce(a,inc=sa$solutions[[1]]) ## == b1
 constrReduce(b1,exc=sa$solutions[[1]]) ## == a
 }
 }
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

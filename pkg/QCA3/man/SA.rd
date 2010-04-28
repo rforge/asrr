@@ -42,6 +42,14 @@ CSA(object1, object0)
 \value{
 For \code{SA} and \code{CSA}, the value is an object of class
   c("SA","QCA"). It is a list of 8 components.
+\item{solutions}{}
+\item{primeImplicants}{}
+\item{explained}{}
+\item{idExclude}{}
+\item{nlevels}{}
+\item{PIChart}{}
+\item{call}{}
+\item{SAIDs}{}
 }
 \references{
   Yamasaki and Rihoux. 2009. A commented review of applications. In
@@ -50,7 +58,7 @@ For \code{SA} and \code{CSA}, the value is an object of class
   Ragin. Sage.
 }
 \author{Ronggui HUANG}
-\seealso{\code{\link{reduce}} \code{\link{constrReduce}}}
+\seealso{\code{\link{reduce}} and \code{\link{constrReduce}}}
 \examples{
 \dontrun{
 data(Yamasaki,package="QCA")
@@ -63,5 +71,4 @@ CSA(ans0[1],ans1) ## no CSA, please note the subset operation
 CSA(ans0[2],ans1) ## ans0[2]-ans0[5] have CSA
 }
 }
-%\keyword{ ~kwd1 }
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

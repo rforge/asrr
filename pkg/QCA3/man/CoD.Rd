@@ -33,9 +33,7 @@ Data used in "The consolidation of democracy: comparing Europe and Latin America
     \item{\code{decent}}{a numeric vector}
   }
 }
-\details{
-
-}
+%\details{}
 \source{
 This data set is kindly provided by Prof Schneider.
 }

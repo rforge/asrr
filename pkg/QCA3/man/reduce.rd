@@ -1,54 +1,48 @@
 \name{reduce}
 \alias{reduce}
-\alias{reduceOld}
-\alias{reduce.truthTable}
 \alias{reduce.default}
-\alias{print.QCA}
-\alias{summary.QCA}
-\alias{[.QCA}
+\alias{reduce.data.frame}
+\alias{reduce.truthTable}
+\alias{reduce.formula}
 \title{ Boolean miniziation for csQCA, mvQCA and fsQCA }
 \description{
   This is the core funtion for QCA (Qualitative Comparative
   Analysis). Given the outcome and conditions, it returns an object of
   class 'QCA', which contains all the possible configurations leading to
-  the outcome. It can handle all three kinds of QCA., namely csQCA,
-  mvQCA, and fsQCA.
+  the outcome. It can handle various kinds of QCA., namely csQCA,
+  mvQCA, fsQCA and csTQCA.
 }
 \usage{
-reduce(mydata,...)
+reduce(x,...)
 
-\method{reduce}{truthTable}(mydata, explain = c("positive", "negative"),
+## No meaningful default method is defined.
+
+\method{reduce}{truthTable}(x, explain = c("positive", "negative"),
        remainders = c("exclude","include"),
        contradictions = c("remainders","positive","negative"),
        dontcare = c("remainders", "positive", "negative"),
        keepTruthTable = TRUE,...)
 
-\method{reduce}{default}(mydata, outcome, conditions,
-       explain = c("positive", "negative"),
-       remainders = c("exclude", "include"),
-       contradictions = c("remainders","positive", "negative"),
-       dontcare = c("remainders", "positive", "negative"),
-       preprocess = c("cs_truthTable","fs_truthTable", "pass"),
-       nlevels = rep(2, length(conditions)), keepTruthTable = TRUE, ...)
+\method{reduce}{data.frame}(x, outcome, conditions,
+        explain = c("positive", "negative"), 
+        remainders = c("exclude", "include"),
+        contradictions = c("remainders", "positive", "negative"),
+        dontcare = c("remainders", "positive", "negative"),
+        preprocess = c("cs_truthTable", "fs_truthTable",
+        "mv_truthTable"), 
+       keepTruthTable = TRUE, ...)
 
-## previous version of default method of reduce.
-reduceOld(mydata, outcome, conditions,
-       explain = c("positive", "negative"),
-       remainders = c("exclude", "include"),
-       contradictions = c("remainders","positive", "negative"),
-       dontcare = c("remainders", "positive", "negative"),
-       preprocess = c("cs_truthTable","fs_truthTable", "pass"),
-       nlevels = rep(2, length(conditions)), keepTruthTable = TRUE, ...)
-
-\method{print}{QCA}(x, traditional = TRUE, show.truthTable = TRUE, ...)
-
-\method{summary}{QCA}(object, traditional = TRUE, show.case = TRUE, ...)
-
-\method{[}{QCA}(object, which)
+\method{reduce}{formula}(x, data, explain = c("positive", "negative"),
+      remainders = c("exclude", "include"),
+      contradictions = c("remainders", "positive", "negative"),
+      dontcare = c("remainders", "positive", "negative"), 
+      preprocess = c("cs_truthTable", "fs_truthTable", "mv_truthTable"), 
+      keepTruthTable = TRUE, ...)
 }
 \arguments{
-  \item{mydata}{a data frame}
+  \item{x}{a R object, it could be a truthTable, data frame or a formula}
   \item{outcome}{a character string to specify the outcome}
+  \item{data}{a data frame, which is not optional.}
   \item{conditions}{a character vector to specify the conditions}
   \item{explain}{a character string specifying the cases to be
     explained. Must one of "positive" or "negative".}
@@ -61,28 +55,10 @@ reduceOld(mydata, outcome, conditions,
     dontcare cases. Must one of "remainders", "positive", "negative"}
   \item{preprocess}{a character string specifying the function for
     preprocessing data, which turns raw data to a truthTable. Must one
-    of \code{cs_truthTable}, \code{fs_truthTable} or \code{pass}}
-  \item{nlevels}{a integer vector, specifying number of levels for the
-    corresponding conditions. For csQCA and fsQCA, it is always
-    \code{rep(2,length(conditions))}}
+    of \code{cs_truthTable}, \code{fs_truthTable} or \code{mv_truthTable}.}
   \item{keepTruthTable}{logical, when TRUE the returned object keeps
     the truthTable}
-  \item{\dots}{ For \code{reduce}, arguements passed to preprocess
-    function; for \code{print.QCA} and \code{summary.QCA}, currently not
-    used.}
-  \item{x}{an object of class 'QCA', which is usually returned from
-    \code{reduce}.}
-  \item{traditional}{logical, use traditional symbol when it is
-    TRUE. Otherwise, use Tosmana-style symbol.}
-  \item{show.truthTable}{logical, show truthTable when it is TRUE. Of
-    course, it has effect only when the 'keepTruthTable' argument of
-    \code{reduce} is set to TRUE.}
-  \item{object}{an object of class 'QCA', which is usually returned from
-    \code{reduce}.}
-  \item{show.case}{logical, show case names when it is TRUE.}
-  \item{which}{numeric vector, indices specifying elements to
-extract. Extraction of a solution or (prime implicant) is essentially a
-extraction on a list. you can refer to \code{[} for more details.}
+  \item{\dots}{ other arguments passed to a function.}
 }
 \details{
   Outcome is the variable to be explained by the conditions. Conditions
@@ -101,15 +77,9 @@ extraction on a list. you can refer to \code{[} for more details.}
   2009:62). It is not necessary to include trivial necessary condition
   in the final solutions.
 
-  The traditional way uses upper-case letters representing 1 and and
-  lower-case letters reprensenting 0. The Tosmana-style uses
-  \code{condition{value}} to represent the prime implicants.
-
   Since version 0.0-3, reduce uses enhanced internal function ereduce1
-(which in uses enhanced internal function esubset). Yet, original
-version of reduce is kept and renamed as reduceOld, thus it can used to
-double check the new reduce function.
-
+  (which uses enhanced internal function esubset). It has been tested
+  preliminary.
 }
 \value{
   An object of class "QCA". It is essentailly a list of 10 components.
@@ -134,7 +104,7 @@ double check the new reduce function.
 }
 \references{
   Caramani, Daniele. 2009. "Introduction to the comparative method with
-  Boolean algebra." SAGE.
+  Boolean algebra." Sage.
 
   Cronqvist, Lasse and  Berg-Schlosser, Dirk. 2009. Multi-Value QCA
   (mvQCA). In Configuraional comparative Methods: qualitative
@@ -224,27 +194,27 @@ SA(ans0) ## 18 simplifying assumptions
 
 ## mvQCA
 conditions <- c("GNPCAP", "URBANIZA", "LITERACY", "INDLAB")
-reduce(Lipset_mv,"SURVIVAL",conditions,explain="positive",remainder="exclude",case="CASEID",nlevels=c(3,2,2,2))
+reduce(Lipset_mv,"SURVIVAL",conditions,explain="positive",remainder="exclude",case="CASEID",prep="mv_truthTable")
 ## formula 1 Cronqvist and Berg-Schlosser(2009:80)
 ans1 <-
-  reduce(Lipset_mv,"SURVIVAL",conditions,explain="positive",remainder="include",case="CASEID",nlevels=c(3,2,2,2))
+  reduce(Lipset_mv,"SURVIVAL",conditions,explain="positive",remainder="include",case="CASEID",prep="mv_truthTable")
 print(ans1) ## formula 2 in Cronqvist and Berg-Schlosser(2009:81)
 SA(ans1) ## 9 SAs (see end note 7)
-reduce(Lipset_mv,"SURVIVAL",conditions,explain="negative",remainder="exclude",case="CASEID",nlevels=c(3,2,2,2))
+reduce(Lipset_mv,"SURVIVAL",conditions,explain="negative",remainder="exclude",case="CASEID",prep="mv_truthTable")
 ## formula 3 in Cronqvist and Berg-Schlosser(2009:81)
 ans0 <-
-  reduce(Lipset_mv,"SURVIVAL",conditions,explain="negative",remainder="include",contrad="positive",case="CASEID",nlevels=c(3,2,2,2))
+  reduce(Lipset_mv,"SURVIVAL",conditions,explain="negative",remainder="include",contrad="positive",case="CASEID",prep="mv_truthTable")
 print(ans0) ## formula 4 in Cronqvist and Berg-Schlosser(2009:81)
 SA(ans0) ## 7 SAs (see end note 9)
 
 ## fsQCA
 conditions <- c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ", "Stable.FZ")
-reduce(mydata=Lipset_fs,"Survived.FZ",conditions,explain="positive",remaind="exclude",prepro="fs",consistency=0.7)
+reduce(Lipset_fs,"Survived.FZ",conditions,explain="positive",remaind="exclude",prepro="fs",consistency=0.7)
 ## Formula 1 in Ragin (2009:112)
-reduce(mydata=Lipset_fs,"Survived.FZ",conditions,explain="positive",remaind="include",prepro="fs",consistency=0.7)
+reduce(Lipset_fs,"Survived.FZ",conditions,explain="positive",remaind="include",prepro="fs",consistency=0.7)
 ## Formula 2 in Ragin (2009:114)
-reduce(mydata=Lipset_fs,"Survived.FZ",conditions,explain="negative",remaind="exclude",prepro="fs",consistency=0.7)
+reduce(Lipset_fs,"Survived.FZ",conditions,explain="negative",remaind="exclude",prepro="fs",consistency=0.7)
 ## Formula 5 in Ragin (2009:115)
-reduce(mydata=Lipset_fs,"Survived.FZ",conditions,explain="negative",remaind="include",prepro="fs",consistency=0.7)
+reduce(Lipset_fs,"Survived.FZ",conditions,explain="negative",remaind="include",prepro="fs",consistency=0.7)
 ## Formula 6 in Ragin (2009:117)
 }

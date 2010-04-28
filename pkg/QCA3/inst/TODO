@@ -1,8 +1,6 @@
 * implement procedure of MSDO/MDSO in p29
 
-* implement TQCA?
-
-* undocumented functions include findNoCSA, findParsimonious, overlap, and which.commonConfiguration.
+* undocumented functions include findNoCSA, findParsimonious, overlap, which.commonConfiguration and update method.
 
 * plot method for QCA object with aids from Vennerable packages.
 

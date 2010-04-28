@@ -1,5 +1,5 @@
 export(constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,
-       fs_tt, fs_truthTable, reduce,reduceOld, SA, simplifyingAssumption, suffnec,
+       fs_tt, fs_truthTable, mv_truthTable, reduce, SA, simplifyingAssumption, suffnec,
        thresholdssetter)
 S3method(drop1, truthTable)
 S3method(print, coincid)
@@ -8,6 +8,7 @@ S3method(print, QCA)
 S3method(print, suffnec)
 S3method(print, summary.QCA)
 S3method(print, truthTable)
+S3method(reduce, data.frame)
 S3method(reduce, default)
 S3method(reduce, formula)
 S3method(reduce, truthTable)
