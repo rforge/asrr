@@ -1,3 +1,7 @@
+2010-04-30
+	* add new dataset Yamasaki2009.
+	* minor bugfix of summary.QCA.
+
 2010-04-28
 	* update method for QCA is exported.
 	* minor bugfix of reduce.truthTable.

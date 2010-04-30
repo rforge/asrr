@@ -841,6 +841,7 @@ summary.QCA <- function(object,traditional=TRUE,show.case=TRUE,...){
     ## but the actualy meaning of rownames doesn't matter.
     ## cases covered by multiple PIs???
     explain <- object$call$explain
+    if (is.null(explain)) explain <- "positive" ## will be null if default
     truthTable <- object$truthTable
     PIs <- prettyPI(object,traditional=traditional)
     Cases <- truthTable[rownames(truthTable) %in% rownames(object$explained), "Cases"]
