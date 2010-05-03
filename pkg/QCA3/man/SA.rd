@@ -42,14 +42,16 @@ CSA(object1, object0)
 \value{
 For \code{SA} and \code{CSA}, the value is an object of class
   c("SA","QCA"). It is a list of 8 components.
-\item{solutions}{}
-\item{primeImplicants}{}
-\item{explained}{}
-\item{idExclude}{}
-\item{nlevels}{}
-\item{PIChart}{}
-\item{call}{}
-\item{SAIDs}{}
+\item{solutions}{a list of data frame.For SA, each data frame consists one set of
+  simplifying assumptions of each solution. For CSA, it presents a set
+  of contradictory simplifying assumptions. Each row of a data frame is one implicant.}
+\item{primeImplicants}{the same as that of object.}
+\item{explained}{the same as that of object for SA and object1 for CSA.}
+\item{idExclude}{the same as that of object for SA and object1 for CSA.}
+\item{nlevels}{the same as that of object for SA and object1 for CSA.}
+\item{PIChart}{the same as that of object for SA and object1 for CSA.}
+\item{call}{the same as that of object for SA and object1 for CSA.}
+\item{SAIDs}{a list of integer vector, corresponding grouping id of solutions component.}
 }
 \references{
   Yamasaki and Rihoux. 2009. A commented review of applications. In
