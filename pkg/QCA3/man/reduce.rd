@@ -94,7 +94,7 @@ reduce(x,...)
   solution. The number of the matrix is row index of primeImplicants.}
   \item{primeImplicants}{A matrix of prime implicants.}
   \item{truthTable}{a truthTable if keepTruthTable is TRUE, otherwise NULL.}
-  \item{explained}{The configuration of conditions for explained cases. Note it is not on basis of case but basis of configuration.}
+  \item{explained}{A data frame, representing the configuration of conditions for explained cases. Note it is not on basis of case but basis of configuration.}
   \item{idExclude}{integer vector. id of observed configurations that are
   excluded from minimization. The meaning of id is equivalent to the
   line number of a configuration discussed in Dusa (2007).} 

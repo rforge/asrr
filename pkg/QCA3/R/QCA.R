@@ -856,6 +856,7 @@ summary.QCA <- function(object,traditional=TRUE,show.case=TRUE,...){
         N_negative <- sum(truthTable["freq0"])
         N <- apply(object$PIChart,1,function(each)sum(each * NCase))
         coverage <- apply(object$solutionsIDX,2,function(each) N[each])
+        ## a matrix, each column represents one solution
         rownames(coverage) <- paste("PI",seq_len(nrow(coverage)),sep=".")
         colnames(coverage) <- paste("S",seq_len(ncol(coverage)),sep=".")
         prop <- coverage/N_total

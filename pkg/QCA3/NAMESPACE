@@ -1,7 +1,9 @@
 export(constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,
        fs_tt, fs_truthTable, mv_truthTable, reduce, SA, simplifyingAssumption, suffnec,
        thresholdssetter)
-S3method(drop1, truthTable)
+S3method(coverage, QCA)
+S3method(coverage, default)
+#S3method(drop1, truthTable)
 S3method(print, coincid)
 S3method(print, QCA)
 #S3method(plot, QCA)
