@@ -49,7 +49,7 @@ coverage.default <- function(x,y,alternative=c("less","greater")){
 }
 
 
-coverage.QCA <- function(x,...){
+coverage.QCA <- function(x,traditional=TRUE,...){
     explain <- x$call$explain
     if (is.null(explain)) explain <- "positive" ## will be null if default
     truthTable <- x$truthTable
@@ -77,6 +77,11 @@ coverage.QCA <- function(x,...){
     ## a list of logic matrix (ncol=nrow(object$explained), nrow=number of implicants in a solution)
     ## each column represents one implicant
     ## TRUE suggest the implicant covers a
+    implicantString <- lapply(x$solutions,
+                              function(eachSolution){
+                                apply(eachSolution,1,toString,traditional=traditional,
+                                      nlevels=x$nlevels,name=names(x$solutions[[1]]))
+                              }) ## end of implicantString
     coverage <- vector("list",length(x$solutions))
     for (i in 1:length(x$solutions)){
         NMatrix <- N_explainedMatrix
@@ -88,10 +93,16 @@ coverage.QCA <- function(x,...){
             if (any(idxUnique)) unique <- c(unique,sum(NMatrix[,j,drop=TRUE][idxUnique])) else
             unique <- c(unique,0)
         }
-        coverage[[i]] <- list(raw=raw,unique=unique)
-    }
+        coverage[[i]] <- data.frame(implicant=implicantString[[1]],
+                                    raw=raw,unique=unique)
+      }
+    cat(sprintf("Total number of cases: %i\n",N_total))
+    cat(sprintf("Number of cases [1]: %i\n",N_positive))
+    cat(sprintf("Number of cases [0]: %i\n",N_negative))
+    cat(sprintf("Number of cases to explain: %i\n\n", N_T_explained))
+    cat("Coverage of each solution.\n\n")
     coverage
-}
+  }
 
 suffnec <- function(x,use=c("complete","pairwise")){
   consistency_fn <- function(x,y,alternative=c("xley","ylex"),...){

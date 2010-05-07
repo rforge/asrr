@@ -783,40 +783,42 @@ reduceOld <- function(mydata,outcome,conditions,
   ans
 }
 
-prettyPI <- function(object,traditional=TRUE,...){
 
-    toString <- function(implicant, traditional,nlevels,name){
-        ## nm <- name[!is.na(implicant)]
-        ## implicant <- implicant[!is.na(implicant)]
-        nm <- name[!is.dontcare(implicant)]
-        implicant <- implicant[!is.dontcare(implicant)]
-        if (traditional && all(nlevels==2)) {
-            nm[implicant==1] <- toupper(nm[implicant==1])
-            nm[implicant==0] <- tolower(nm[implicant==0])
-            res <- paste(nm,sep="",collapse="*")
-        } else {
-            res <- paste(nm,sprintf("{%s}",implicant),sep="",collapse="*")
-        }
-        res
-    } ## end of toString()-> turn each implicant into a string
-
-    var_names <- names(object$explained)
-    nlevels <- object$nlevels
-    solutions <- object$solutions
-
-    toPI <- function(solution){
-        if (is.null(solution)) {
-            ans <- list(PI="",N=0)
-        } else {
-            PIs <- apply(solution,1,toString,traditional=traditional,nlevels=nlevels,name=var_names)
-            PI <- paste(PIs,collapse=" + ")
-            ans <- list(PI=PI,N=length(PIs))
-        }
-    }
-
-    ans <- lapply(solutions,toPI)
-    ans
+toString <- function(implicant, traditional,nlevels,name){
+  ## turn each implicant into a string
+  ## nm <- name[!is.na(implicant)]
+  ## implicant <- implicant[!is.na(implicant)]
+  nm <- name[!is.dontcare(implicant)]
+  implicant <- implicant[!is.dontcare(implicant)]
+  if (traditional && all(nlevels==2)) {
+    nm[implicant==1] <- toupper(nm[implicant==1])
+    nm[implicant==0] <- tolower(nm[implicant==0])
+    res <- paste(nm,sep="",collapse="*")
+  } else {
+    res <- paste(nm,sprintf("{%s}",implicant),sep="",collapse="*")
+  }
+  res
 }
+
+
+prettyPI <- function(object,traditional=TRUE,...){
+  var_names <- names(object$explained)
+  nlevels <- object$nlevels
+  solutions <- object$solutions
+  
+  toPI <- function(solution){
+    if (is.null(solution)) {
+      ans <- list(PI="",N=0)
+    } else {
+      PIs <- apply(solution,1,toString,traditional=traditional,nlevels=nlevels,name=var_names)
+      PI <- paste(PIs,collapse=" + ")
+      ans <- list(PI=PI,N=length(PIs))
+    }
+  }
+  
+  ans <- lapply(solutions,toPI)
+  ans
+} ## end of prettyPI()
 
 print.QCA <- function(x,traditional=TRUE,show.truthTable=TRUE,...){
     cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")

@@ -1,5 +1,7 @@
 \name{coverage}
 \alias{coverage}
+\alias{coverage.QCA}
+\alias{coverage.default}
 \alias{consistency}
 \title{
 Coverage and consistency of x by y.
@@ -10,13 +12,18 @@ Coverage and consistency of x by y.
   consistency of x by y.
 }
 \usage{
-coverage(x, y, alternative = c("less", "greater"))
+
+coverage(x, ...)
+
+\method{coverage}{default}(x, y, alternative = c("less", "greater"))
+
+\method{coverage}{QCA}{x,traditional=TRUE,...}
 
 consistency(x, y, alternative = c("less", "greater"))
 }
 \arguments{
-  \item{x}{
-    a numeric vector of fuzzy set score.
+  \item{x}{a numeric vector of fuzzy set score for default method of
+    coverage and consistency. A QCA object for QCA method of coverage.
 }
 \item{y}{
   a numeric vector of fuzzy set score.
@@ -37,7 +44,12 @@ consistency(x, y, alternative = c("less", "greater"))
   condition (Ragin, 2008: 61).
 }
 \value{
-  a length-1 numeric vector.
+  For default method of coverage and consistency, the value is a
+  length-1 numeric vector.
+
+  For QCA method of coverage, it is a list of data frame. Each data
+  frame represent coverage of one solution. It contains three columns,
+  namely implicant, raw and unique (coverage in terms of number of case).
 }
 \references{
   Ragin, C. 2006. Set Relations in Social Research: Evaluating Their
