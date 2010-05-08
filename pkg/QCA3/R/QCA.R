@@ -592,9 +592,6 @@ reduce <- function(x,...){
     UseMethod('reduce')
 }
 
-## reduce.default <- function(x,...){
-##     stop("No default method of reduce since 0.0-3 version.")
-## }
 reduce.default <-
 reduce.truthTable <- function(x,
                               explain=c("positive","negative"),
@@ -603,6 +600,7 @@ reduce.truthTable <- function(x,
                               dontcare=c("remainders","positive","negative"),
                               keepTruthTable=TRUE,...)
 {
+    call <- match.call()
     if (!"truthTable"  %in% class(x) ) stop("x is not a truthTable.")
     mydata <- x$truthTable
     conditions <- x$conditions
@@ -630,7 +628,8 @@ reduce.truthTable <- function(x,
     if (remainders=="include"){
         ## if necessary conditons -> add some remainders to dat0
         superSets1 <- apply(dat1, 1, superSet,nlevels=nlevels)
-        dim(superSets1) <- NULL ## set dim to NULL rather than use as.vector to speed it up.
+        dim(superSets1) <- NULL
+        ## set dim to NULL rather than use as.vector to speed it up.
         superSets1 <- unique(superSets1)
         superSets0 <- apply(dat0, 1, superSet,nlevels=nlevels)
         dim(superSets0) <- NULL
@@ -648,9 +647,11 @@ reduce.truthTable <- function(x,
     sl <- solvePIChart(PIChart)
     solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
     commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
-    ans <- list(solutions=solutions,commonSolutions=commonSolutions,solutionsIDX=sl,primeImplicants=primeImplicants,
-                truthTable=truthTable,explained=explained,idExclude=idExclude,nlevels=nlevels,PIChart=PIChart,
-                call=call)
+    ans <- list(solutions=solutions,commonSolutions=commonSolutions,
+                solutionsIDX=sl,primeImplicants=primeImplicants,
+                truthTable=truthTable,explained=explained,
+                idExclude=idExclude,nlevels=nlevels,
+                PIChart=PIChart, call=call)
     class(ans) <- c("QCA")
     ans
 }
@@ -666,6 +667,7 @@ reduce.formula <- function(x, data,
 {
     ## x is a formula
     ## note that data is mandatory
+    call <- match.call()
     if (missing(data)) stop("argument data is missing.")
     term <- terms(x)
     if (attr(term,"response")==0) {stop("formula in the lef hand side is empty.")}
@@ -697,6 +699,7 @@ reduce.data.frame <- function(x, outcome, conditions,
                               keepTruthTable=TRUE,
                               ...)
 {
+    call <- match.call()
     explain <- match.arg(explain)
     remainders <- match.arg(remainders)
     contradictions <- match.arg(contradictions)
@@ -915,6 +918,9 @@ print.summary.QCA <- function(x,digits=3,traditional=FALSE,...){
 
 subCombination <- function(implicant,nlevels=rep(2,length(implicant)))
 {
+    ## It returns a subset of subSet(), that is subCombination
+    ## The difference between the two are: subSets may contain dontcare value
+    ## subCombination contains NO dontcare value.
     ## if (any(na.id <- is.na(implicant))){
     if (any(na.id <- is.dontcare(implicant))){
         IDX <- cumprod(nlevels+1)/(nlevels+1)
@@ -991,17 +997,21 @@ CSA <- function(object1,object0){
   ans
 }
 
-constrReduce <- function(object,exclude=NULL,include=NULL,necessary=NULL){
+constrReduce <- function(object,exclude=NULL,include=NULL,
+                         necessary=NULL){
+  remainders=FALSE
   ## get the intermediate solutions
   ## all arguments are data.frame with ncol=length(object$nlevels)
-  if (is.null(exclude) && is.null(include) && is.null(necessary)) stop("No constraint is provided.")
+  if (is.null(exclude) && is.null(include) && is.null(necessary)) {
+    stop("No constraint is provided.")
+  }
   explained <- object$explained
   nlevels <- object$nlevels
   solutions <- object$solutions
   if (length(solutions)>1) stop("There are multiple solutions.You can use '[' to select one.")
   solution <- solutions[[1]]
   ids1 <- unique(unlist(as.vector(apply(solution,1,subCombination ,nlevels=nlevels))))
-  idsExplained <- apply(explained,1,implicant2Id,nlevels)
+  ## idsExplained <- apply(explained,1,implicant2Id,nlevels)
   ## ids1 might include remainders, use idsExplained instead
   if (!is.null(exclude)){
     ## double check when there is NA in exclude???
@@ -1009,6 +1019,7 @@ constrReduce <- function(object,exclude=NULL,include=NULL,necessary=NULL){
     if (any(exclude > nlevels,na.rm=T)) stop("elements of exclude out of range.")
     ## idsExclude <- unlist(as.vector(apply(exclude,1,subSet,nlevels=nlevels)))
     idsExclude <- unlist(as.vector(apply(exclude,1,subCombination,nlevels=nlevels)))
+    superSetIdsExclude <- unlist(as.vector(apply(exclude,1,superSet,nlevels=nlevels)))
     ids1 <- setdiff(ids1, idsExclude)
   }
   if (!is.null(include)){
@@ -1022,7 +1033,22 @@ constrReduce <- function(object,exclude=NULL,include=NULL,necessary=NULL){
     }
     ids1 <- union(ids1,idsInclude)
   }
-  primesId  <- reduce2(ids1,nlevels=nlevels)
+  if (!remainders) {
+    primesId  <- reduce2(ids1,nlevels=nlevels)
+  }
+  if (remainders) {
+    superSetIdOfNotExplain <- apply(id2Implicant(object$idExclude,nlevels=nlevels),1,
+                                    superSet,nlevels=nlevels)
+    dim(superSetIdOfNotExplain) <- NULL
+    allSuperSetIdsExclude <- unique(c(superSetIdsExclude,superSetIdOfNotExplain))
+    superSetIdsExplain <- apply(id2Implicant(ids1,nlevels=nlevels),1,
+                                    superSet,nlevels=nlevels)
+    dim(superSetIdsExplain) <- NULL
+    superSetIdsExplain <- unique(superSetIdsExplain)
+    primesId <- ereduce1(setdiff(superSetIdsExplain,allSuperSetIdsExclude),
+                         nlevels=nlevels)
+    ## in ereduce1, primesId are ids of superSet of the explained
+  }
   primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=names(object$explained))
   if (!is.null(necessary)){
     Var_name <- names(necessary)

@@ -142,7 +142,7 @@ reduce(x,...)
   \code{\link[QCA]{eqmcc}} if speed becomes an issue for
   \code{\link{reduce}}. The disparity is due to the fact that
   \code{eqmcc} eliminates redundant PIs before solving the PIChart
-  (Thanks Adrian for pointting it out), but \code{reduce} does not (HUANG, 2009).
+  (Thanks Adrian for pointting it out), but \code{reduce} does not.
   \code{reduce} is a bit greedy in terms of memory usage, for 15 conditions, it
   uses proximately 500 to 600 Mb memory in typical QCA study. I emphasis
   "typical" because the exact scenario also depends on the number of

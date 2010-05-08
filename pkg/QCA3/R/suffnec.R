@@ -93,7 +93,7 @@ coverage.QCA <- function(x,traditional=TRUE,...){
             if (any(idxUnique)) unique <- c(unique,sum(NMatrix[,j,drop=TRUE][idxUnique])) else
             unique <- c(unique,0)
         }
-        coverage[[i]] <- data.frame(implicant=implicantString[[1]],
+        coverage[[i]] <- data.frame(implicant=implicantString[[i]],
                                     raw=raw,unique=unique)
       }
     cat(sprintf("Total number of cases: %i\n",N_total))

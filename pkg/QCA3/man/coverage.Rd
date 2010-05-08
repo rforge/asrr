@@ -4,7 +4,7 @@
 \alias{coverage.default}
 \alias{consistency}
 \title{
-Coverage and consistency of x by y.
+Coverage and consistency.
 }
 \description{
   Given two fuzzy set score variables x and y, coverage returns the coverage
