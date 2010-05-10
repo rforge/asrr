@@ -621,9 +621,14 @@ reduce.truthTable <- function(x,
     datC <- mydata[mydata[["OUT"]]=="C",conditions] ## subset(mydata,OUT=="C",conditions)
     if (contradictions=="positive") dat1 <- rbind(dat1,datC)
     if (contradictions=="negative") dat0 <- rbind(dat0,datC)
-    idExclude <- apply(dat0,1,implicant2Id,nlevels=nlevels)
-    if (explain=="positive") explained <- dat1
-    if (explain=="negative") explained <- dat0
+    if (explain=="positive") {
+      explained <- dat1
+      idExclude <- apply(dat0,1,implicant2Id,nlevels=nlevels)
+    }
+    if (explain=="negative") {
+      explained <- dat0
+      idExclude <- apply(dat1,1,implicant2Id,nlevels=nlevels)
+    }
     if (nrow(explained)==0) stop("No configuration is associated with the explained outcome.")
     if (remainders=="include"){
         ## if necessary conditons -> add some remainders to dat0
@@ -981,9 +986,10 @@ CSA <- function(object1,object0){
   } else {
     object1$solutions <- list(NULL)
   }
-   object1$commonSolutions <- object1$solutionsIDX <- object1$truthTable <- NULL
+   object1$commonSolutions <- object1$solutionsIDX <- object1$truthTable <- object1$SAIDs <- NULL
    object1
 }
+
 
 '[.QCA' <- function(object,which){
   if (!all(which %in% seq_len(length(object$solutions)))) stop("which is out of range.")
@@ -997,9 +1003,7 @@ CSA <- function(object1,object0){
   ans
 }
 
-constrReduce <- function(object,exclude=NULL,include=NULL,
-                         necessary=NULL){
-  remainders=FALSE
+constrReduce <- function(object,exclude=NULL,include=NULL,necessary=NULL){
   ## get the intermediate solutions
   ## all arguments are data.frame with ncol=length(object$nlevels)
   if (is.null(exclude) && is.null(include) && is.null(necessary)) {
@@ -1033,22 +1037,7 @@ constrReduce <- function(object,exclude=NULL,include=NULL,
     }
     ids1 <- union(ids1,idsInclude)
   }
-  if (!remainders) {
-    primesId  <- reduce2(ids1,nlevels=nlevels)
-  }
-  if (remainders) {
-    superSetIdOfNotExplain <- apply(id2Implicant(object$idExclude,nlevels=nlevels),1,
-                                    superSet,nlevels=nlevels)
-    dim(superSetIdOfNotExplain) <- NULL
-    allSuperSetIdsExclude <- unique(c(superSetIdsExclude,superSetIdOfNotExplain))
-    superSetIdsExplain <- apply(id2Implicant(ids1,nlevels=nlevels),1,
-                                    superSet,nlevels=nlevels)
-    dim(superSetIdsExplain) <- NULL
-    superSetIdsExplain <- unique(superSetIdsExplain)
-    primesId <- ereduce1(setdiff(superSetIdsExplain,allSuperSetIdsExclude),
-                         nlevels=nlevels)
-    ## in ereduce1, primesId are ids of superSet of the explained
-  }
+  primesId  <- reduce2(ids1,nlevels=nlevels)
   primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=names(object$explained))
   if (!is.null(necessary)){
     Var_name <- names(necessary)
