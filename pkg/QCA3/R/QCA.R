@@ -816,7 +816,7 @@ prettyPI <- function(object,traditional=TRUE,...){
   var_names <- names(object$explained)
   nlevels <- object$nlevels
   solutions <- object$solutions
-  
+
   toPI <- function(solution){
     if (is.null(solution)) {
       ans <- list(PI="",N=0)
@@ -826,7 +826,7 @@ prettyPI <- function(object,traditional=TRUE,...){
       ans <- list(PI=PI,N=length(PIs))
     }
   }
-  
+
   ans <- lapply(solutions,toPI)
   ans
 } ## end of prettyPI()
@@ -1059,6 +1059,7 @@ constrReduce <- function(object,exclude=NULL,include=NULL,necessary=NULL){
   object$primeImplicants <- primeImplicants
   object$solutions <- solutions
   object$commonSolutions <- commonSolutions
+  object$call <- match.call()
   object
 }
 
