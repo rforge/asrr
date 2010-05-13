@@ -601,6 +601,7 @@ reduce.truthTable <- function(x,
                               keepTruthTable=TRUE,...)
 {
     call <- match.call()
+    call[[1]] <- as.name("reduce")
     if (!"truthTable"  %in% class(x) ) stop("x is not a truthTable.")
     mydata <- x$truthTable
     conditions <- x$conditions
@@ -673,6 +674,7 @@ reduce.formula <- function(x, data,
     ## x is a formula
     ## note that data is mandatory
     call <- match.call()
+    call[[1]] <- as.name("reduce")
     if (missing(data)) stop("argument data is missing.")
     term <- terms(x)
     if (attr(term,"response")==0) {stop("formula in the lef hand side is empty.")}
@@ -705,6 +707,7 @@ reduce.data.frame <- function(x, outcome, conditions,
                               ...)
 {
     call <- match.call()
+    call[[1]] <- as.name("reduce")
     explain <- match.arg(explain)
     remainders <- match.arg(remainders)
     contradictions <- match.arg(contradictions)

@@ -1,21 +1,29 @@
 \name{constrReduce}
 \alias{constrReduce}
+\alias{excludeCSA}
 \title{ Impose constraints on a QCA solution}
 \description{
-\code{constrReduce} allows you to include a set of configurations
-to the a solution, or exclude a set of configurations from a solution,
-then return a new solution.
+
+To impose constraints on a QCA solution and returns a new QCA solution.
+
 }
 \usage{
 constrReduce(object, exclude = NULL, include = NULL,necessary = NULL)
+
+excludeCSA(object, csa) 
 }
 \arguments{
   \item{object}{ An object of class "QCA".}
   \item{exclude}{ A data frame, each row represent one configuration.}
   \item{include}{ A data frame, each row represent one configuration.}
   \item{necessary}{ A list, specifying the necessary conditions.}
+  \item{csa}{an object returned by \code{CSA}.}
 }
-\details{
+\details{ 
+  \code{constrReduce} allows you to include a set of configurations
+to the a solution, or exclude a set of configurations from a solution,
+then return a new solution.
+
   Sometime, you may encounter contraditory simplifying assumptions. In
   that case, you may want to exclude the CSAs to attain a more reasonable
   solution.
