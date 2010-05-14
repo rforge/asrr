@@ -54,12 +54,14 @@ excludeCSA(object, csa)
 
   If you attain a solution without including remainders, you can see if
   there is necessary condition. If it does, then you may want to include
-  the remainders containning the necessary conditions only. There are
-  two ways to do it. First to attain a solutions including
-  remainders. then 1) impose constraints by necessary argument. 2) use
-  \code{SA} to get the simplyfing solution, find out the SAs not
-  containing the necessary conditions and exclude them (documentation
-  needs improvement in this paragraph).
+  the remainders containning the necessary conditions only. The has
+  something to do with the necessary argument in constrReduce. However, it
+  is not a fully-fledged function yet. It needs improvement in future version.
+  
+  %There are two ways to do it. First to attain a solutions including
+  %remainders. then 1) impose constraints by necessary argument. 2) use
+  %\code{SA} to get the simplyfing solution, find out the SAs not
+  %containing the necessary conditions and exclude them.
 }
 \value{
   For \code{constrReduce}, it is an object of class "QCA". It is
