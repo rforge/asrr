@@ -15,9 +15,9 @@ Coverage and consistency.
 
 coverage(x, ...)
 
-\method{coverage}{default}(x, y, alternative = c("less", "greater"))
+\method{coverage}{default}(x, y, alternative = c("less", "greater"),...)
 
-\method{coverage}{QCA}{x,traditional=TRUE,...}
+\method{coverage}{QCA}(x,traditional=TRUE,...)
 
 consistency(x, y, alternative = c("less", "greater"))
 }
@@ -30,7 +30,10 @@ consistency(x, y, alternative = c("less", "greater"))
 }
   \item{alternative}{
     specify the relationship between x and y.
-}
+  }
+  \item{traditional}{logical, use traditional symbol to present the
+    solution when it is TRUE. Otherwise, use Tosmana-style symbol.}
+  \item{\ldots}{not used currently.}
 }
 \details{
   When alternative is "less", it returns coverage(x<=y). This is
@@ -73,5 +76,9 @@ coverage(1-CoD$demex,1-CoD$cod,'greater')
 # no previous democratic experience
 coverage(pmin(1-CoD$demex,1-CoD$econdev),1-CoD$cod,'greater')
 # not socioeconomic developed society without prior democratic experience
+
+## coverage method for QCA object
+tb2<-reduce(policyChange~soc+pol+ind+are+foc,Yamasaki2009,cases="country")
+coverage(tb2)
 }
 

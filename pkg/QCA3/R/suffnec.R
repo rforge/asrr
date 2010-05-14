@@ -30,7 +30,7 @@ coverage <- function(x,...){
     UseMethod("coverage")
 }
 
-coverage.default <- function(x,y,alternative=c("less","greater")){
+coverage.default <- function(x,y,alternative=c("less","greater"),...){
   ## coverage(x<=y) when alternative="less"
   ## coverage(x>=y) when alternative="greater"
   ## x and y must in [0,1]

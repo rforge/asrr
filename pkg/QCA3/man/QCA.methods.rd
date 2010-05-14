@@ -33,8 +33,9 @@ extraction on a list. you can refer to \code{[} for more details.}
   \item{\dots}{ For \code{print.QCA} and \code{summary.QCA}, currently not
     used. For \code{update}, additional arguments to the call, or
 arguments with changed values. Use 'name=NULL' to remove the argument
-'name'.
-}
+'name'.}
+\item{evaluate}{when TRUE, return the evaluated result which is an
+object of QCA class. Otherwise, it returns the call.}
 }
 \details{
   The traditional way uses upper-case letters representing 1 and and
@@ -48,7 +49,8 @@ arguments with changed values. Use 'name=NULL' to remove the argument
 
  The index method returns an object of class "QCA".
 
-update method returns a new "QCA" object.
+ update method returns a new "QCA" object if evaluate is TRUE, the call
+if FALSE.
 }
 
 \author{ Ronggui HUANG}

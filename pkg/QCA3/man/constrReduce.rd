@@ -72,6 +72,9 @@ excludeCSA(object, csa)
   \code{\link{reduce}} and  \code{\link{CSA}}
 }
 \examples{
+example(HuangGui2009)
+excludeCSA(ans2[2],CSA(ans1,ans2[2]))
+
 \dontrun{
 ## example 1
 data(Yamasaki,package="QCA")
