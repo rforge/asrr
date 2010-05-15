@@ -19,7 +19,7 @@ findNoCSA <- function(x,y, noCSA=TRUE){
 
 
 findParsimonious <- function(x) {
-    ans <- sapply(x$solutions, function(i) sum(!is.na(i)))
+    ans <- sapply(x$solutions, function(i) sum(!is.dontcare(i)))
     idx <- which(ans == min(ans))
     idx
 }
