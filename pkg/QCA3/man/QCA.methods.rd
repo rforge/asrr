@@ -9,7 +9,7 @@
    Various methods for object from \code{\link{reduce}}
 }
 \usage{
-\method{plot}{QCA}{x,...}
+\method{plot}{QCA}(x,...)
 
 \method{print}{QCA}(x, traditional = TRUE, show.truthTable = TRUE, ...)
 

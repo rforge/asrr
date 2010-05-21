@@ -1,4 +1,4 @@
-export(constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,excludeCSA,
+export(constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,excludeCSA, findNoCSA,
        fs_tt, fs_truthTable, mv_truthTable, reduce, SA, simplifyingAssumption, suffnec,
        thresholdssetter)
 S3method(coverage, QCA)
