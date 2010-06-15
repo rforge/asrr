@@ -82,7 +82,7 @@ reduce(x,...)
 
   Since version 0.0-3, reduce uses enhanced internal function ereduce1
   (which uses enhanced internal function esubset). It has been tested
-  and yields the same result (see tests directly for details).
+  and yields the same result (see tests directory for details).
 }
 \value{
   An object of class "QCA". It is essentailly a list of 10 components.
