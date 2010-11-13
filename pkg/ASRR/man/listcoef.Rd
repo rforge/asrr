@@ -21,22 +21,18 @@ listcoef(x, ...)
 \details{
 Currently, it supports linear regression model, logistic model, probit model and poisson model. When the model is estimated, argument x and y must be set to TRUE.
 
-Definition of notation is as follow:
-SDofX is the standard deviation of X.
-SDofY is the standard deviation of Y.
+Definition of notation is as follow: (1) SDofX is the standard deviation
+of X. (2)SDofY is the standard deviation of Y.
 }
 \value{
-A data frame containing relevant components.}
+  A data frame containing relevant components.
+}
 \references{
 Long, J. S.2001. Regression Models for Categorical Dependent Variables Using Stata Stata Press.
 }
 \author{
 HUANG Ronggui
 }
-\note{
-The method of weighted covariance is 'ML', and the result is slightly different from that of Stata's summarize command.
-}
-%\seealso{}
 \examples{
 \dontrun{
 data(Chirot,package="car")
