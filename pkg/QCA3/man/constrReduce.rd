@@ -3,9 +3,7 @@
 \alias{excludeCSA}
 \title{ Impose constraints on a QCA solution}
 \description{
-
 To impose constraints on a QCA solution and returns a new QCA solution.
-
 }
 \usage{
 constrReduce(object, exclude = NULL, include = NULL,necessary = NULL)
@@ -101,6 +99,7 @@ easy <- sa$solution[[1]] [idx,]
 difficult <- sa$solution[[1]] [-idx,]
 constrReduce(comp,include=easy)
 constrReduce(pars,exclude=difficult) ## the last two are equivalent.
+
 ## another way is to manually construct the easy counterfactuals
 easy2 <- rbind(
 c(1,-9,1,-9,1), # A*S*R
@@ -128,8 +127,9 @@ CSA(ans02b,ans1) ## no CSA
 ## example 2
 data(Osa,package="QCA") ## QCA package is required to run this example
 conditions <- c("DYNA","ACCES","INFLU","ELITE","SOCIAL")
-a <- reduce(Osa, outcome = "OUT", conditions = conditions, explain = "negative", remainders = "ex", contradictions = "negative")
-b <- reduce(Osa, outcome = "OUT", conditions = conditions, explain = "negative", remainders = "include", contradictions = "negative")
+Osa$OUT2 <- Osa$OUT ## OUT is reserved word in QCA3.
+a <- reduce(Osa, outcome = "OUT2", conditions = conditions, explain = "negative", remainders = "ex", contradictions = "negative")
+b <- reduce(Osa, outcome = "OUT2", conditions = conditions, explain = "negative", remainders = "include", contradictions = "negative")
 
 # there are two solutions in b, let's focus on the first only.
 b1 <- b[1]

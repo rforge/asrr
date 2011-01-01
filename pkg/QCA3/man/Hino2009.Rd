@@ -18,12 +18,6 @@ Example data of Time-series QCA.
     \item{\code{DIVERT}}{a numeric vector}
   }
 }
-\details{
-%%  ~~ If necessary, more details than the __description__ above ~~
-}
-\source{
-%%  ~~ reference to a publication or URL from which the data were obtained ~~
-}
 \references{
   Hino, Airo 2009. "Time-Series QCA: Studying Temporal Change through Boolean Analysis." Sociological Theory and Methods 24 (2) : 247-265.
 }

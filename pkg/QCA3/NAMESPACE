@@ -2,7 +2,7 @@ export(directCalibration,
        constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,
        excludeCSA,
        findNoCSA, fs_tt, fs_truthTable, fsplot,
-       mv_truthTable, primeImplicants,
+       mv_truthTable, #primeImplicants,
        reduce, SA, simplifyingAssumption, suffnec,
        thresholdssetter)
 S3method(coverage, QCA)
