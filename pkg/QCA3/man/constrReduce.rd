@@ -27,7 +27,6 @@ excludeCSA(object, csa)
  \code{excludeCSA} conducts Boolean minimization including other
  remainders except those in condictory simplifying assumptions.
 
-
  The difference between \code{constrReduce} and \code{excludeCSA} mainly
  lies in how to deal with other remainders when imposing constraints on a QCA
  solution. \code{constrReduce} does not include further remainders,
@@ -35,7 +34,10 @@ excludeCSA(object, csa)
  
   Sometime, you may encounter contraditory simplifying assumptions. In
   that case, you may want to exclude the CSAs to attain a more reasonable
-  solution. In this case, \code{excludeCSA} is the most suitable way to go.
+  solution. In this case, \code{excludeCSA} is the most suitable way to
+  go, which can make QCA easier. However, it does not guarantee a final
+  solution, in particular when there are multiple solutions to both
+  positive and negative outcome. 
 
   Sometimes, you may attain a solution without including all the
   remainders, latter you may want to include a small number of
