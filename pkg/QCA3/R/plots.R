@@ -30,7 +30,9 @@ plot.QCA <- function(x,...){
 fsplot <- function(formula,data,main="fuzzy set plot",xlab=NULL,ylab=NULL,...){
     if (is.null(ylab)) ylab <- deparse(formula[[2]])
     if (is.null(xlab)) xlab <- deparse(formula[[3]])
-    conditions <- model.matrix(formula,data=data)[,-1,drop=FALSE]
+    formula <- as.formula(paste(deparse(formula),"-1",sep=""))
+    ## remove the intercept
+    conditions <- model.matrix(formula,data=data)
     conditions <- apply(conditions,1,min)
     out <- model.response(model.frame(formula,data=data))
     plot(conditions,out,xlim=c(0,1),ylim=c(0,1),main=main,xlab=xlab,ylab=ylab,...)
@@ -46,3 +48,8 @@ fsplot <- function(formula,data,main="fuzzy set plot",xlab=NULL,ylab=NULL,...){
     mtext(lab,line=0.3)
 }
 
+fsnot <- function(x) {
+    1-x
+}
+fsand <- function(...) pmin(...,na.rm=FALSE)
+fsor <- function(...) pmax(...,na.rm=FALSE)

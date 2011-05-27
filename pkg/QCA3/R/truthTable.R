@@ -24,7 +24,7 @@ cs_truthTable <- function(mydata, outcome, conditions,
     if (outcome==""||conditions =="") stop("You must specific outcome and conditions first.")
     if (length(conditions)<2) stop("The number of conditions must greater than 1.")
     reserved <- c("NCase","freq1","freq0","OUT","Cases")
-    if (any(outcome %in% reserved)) stop("Some names of condition are reserved fro truthTable.")
+    if (any(outcome %in% reserved)) stop("Some names of condition are reserved for truthTable.")
     mydata <- mydata[,c(outcome,conditions,weight,cases)]
     missing <- match.arg(missing)
     if (missing=="missing")  mydata <- na.exclude(mydata) # eliminate missing data
