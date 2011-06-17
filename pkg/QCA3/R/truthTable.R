@@ -291,3 +291,8 @@ print.truthTable <- function(x,...){
     x <- unclass(x)
     print(x$truthTable)
 }
+
+sort.fs_truthTable <- function (x, decreasing = FALSE, ...) {
+    x$truthTable <- x$truthTable[order(x$truthTable$Consistency,decreasing=decreasing),]
+    x
+}
