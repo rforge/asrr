@@ -1,7 +1,7 @@
 export(directCalibration,
        constrReduce,coincid,consistency, coverage, CSA, cs_truthTable,
        excludeCSA,
-       findNoCSA, fs_tt, fs_truthTable, fsnot, fsplot,
+       findNoCSA, fs_truthTable, fsnot, fsplot,
        mv_truthTable, #primeImplicants,
        reduce, SA, simplifyingAssumption, suffnec,
        thresholdssetter)
