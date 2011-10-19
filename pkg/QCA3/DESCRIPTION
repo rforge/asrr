@@ -1,8 +1,8 @@
 Package: QCA3
 Type: Package
 Title: Yet another package for Qualitative Comparative Analysis
-Version: 0.0-4
-Date: 2011-09-20
+Version: 0.0-5
+Date: 2011-10-19
 Author: Ronggui HUANG
 Maintainer: Ronggui HUANG<ronggui.huang@gmail.com>
 Imports: lpSolve
@@ -12,4 +12,4 @@ License: BSD
 LazyLoad: yes
 LazyData: yes
 URL: http://asrr.r-forge.r-project.org/
-Packaged: 2011-09-20 10:09:23 UTC; rghuang
+
