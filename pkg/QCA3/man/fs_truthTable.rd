@@ -1,13 +1,16 @@
 \name{fs_truthTable}
 \alias{fs_truthTable}
+\alias{sort.fs_truthTable}
 \title{Construction of truthTable from fuzzy set score}
 \description{
   Constructing a truthTable from fuzzy set score.
 }
 \usage{
 fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
-             consistency_cutoff = 0.8,
-             show.cases =TRUE,quiet =FALSE, cases = NULL, complete=FALSE,...)
+             consistency_cutoff = 0.8, show.cases =TRUE,quiet =FALSE,
+             cases = NULL, complete=FALSE,...)
+
+\method{sort}{fs_truthTable}(x, decreasing = TRUE, criterion = "Consistency", ...)
 }
 \arguments{
   \item{mydata}{ A fuzzy set score dataset. All the scores must range
@@ -27,6 +30,11 @@ fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
     dataset.}
   \item{complete}{show logical remainders when TRUE.}
   \item{\dots}{Not used currently.}
+
+  \item{x}{an fs_truthTable object.}
+  \item{decreasing}{same as that of sort.}
+  \item{criterion}{a name from the truthTable, sort the fs_truthTable
+  according to this variable.}
 }
 \details{
   There are serveral pillars which make it possible to construct a crip
@@ -39,7 +47,10 @@ fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
   consistency of fuzzy-set subset relations (the \code{consistency_cutoff}
   argument), we can finally construct a truthTable.
 
-  There is a sort method for the returned object.
+  This function can also be used for crip set QCA as fsQCA software does,
+  though cs_truthTable is specific to csQCA.
+
+  There is a sort method and a consistGaps method for the fs_truthTable object.
 }
 \value{
   An object of class "truthTable" and "fs_truthTable".
@@ -56,4 +67,11 @@ fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
 \examples{
 fs_truthTable(Lipset_fs,"Survived.FZ",c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ",
 "Stable.FZ"),cases="Country",consistency_cutoff=0.7)
+
+fst <- fs_truthTable(Lipset_fs,"Survived.FZ",c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ",
+"Stable.FZ"),cases="Country",consistency_cutoff=0.7,complete=TRUE)
+
+sort(sort(fst),criterion="OUT")
+
+consistGap(fst)
 }

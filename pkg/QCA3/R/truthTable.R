@@ -12,7 +12,7 @@ lowerLimite <- function(x, n, conf.level=0.95) {
 
 cs_truthTable <- function(mydata, outcome, conditions,
                           method = c("deterministic","probabilistic"),
-                          weight=NULL,
+                          weight=NULL,complete=FALSE,
                           show.cases = TRUE, cases=NULL,
                           cutoff1 = 1, cutoff0 = 1, benchmark=0.65, conf.level = 0.95,
                           missing=c('missing','dontcare','positive','negative')
@@ -28,7 +28,7 @@ cs_truthTable <- function(mydata, outcome, conditions,
     mydata <- mydata[,c(outcome,conditions,weight,cases)]
     missing <- match.arg(missing)
     if (missing=="missing")  mydata <- na.exclude(mydata) # eliminate missing data
-    if (missing=='dontcare') mydata[is.na(mydata)] <- -9
+    if (missing=='dontcare') mydata[is.na(mydata)] <- -9 # how to assigned rowid and proceed the minimization?
     if (missing=='positive') mydata[is.na(mydata)] <- 1
     if (missing=='negative') mydata[is.na(mydata)] <- 0
     ## take care of missing data
@@ -43,13 +43,6 @@ cs_truthTable <- function(mydata, outcome, conditions,
     }
     if (!is.null(weight)) weight <- mydata[[weight]] else weight <- rep(1, nrow(mydata))
     method <- match.arg(method)
-    ## getId <- function(implicant,nlevels){
-    ##     ## id of combinations
-    ##     IDX <- cumprod(nlevels)/nlevels
-    ##     ans <- sum(implicant*IDX)+1
-    ##     ans
-    ## }
-    ## rowid <- apply(conditionsData, 1, getId, nlevels=nlevels)
     rowid <- apply(conditionsData, 1, implicant2Id, nlevels=nlevels)
     ## use id of grouping rather than combination to handle dontcare case
     N_total <- sum(weight,na.rm=TRUE) ## total number of case taking freq weight into consideration
@@ -63,9 +56,17 @@ cs_truthTable <- function(mydata, outcome, conditions,
         c1 <- (!all(each==0)) && (!all(each==1))
         c1})
     Cid <- names(Negative)[Contradictory] ## all.equal(names(Positive),names(Negative))
-    WhichUnique <- match(sort(unique(rowid)),rowid) ## pay attention to the use of match()
-    allExpress <- conditionsData[WhichUnique,]
-    rownames(allExpress) <- as.character(sort(unique(rowid)))
+    if (complete) {
+        exp <- sprintf("c(0:%i)", nlevels - 1)
+        allExpress <- eval(parse(text = sprintf("expand.grid(%s)",
+                                 paste(conditions, "=", exp, sep = "", collapse = ","))))
+        rownames(allExpress) <- apply(allExpress,  1, implicant2Id, nlevels = nlevels)
+    }
+    else {
+        WhichUnique <- match(sort(unique(rowid)),rowid) ## pay attention to the use of match()
+        allExpress <- conditionsData[WhichUnique,]
+        rownames(allExpress) <- as.character(sort(unique(rowid)))
+    }
     ## NCase
     allExpress$NCase <- 0
     Ncase <- tapply(weight,rowid,sum)
@@ -131,7 +132,7 @@ cs_truthTable <- function(mydata, outcome, conditions,
 
 mv_truthTable <- function(mydata, outcome, conditions,
                           method = c("deterministic","probabilistic"),
-                          weight=NULL,
+                          weight=NULL,complete=TRUE,
                           show.cases = TRUE, cases=NULL,
                           cutoff1 = 1, cutoff0 = 1, benchmark=0.65, conf.level = 0.95,
                           missing=c('missing','dontcare','positive','negative')
@@ -174,9 +175,17 @@ mv_truthTable <- function(mydata, outcome, conditions,
         c1 <- (!all(each==0)) && (!all(each==1))
         c1})
     Cid <- names(Negative)[Contradictory] ## all.equal(names(Positive),names(Negative))
-    WhichUnique <- match(sort(unique(rowid)),rowid) ## pay attention to the use of match()
-    allExpress <- conditionsData[WhichUnique,]
-    rownames(allExpress) <- as.character(sort(unique(rowid)))
+    if (complete) {
+        exp <- sprintf("c(0:%i)", nlevels - 1)
+        allExpress <- eval(parse(text = sprintf("expand.grid(%s)",
+                                 paste(conditions, "=", exp, sep = "", collapse = ","))))
+        rownames(allExpress) <- apply(allExpress,  1, implicant2Id, nlevels = nlevels)
+    }
+    else {
+        WhichUnique <- match(sort(unique(rowid)),rowid) ## pay attention to the use of match()
+        allExpress <- conditionsData[WhichUnique,]
+        rownames(allExpress) <- as.character(sort(unique(rowid)))
+    }
     ## NCase
     allExpress$NCase <- 0
     Ncase <- tapply(weight,rowid,sum)
@@ -295,19 +304,34 @@ print.truthTable <- function(x,...){
     print(x$truthTable)
 }
 
-sort.fs_truthTable <- function (x, decreasing = TRUE, showGap=TRUE, ...) {
-    x$truthTable <- x$truthTable[order(x$truthTable$Consistency,decreasing=decreasing),]
-    if (showGap) {
-        gaps <- c(NA,abs(diff(x$truthTable$Consistency)))
-        tmp <- x
-        tmp$truthTable$Consist.Gap <- gaps
-        print(tmp)
+sort.fs_truthTable <- function (x, decreasing = TRUE, criterion="Consistency", ...) {
+    x$truthTable <- x$truthTable[order(x$truthTable[,criterion],decreasing=decreasing),]
+    x
+}
+
+sort.truthTable <- function (x, decreasing = TRUE, criterion="OUT", ...) {
+    if (criterion == "groupIndex") {
+        x$truthTable <- x$truthTable[order(rownames(x$truthTable),decreasing=decreasing),]
+    } else {
+        x$truthTable <- x$truthTable[order(x$truthTable[,criterion],decreasing=decreasing),]
     }
-    invisible(x)
+    x
+}
+
+consistGap <- function(x){
+    if (!inherits(x,"fs_truthTable")) stop("x must be an object of class 'fs_truthTable'.")
+    x <- sort(x,criterion="OUT")
+    gaps <- c(NA,abs(diff(x$truthTable$Consistency)))
+    ans <- cbind(x$truthTable[,c("OUT","freq1","freq0","NCase","Consistency")],ConsistGap=gaps)
+    ## ans$MaxGap <- ""
+    ## ans$MaxGap[which(ans$ConsistGap == max(ans$ConsistGap,na.rm=TRUE))] <- "max"
+    rownames(ans) <- row.names(x$truthTabl)
+    ans
 }
 
 setOUT <- function(x, rownames, value){
 ## x is a truthTable, rownames is character vector of rownames, value is the new OUT
+    if (!inherits(x,"truthTable")) stop("x must be an object of class 'truthTable'.")
     if (any(!(value %in% c(0, 1, -9)))) stop("value must be 0, 1 or -9.")
     idx <- match(as.character(rownames), rownames(x$truthTable))
     x$truthTable[idx,"OUT"] <- value

@@ -1,5 +1,6 @@
 \name{mv_truthTable}
 \alias{mv_truthTable}
+\alias{sort.mv_truthTable}
 \title{Construct a truthTable for mvQCA}
 \description{
   Construct a truthTable for mvQCA. Both deterministic and
@@ -19,6 +20,8 @@ mv_truthTable(mydata, outcome, conditions, method = c("deterministic",
   \item{method}{character, specifying the method of determining the
     outcome of a configuration.}
   \item{weight}{character, name of a variable specifying the weights.}
+  \item{complete}{logical, when it is TRUE the result includes
+    configurations without empirical cases.}
   \item{show.cases}{logical, when TRUE the result shows case names.}
   \item{cases}{character, variable specifying the case names. When it is
     NUll, then use row names of mydata as case names.}
@@ -33,6 +36,8 @@ mv_truthTable(mydata, outcome, conditions, method = c("deterministic",
   The value of all the conditions should start from 0. For example, for
   mvQCA with 3 levels,it should be 0,1 or 2. Value -9 in conditions
   means "don't care" (though "don't care" in outcome is denoted by "-9").
+
+  There is a sort method method for the truthTable object.
   
   Refer to \code{\link{cs_truthTable}} for for more details.
 }
@@ -48,4 +53,9 @@ mv_truthTable(mydata, outcome, conditions, method = c("deterministic",
 ## truthTable for mvQCA.
 mv_truthTable(Lipset_mv,"SURVIVAL", c("GNPCAP", "URBANIZA", "LITERACY",
               "INDLAB"),case="CASEID")
+
+mvt <- mv_truthTable(Lipset_mv,"SURVIVAL", c("GNPCAP", "URBANIZA", "LITERACY",
+              "INDLAB"),case="CASEID")
+
+sort(mvt)
 }
