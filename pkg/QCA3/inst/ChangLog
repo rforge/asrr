@@ -1,3 +1,8 @@
+2011-10-10
+	* complete is re-introduced into fs_truthTable as requested
+	* new argument of showGap for sort.fs_truthTable
+	* new functions of implicantsToDF() and setOUT()
+
 2011-09-20 (as 0.0-4)
 	* document fsnot function.
 	* remove fs_tt (no longer needed)

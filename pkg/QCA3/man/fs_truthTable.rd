@@ -7,7 +7,7 @@
 \usage{
 fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
              consistency_cutoff = 0.8,
-             show.cases =TRUE,quiet =FALSE, cases = NULL, ...)
+             show.cases =TRUE,quiet =FALSE, cases = NULL, complete=FALSE,...)
 }
 \arguments{
   \item{mydata}{ A fuzzy set score dataset. All the scores must range
@@ -25,6 +25,7 @@ fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
   \item{cases}{ character, variable of case names. If it is NULL and
     show.cases is TRUE, name of cases are derived from row names of
     dataset.}
+  \item{complete}{show logical remainders when TRUE.}
   \item{\dots}{Not used currently.}
 }
 \details{

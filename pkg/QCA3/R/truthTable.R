@@ -1,5 +1,5 @@
 ## This file (R/truthTable.R) is part of QCA3 package
-## copyright: HUANG Ronggui 2008-2010
+## copyright: HUANG Ronggui 2008-2011
 
 lowerLimite <- function(x, n, conf.level=0.95) {
   ## If lowerLimite() > benchmark, then it the result supportes H1.
@@ -53,7 +53,8 @@ cs_truthTable <- function(mydata, outcome, conditions,
     rowid <- apply(conditionsData, 1, implicant2Id, nlevels=nlevels)
     ## use id of grouping rather than combination to handle dontcare case
     N_total <- sum(weight,na.rm=TRUE) ## total number of case taking freq weight into consideration
-    Positive <- tapply(outcomeData,rowid,FUN=function(each) all(each==1)) ## index of configuration with positive outcome
+    Positive <- tapply(outcomeData,rowid,FUN=function(each) all(each==1))
+    ## index of configuration with positive outcome
     ## with aid of rowid, we aggregate those with common rowid into one group.
     Pid <- names(Positive)[Positive] ## rownames of configuration with positive outcome
     Negative <- tapply(outcomeData,rowid,FUN=function(each) all(each==0))
@@ -142,7 +143,7 @@ mv_truthTable <- function(mydata, outcome, conditions,
     if (outcome==""||conditions =="") stop("You must specific outcome and conditions first.")
     if (length(conditions)<2) stop("The number of conditions must greater than 1.")
     reserved <- c("NCase","freq1","freq0","OUT","Cases")
-    if (any(outcome %in% reserved)) stop("Some names of condition are reserved fro truthTable.")
+    if (any(outcome %in% reserved)) stop("Some names of condition are reserved for truthTable.")
     mydata <- mydata[,c(outcome,conditions,weight,cases)]
     missing <- match.arg(missing)
     if (missing=="missing")  mydata <- na.exclude(mydata) # eliminate missing data
@@ -234,12 +235,12 @@ mv_truthTable <- function(mydata, outcome, conditions,
 }
 
 fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistency_cutoff=0.8,
-                          show.cases = TRUE, quiet = FALSE,cases=NULL,...)
+                          show.cases = TRUE, quiet = FALSE,cases=NULL,complete=FALSE, ...)
 {
     membership_cutoff=0.5
     if (consistency_cutoff>1 || consistency_cutoff<0) stop("consistency_cutoff should be in [0,1].")
     if (consistency_cutoff<0.75) warning("It is suggested that consistency_cutoff be >= 0.75.")
-    if (outcome==""||conditions=="") stop("You must specific outcome and conditions first.")
+    if (outcome==""||conditions=="") stop("outcome and conditions must be specified.")
     if (length(conditions)<2) stop("The number of conditions must greater than 1.")
     reserved <- c("NCase","freq1","freq0","OUT","Cases")
     if (any(outcome %in% reserved)) stop("Some names of condition are reserved fro truthTable.")
@@ -274,13 +275,15 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
     allExpress$freq0[allExpress$OUT=="0"] <- allExpress$NCase[allExpress$OUT=="0"]
     allExpress$freq1[allExpress$OUT=="1"] <- allExpress$NCase[allExpress$OUT=="1"]
     allExpress <- allExpress[,c(seq_len(length(conditions)),(length(conditions)+3):(length(conditions)+5),(length(conditions)+1):(length(conditions)+2))]
-    ## reorder alExpress
+    ## reorder allExpress
     if (show.cases){
         if (is.null(cases)) cases <- rownames(mydata) else cases <- mydata[,cases]
         cases <- gsub(",","_",cases)
         allExpress$Cases <- apply(score_mat,2,function(x) paste(cases[which( x > membership_cutoff)],sep="",collapse=","))
     }
-    allExpress <- allExpress[allExpress$OUT != "?",,drop=FALSE]
+    if (!complete) {
+        allExpress <- allExpress[allExpress$OUT != "?",,drop=FALSE]
+    }
     rownames(allExpress) <- apply(allExpress[,conditions],1, implicant2Id, nlevels=rep(2,length(conditions)))
     ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=rep(2,length(conditions)),call=match.call())
     class(ans) <- c("truthTable","fs_truthTable")
@@ -292,7 +295,21 @@ print.truthTable <- function(x,...){
     print(x$truthTable)
 }
 
-sort.fs_truthTable <- function (x, decreasing = FALSE, ...) {
+sort.fs_truthTable <- function (x, decreasing = TRUE, showGap=TRUE, ...) {
     x$truthTable <- x$truthTable[order(x$truthTable$Consistency,decreasing=decreasing),]
+    if (showGap) {
+        gaps <- c(NA,abs(diff(x$truthTable$Consistency)))
+        tmp <- x
+        tmp$truthTable$Consist.Gap <- gaps
+        print(tmp)
+    }
+    invisible(x)
+}
+
+setOUT <- function(x, rownames, value){
+## x is a truthTable, rownames is character vector of rownames, value is the new OUT
+    if (any(!(value %in% c(0, 1, -9)))) stop("value must be 0, 1 or -9.")
+    idx <- match(as.character(rownames), rownames(x$truthTable))
+    x$truthTable[idx,"OUT"] <- value
     x
 }

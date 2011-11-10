@@ -107,6 +107,8 @@ c(1,1,1,0,-9), # A*C*S*i
 c(1,-9,-9,0,-9) # A*i
 )
 easy2 <- as.data.frame(easy2)
+## implicantsToDF faciliates you to construct such a data frame
+easy2 <- implicantsToDF(x="A*S*R+A*C*S*i+A*i",conditions=c("A","C","S","I","R"))
 constrReduce(comp,include=easy2)
 ## end of Ragin (2009:chapter 9) example
 

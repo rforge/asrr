@@ -807,6 +807,20 @@ update.QCA <- function (object, ..., evaluate = TRUE)
     else call
   }
 
+implicantsToDF <- function(x, conditions){
+    ## implicantsToDF(x="A*S*R+A*C*S*i",conditions=c("A", "C", "S", "I", "R"))
+    x <- strsplit(x,"+",fixed=T)[[1]]
+    x <- strsplit(x,"*",fixed=T)
+    dat <- as.data.frame(matrix(-9,length(x),length(conditions)))
+    names(dat) <- toupper(conditions)
+    for (i in 1:length(x)){
+        xx <- x[[i]]
+	idx <- match(toupper(xx),toupper(conditions))
+	dat[i,idx] <- as.numeric(xx == toupper(xx))
+    }
+    dat
+}
+
 thresholdssetter <- function(x,nthreshold=1,value=TRUE,method="average",thresholds=NULL,dismethod="euclidean",print.table=TRUE){
   ## method -> see mehtod of hclust
   if (is.null(thresholds)){
