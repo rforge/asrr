@@ -2,6 +2,7 @@
 	* complete is re-introduced into fs_truthTable, cs_truthTable and mv_truthTable as requested
 	* new function of consistGap for fs_truthTable
 	* new functions of implicantsToDF() and setOUT()
+	* improvement on constrReduce.rd
 
 2011-09-20 (as 0.0-4)
 	* document fsnot function.

@@ -11,3 +11,5 @@
 * examine the logical relation between the derived variable and original variables (for TQCA).
 
 * consistency for ~Y in fs_truthTable()
+
+* bool calc

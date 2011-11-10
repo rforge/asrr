@@ -22,8 +22,9 @@ excludeCSA(object, csa)
   to the a solution, or exclude a set of configurations from a solution,
   then return a new solution.
 
- \code{excludeCSA} conducts Boolean minimization including other
- remainders except those in condictory simplifying assumptions.
+ \code{excludeCSA} conducts Boolean minimization by freely including other
+ remainders except those in condictory simplifying assumptions and
+ thoese excluded in the first place (idExclude component of the object).
 
  The difference between \code{constrReduce} and \code{excludeCSA} mainly
  lies in how to deal with other remainders when imposing constraints on a QCA
@@ -33,8 +34,8 @@ excludeCSA(object, csa)
   Sometime, you may encounter contraditory simplifying assumptions. In
   that case, you may want to exclude the CSAs to attain a more reasonable
   solution. In this case, \code{excludeCSA} is the most suitable way to
-  go, which can make QCA easier. However, it does not guarantee a final
-  solution, in particular when there are multiple solutions to both
+  go, which can make QCA easier. However, it does not guarantee a single
+  final solution, in particular when there are multiple solutions to both
   positive and negative outcome. 
 
   Sometimes, you may attain a solution without including all the
@@ -90,24 +91,15 @@ comp <- reduce(Stokke,"Y",c("A","C","S","I","R"),explain="positive")
 pars <- reduce(Stokke,"Y",c("A","C","S","I","R"),explain="positive",remaind="include")
 sa <- SA(pars)
 ## determins easy counterfactuals
-idx <- c(12,14,## A*S*R must be kept
-         14, ## A*C*S*i must be kept
-         3,5,8,10,12,14 ## A*i must be kept
-         )
-idx <- unique(idx) ## index of easy counterfactuals
-easy <- sa$solution[[1]] [idx,]
-difficult <- sa$solution[[1]] [-idx,]
-constrReduce(comp,include=easy)
-constrReduce(pars,exclude=difficult) ## the last two are equivalent.
-
-## another way is to manually construct the easy counterfactuals
-easy2 <- rbind(
+## method 1 is to manually construct the easy counterfactuals
+easy1 <- rbind(
 c(1,-9,1,-9,1), # A*S*R
 c(1,1,1,0,-9), # A*C*S*i
 c(1,-9,-9,0,-9) # A*i
 )
-easy2 <- as.data.frame(easy2)
-## implicantsToDF faciliates you to construct such a data frame
+easy1 <- as.data.frame(easy1)
+constrReduce(comp,include=easy1)
+## method 2 uses implicantsToDF faciliates such construction
 easy2 <- implicantsToDF(x="A*S*R+A*C*S*i+A*i",conditions=c("A","C","S","I","R"))
 constrReduce(comp,include=easy2)
 ## end of Ragin (2009:chapter 9) example
