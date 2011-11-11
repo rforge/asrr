@@ -276,6 +276,9 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
     score_mat <- apply(allExpress,1,function(x) getScore(x,data=conditionsData))
     allExpress$NCase<- apply(score_mat,2,function(x) sum(x>membership_cutoff))
     allExpress$Consistency <- apply(score_mat,2,function(x,outcome) {sum(pmin(x,outcome))/sum(x)},outcome=mydata[,outcome])
+    allExpress$priConsistency <- apply(score_mat,2,function(x,outcome) {(sum(pmin(x,outcome)) - sum(pmin(x, outcome, 1 - outcome))) /
+                                                                            (sum(x) - sum(pmin(x, outcome, 1 - outcome))) },outcome=mydata[,outcome])
+    allExpress$sqrtProduct <- allExpress$Consistency * allExpress$priConsistency
     allExpress$OUT <- "?"
     allExpress$OUT[allExpress$NCase >= ncases_cutoff & allExpress$Consistency > consistency_cutoff]<-"1"
     allExpress$OUT[allExpress$NCase >= ncases_cutoff & allExpress$Consistency <= consistency_cutoff]<-"0"
@@ -283,7 +286,7 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
     allExpress$freq0 <- allExpress$freq1 <- 0
     allExpress$freq0[allExpress$OUT=="0"] <- allExpress$NCase[allExpress$OUT=="0"]
     allExpress$freq1[allExpress$OUT=="1"] <- allExpress$NCase[allExpress$OUT=="1"]
-    allExpress <- allExpress[,c(seq_len(length(conditions)),(length(conditions)+3):(length(conditions)+5),(length(conditions)+1):(length(conditions)+2))]
+    allExpress <- allExpress[,c(seq_len(length(conditions)),(length(conditions)+5):(length(conditions)+7),(length(conditions)+1):(length(conditions)+4))]
     ## reorder allExpress
     if (show.cases){
         if (is.null(cases)) cases <- rownames(mydata) else cases <- mydata[,cases]
