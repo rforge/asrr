@@ -825,12 +825,16 @@ boolIntersect <- function(x="a*S*c+a*S*d",string=TRUE){
     condition <- toupper(unique(strsplit(x,"[*+]")[[1]]))
     DF <- implicantsToDF(x,condition)
     ids <- apply(DF,1,QCA3:::subCombination)
-    dim(ids) <- NULL ## matrix to vector
-    ids <- ids[duplicated(ids)]
-    ans <- QCA3:::id2Implicant(ids,rep(2,length(condition)),names=condition)
-    if (string) {
-        ans <- QCA3:::toString(ans,TRUE,rep(2,length(condition)),condition)
-    }
+    ids <- as.vector(ids)
+    tids <- table(idx)
+    ids <- names(tids)[tids==nrow(DF)]
+    ids <- as.numeric(ids)
+    if (length(ids)>0) {
+        ans <- QCA3:::id2Implicant(ids,rep(2,length(condition)),names=condition)
+        if (string) {
+            ans <- QCA3:::toString(ans,TRUE,rep(2,length(condition)),condition)
+        }
+    } else ans <- ""
     ans
 }
 
