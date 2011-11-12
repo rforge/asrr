@@ -821,21 +821,24 @@ implicantsToDF <- function(x, conditions){
     dat
 }
 
-boolIntersect <- function(x="a*S*c+a*S*d",string=TRUE){
+boolIntersect <- function(x, string=TRUE){
     condition <- toupper(unique(strsplit(x,"[*+]")[[1]]))
+    nlevel <- rep(2, length(condition))
     DF <- implicantsToDF(x,condition)
-    ids <- apply(DF,1,QCA3:::subCombination)
-    ids <- as.vector(ids)
-    tids <- table(idx)
+    ids <- apply(DF,1,subCombination) ## can be matrix of a list
+    if (is.list(ids)) ids <- unlist(ids) else ids <- as.vector(ids)
+    tids <- table(ids)
     ids <- names(tids)[tids==nrow(DF)]
     ids <- as.numeric(ids)
     if (length(ids)>0) {
-        ans <- QCA3:::id2Implicant(ids,rep(2,length(condition)),names=condition)
+        ans <- id2Implicant(ids,nlevel,names=condition)
         if (string) {
-            ans <- QCA3:::toString(ans,TRUE,rep(2,length(condition)),condition)
+            ans <- apply(ans,1,toString,traditional=TRUE,nlevels=nlevel,name=condition)
+            ans <- paste(ans,collapse=" + ") ## ans always has only one implicant?
         }
-    } else ans <- ""
-    ans
+    } else ans <- NULL
+     writeLines(strwrap(ans))
+    invisible(ans)
 }
 
 thresholdssetter <- function(x,nthreshold=1,value=TRUE,method="average",thresholds=NULL,dismethod="euclidean",print.table=TRUE){
