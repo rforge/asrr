@@ -132,7 +132,7 @@ cs_truthTable <- function(mydata, outcome, conditions,
 
 mv_truthTable <- function(mydata, outcome, conditions,
                           method = c("deterministic","probabilistic"),
-                          weight=NULL,complete=TRUE,
+                          weight=NULL,complete=FALSE,
                           show.cases = TRUE, cases=NULL,
                           cutoff1 = 1, cutoff0 = 1, benchmark=0.65, conf.level = 0.95,
                           missing=c('missing','dontcare','positive','negative')

@@ -9,7 +9,7 @@
 }
 \usage{
 mv_truthTable(mydata, outcome, conditions, method = c("deterministic", 
-    "probabilistic"), weight = NULL, show.cases = TRUE, cases = NULL, 
+    "probabilistic"), weight = NULL, complete=FALSE, show.cases = TRUE, cases = NULL, 
     cutoff1 = 1, cutoff0 = 1, benchmark = 0.65, conf.level = 0.95, 
     missing = c("missing", "dontcare", "positive", "negative"))
 }
