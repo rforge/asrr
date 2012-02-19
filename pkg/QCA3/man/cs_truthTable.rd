@@ -14,7 +14,7 @@
 }
 \usage{
 cs_truthTable(mydata, outcome, conditions,method = c("deterministic", 
-    "probabilistic"), weight = NULL, complete=FALSE, show.cases = TRUE, cases = NULL, 
+    "probabilistic", "mixed"), weight = NULL, complete=FALSE, show.cases = TRUE, cases = NULL, 
     cutoff1 = 1, cutoff0 = 1, benchmark = 0.65, conf.level = 0.95, 
     missing = c("missing", "dontcare", "positive", "negative")) 
 }
@@ -68,7 +68,7 @@ cs_truthTable(mydata, outcome, conditions,method = c("deterministic",
   and 1, then the cutting point is the cutoff1 or cutoff0 multiplied by the
   total number of case.
 
-  'benchmark' and 'conf.level' are only meaningful for 'probabilistic'
+  'benchmark' and 'conf.level' are only meaningful for 'probabilistic' and "mixed"
   method. When the method is 'probabilistic', a statistical test will
   conducted to test if the proportion of case for a configuration is
   greater then a benchmark. If the proportion of cases with outcome '1' is
@@ -78,6 +78,15 @@ cs_truthTable(mydata, outcome, conditions,method = c("deterministic",
   proportion fits the criterion, then it is don't care
   configuration. There is no contraditory congfiguration in this method,
   as it is designed to handle with contraditory configurations.
+
+  For method of 'mixed', a statistical test will conducted only for
+  contradictory configurations to test if the proportion of case for a
+  configuration is greater then a benchmark. If the proportion of cases
+  with outcome '1'is greater than benchmark, then the it is a
+  configuratin with outcome '1'. If the proportion of case with outcome
+  '0' is greater than benchmark, then the configuration with outcome of
+  '0'. If neither proportion fits the criterion, then it is don't care
+  configuration. There is no contraditory congfiguration in this method.
 
   rownames of a truthTable is grouping index (not important for
   end-users).

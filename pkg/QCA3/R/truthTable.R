@@ -11,7 +11,7 @@ lowerLimite <- function(x, n, conf.level=0.95) {
 }
 
 cs_truthTable <- function(mydata, outcome, conditions,
-                          method = c("deterministic","probabilistic"),
+                          method = c("deterministic","probabilistic","mixed"),
                           weight=NULL,complete=FALSE,
                           show.cases = TRUE, cases=NULL,
                           cutoff1 = 1, cutoff0 = 1, benchmark=0.65, conf.level = 0.95,
@@ -111,6 +111,16 @@ cs_truthTable <- function(mydata, outcome, conditions,
         allExpress$OUT[nidx] <- "0"
         allExpress$OUT[Dontcareid] <- "-9"
         ## no contradictory cases when using probabilistic method???
+    }
+    if (method=="mixed"){
+        limit1 <- lowerLimite(allExpress$freq1,allExpress$NCase,conf.level)
+        limit0 <- lowerLimite(allExpress$freq0,allExpress$NCase,conf.level)
+        pidx <- intersect(which(limit1 >=benchmark),match(Cid,rownames(allExpress)))
+        nidx <- intersect(which(limit0 >=benchmark),match(Cid,rownames(allExpress)))
+        Dontcareid <- setdiff(match(Cid,rownames(allExpress)),c(pidx,nidx))
+        allExpress$OUT[pidx] <- "1"
+        allExpress$OUT[nidx] <- "0"
+        allExpress$OUT[Dontcareid] <- "-9"
     }
     ## show.cases
     if (show.cases){
