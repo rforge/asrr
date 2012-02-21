@@ -3,6 +3,8 @@
 \alias{coverage.QCA}
 \alias{coverage.default}
 \alias{consistency}
+\alias{consistency.default}
+\alias{consistency.QCA}
 \title{
 Coverage and consistency.
 }
@@ -15,7 +17,7 @@ coverage(x, ...)
 
 \method{coverage}{default}(x, y, alternative = c("less", "greater"),...)
 
-\method{coverage}{QCA}(x, data, type = "row", which = 1, ...)
+\method{coverage}{QCA}(x, data, type = c("raw", "unique"), which = 1, ...)
 
 consistency(x,...)
 
@@ -41,7 +43,7 @@ consistency(x,...)
   Given two fuzzy set score variables x and y, coverage returns the coverage
   of x by y, given their relationship; and consistency returns  the
   consistency of x by y.
-  
+
   When alternative is "less", it returns coverage(x<=y). This is
   coverage for sufficent test. When "greater", it returns
   coverage(x>=y), it is coverage for necessary condition.
@@ -63,7 +65,7 @@ consistency(x,...)
 \references{
   Ragin, C. 2006. Set Relations in Social Research: Evaluating Their
   Consistency and Coverage Political Analysis,14(3):291-310.
-  
+
   Ragin, C. 2008, Redesigning social inquiry: fuzzy set and
   beyond. Chicago: The University of Chicago Press.
 }
@@ -87,7 +89,9 @@ coverage(pmin(1-CoD$demex,1-CoD$econdev),1-CoD$cod,'greater')
 #rownames(CoD) <- CoD$label
 tb6.4 <- reduce(CoD,'cod',c('econdev','eduhi','ethlihom','close','demex','nocom'),exp="positive",remainder='include',pre="fs")
 coverage(tb6.4, CoD)
+coverage(tb6.4, CoD,"unique")
 consistency(tb6.4, CoD)
+cbind(consistency(tb6.4, CoD),coverage(tb6.4,CoD),coverage(tb6.4,CoD,"unique")) ## put together
 
 ## coverage method for QCA object
 tb2<-reduce(policyChange~soc+pol+ind+are+foc,Yamasaki2009,cases="country")
