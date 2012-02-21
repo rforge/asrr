@@ -9,6 +9,8 @@ Produce a coincidence matrix from a crip set or fuzzy set data.
 coincid(x, standardized = FALSE, use = c("complete", "pairwise"))
 %# print method for class coincid
 \method{print}{coincid}(x, digits = 3, ...)
+
+overlap(x, y)
 }
 
 \arguments{
@@ -34,8 +36,6 @@ coincid(x, standardized = FALSE, use = c("complete", "pairwise"))
 
 \author{Ronggui HUANG}
 \seealso{\code{\link[QCA3]{suffnec}}}
-
-%\examples{
-%}
-%\keyword{ ~kwd1 }
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\examples{
+coincid(CoD[,c("cod","econdev","ethlihom")])
+}

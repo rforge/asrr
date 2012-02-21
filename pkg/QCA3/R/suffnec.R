@@ -156,3 +156,10 @@ print.suffnec <- function(x,digits=3,...)
   print(x$suff,digits=digits,na.print=" ",quote = FALSE,...)
 }
 
+
+tnec <- function(x, y){
+    ## x must greater or equal to y?
+    ## how to handle y=1?
+    ans <- mean((1 - x) / (1 - y))
+    ans
+}

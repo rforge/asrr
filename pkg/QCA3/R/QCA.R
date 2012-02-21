@@ -373,7 +373,7 @@ reduce.truthTable <- function(x,
     commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
     ans <- list(solutions=solutions,commonSolutions=commonSolutions,
                 solutionsIDX=sl,primeImplicants=primeImplicants,
-                truthTable=truthTable,explained=explained,
+                truthTable=truthTable,explained=explained,outcome=x$outcome,
                 idExclude=idExclude,nlevels=nlevels,
                 PIChart=PIChart, call=call)
     class(ans) <- c("QCA")

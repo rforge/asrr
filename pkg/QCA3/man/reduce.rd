@@ -24,19 +24,19 @@ reduce(x,...)
        keepTruthTable = TRUE,...)
 
 \method{reduce}{data.frame}(x, outcome, conditions,
-        explain = c("positive", "negative"), 
+        explain = c("positive", "negative"),
         remainders = c("exclude", "include"),
         contradictions = c("remainders", "positive", "negative"),
         dontcare = c("remainders", "positive", "negative"),
         preprocess = c("cs_truthTable", "fs_truthTable",
-        "mv_truthTable"), 
+        "mv_truthTable"),
        keepTruthTable = TRUE, ...)
 
 \method{reduce}{formula}(x, data, explain = c("positive", "negative"),
       remainders = c("exclude", "include"),
       contradictions = c("remainders", "positive", "negative"),
-      dontcare = c("remainders", "positive", "negative"), 
-      preprocess = c("cs_truthTable", "fs_truthTable", "mv_truthTable"), 
+      dontcare = c("remainders", "positive", "negative"),
+      preprocess = c("cs_truthTable", "fs_truthTable", "mv_truthTable"),
       keepTruthTable = TRUE, ...)
 }
 \arguments{
@@ -94,10 +94,13 @@ reduce(x,...)
   solution. The number of the matrix is row index of primeImplicants.}
   \item{primeImplicants}{A matrix of prime implicants.}
   \item{truthTable}{a truthTable if keepTruthTable is TRUE, otherwise NULL.}
-  \item{explained}{A data frame, representing the configuration of conditions for explained cases. Note it is not on basis of case but basis of configuration.}
+  \item{explained}{A data frame, representing the configuration of
+  conditions for explained cases. Note it is not on basis of case but
+  basis of configuration.}
+  \item{outcome}{outcome name.}
   \item{idExclude}{integer vector. id of observed configurations that are
   excluded from minimization. The meaning of id is equivalent to the
-  line number of a configuration discussed in Dusa (2007).} 
+  line number of a configuration discussed in Dusa (2007).}
   \item{nlevels}{a integer vector, the number of levels of each condition.}
   \item{PIChart}{a prime implicants charts, constructed according to
   primeImplicants and explained. It is a logic matrix with dimension of
