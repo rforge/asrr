@@ -1,3 +1,6 @@
+## This file (R/truthTable.R) is part of QCA3 package
+## copyright: HUANG Ronggui 2008-2012
+
 consistency <- function(x,...){
     UseMethod("consistency")
 }

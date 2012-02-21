@@ -65,7 +65,7 @@ excludeCSA(object, csa)
 }
 \value{
   For \code{constrReduce}, it is an object of class "QCA". It is
-  esentailly a list of10 components. See \code{\link{reduce}} for more
+  esentailly a list of 11 components. See \code{\link{reduce}} for more
   details. The only difference is the call componenet.
   
 }
