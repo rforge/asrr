@@ -15,9 +15,13 @@ coverage(x, ...)
 
 \method{coverage}{default}(x, y, alternative = c("less", "greater"),...)
 
-\method{coverage}{QCA}(x,traditional=TRUE,...)
+\method{coverage}{QCA}(x, data, type = "row", which = 1, ...)
 
-consistency(x, y, alternative = c("less", "greater"))
+consistency(x,...)
+
+\method{consistency}{default}(x, y, alternative = c("less", "greater"), ...)
+
+\method{consistency}{QCA}(x, data, which=1, ...)
 }
 \arguments{
   \item{x}{a numeric vector of fuzzy set score for default method of
@@ -79,8 +83,14 @@ coverage(1-CoD$demex,1-CoD$cod,'greater')
 coverage(pmin(1-CoD$demex,1-CoD$econdev),1-CoD$cod,'greater')
 # not socioeconomic developed society without prior democratic experience
 
+## coverage and consistency for QCA object
+#rownames(CoD) <- CoD$label
+tb6.4 <- reduce(CoD,'cod',c('econdev','eduhi','ethlihom','close','demex','nocom'),exp="positive",remainder='include',pre="fs")
+coverage(tb6.4, CoD)
+consistency(tb6.4, CoD)
+
 ## coverage method for QCA object
 tb2<-reduce(policyChange~soc+pol+ind+are+foc,Yamasaki2009,cases="country")
-coverage(tb2)
+coverage(tb2,Yamasaki2009)
 }
 

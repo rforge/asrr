@@ -44,8 +44,9 @@ primeImplicants <- function(object,traditional=TRUE){
     writeLines(strwrap(PI))
 }
 
-consistencyQCA <- function(x, data, which=1){
+consistency.QCA <- function(x, data, which=1, ...){
     ## x is a fsQCA solution, data is the original data,outcome is the outcome of QCA
+    if (which>length(x$solutions)) stop("'which' is too large.")
     sol <- x$solutions[[which]]
     outcome <- x$outcome
     ## only conduct for one solution indicated by which.
@@ -72,6 +73,40 @@ consistencyQCA <- function(x, data, which=1){
         ans[i,"consistency"] <- consistency(x=fzx,y=data[,outcome])
     }
     ans[i+1,"consistency"] <- consistency(x=apply(solX,1,max),y=data[,outcome])
+    implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevel=x$nlevel,conds))
+    rownames(ans) <- c(implicantName,"[solution]")
+    ans
+}
+
+coverage.QCA <- function(x, data, type="row", which=1, ...){
+    ## x is a fsQCA solution, data is the original data,outcome is the outcome of QCA
+    if (which>length(x$solutions)) stop("Which is too large.")
+    sol <- x$solutions[[which]]
+    outcome <- x$outcome
+    ## only conduct for one solution indicated by which.
+    idx1 <- which(sol==1,arr.ind=TRUE)
+    idx0 <- which(sol==0,arr.ind=TRUE)
+    Nimplicant <- nrow(sol)
+    conds <- names(sol)
+    ans <- data.frame(rawCoverage=numeric(Nimplicant+1))
+    solX <- matrix(numeric(nrow(data)*Nimplicant),ncol=Nimplicant)
+    for (i in seq(Nimplicant)) {
+        cond1 <- conds[idx1[idx1[,1]==i,2]]
+        dat1 <- data[,cond1,drop=FALSE]
+        cond0 <- conds[idx0[idx0[,1]==i,2]]
+        dat0 <- 1-data[,cond0,drop=FALSE]
+        if (ncol(dat1)>0 & ncol(dat0)>0) {
+            soli <- cbind(dat1,dat0)
+        } else if(ncol(dat1)==0) {
+            soli <- dat0
+        } else {
+            soli <- dat1
+        }
+        fzx <- apply(soli,1,min)
+        solX[,i] <- fzx
+        ans[i,"rawCoverage"] <- coverage(x=fzx,y=data[,outcome])
+    }
+    ans[i+1,"rawCoverage"] <- coverage(x=apply(solX,1,max),y=data[,outcome])
     implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevel=x$nlevel,conds))
     rownames(ans) <- c(implicantName,"[solution]")
     ans
