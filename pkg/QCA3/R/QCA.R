@@ -557,6 +557,7 @@ print.QCA <- function(x,traditional=TRUE,show.truthTable=TRUE,...){
         cat(sprintf("truthTable with %i configuration(s)\n\n",nrow(truthTable)))
         print(truthTable)
     }
+    cat(sprintf("\n----------------\nExplaining %i configuration(s)\n",nrow(x$explained)))
     for (i in seq_len(length(PIs))) {
         cat("\n----------------\n")
         cat(sprintf("Prime implicant No. %i with %i implicant(s)\n\n",i,PIs[[i]]$N))
