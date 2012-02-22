@@ -46,6 +46,7 @@ primeImplicants <- function(object,traditional=TRUE){
 
 consistency.QCA <- function(x, data, which=1, ...){
     ## x is a fsQCA solution, data is the original data,outcome is the outcome of QCA
+    if (max(x$nlevels)>2) stop("It is not applicable for mvQCA.")
     if (which>length(x$solutions)) stop("'which' is too large.")
     sol <- x$solutions[[which]]
     outcome <- x$outcome
@@ -79,7 +80,7 @@ consistency.QCA <- function(x, data, which=1, ...){
 }
 
 coverage.QCA <- function(x, data, type=c("raw","unique"), which=1, ...){
-    ## not for mvQCA
+    if (max(x$nlevels)>2) stop("It is not applicable for mvQCA.")
     type <- match.arg(type)
     ans <- switch(type,
                   raw= rawCoverageQCA(x,data,which),
@@ -90,6 +91,7 @@ coverage.QCA <- function(x, data, type=c("raw","unique"), which=1, ...){
 
 rawCoverageQCA <- function(x, data, which=1){
     ## x is a fsQCA solution, data is the original data,outcome is the outcome of QCA
+    if (max(x$nlevels)>2) stop("It is not applicable for mvQCA.")
     if (which>length(x$solutions)) stop("Which is too large.")
     sol <- x$solutions[[which]]
     outcome <- x$outcome
@@ -124,6 +126,7 @@ rawCoverageQCA <- function(x, data, which=1){
 
 uniqueCoverageQCA <- function(x, data, which=1){
     ## x is a fsQCA solution, data is the original data,outcome is the outcome of QCA
+    if (max(x$nlevels)>2) stop("It is not applicable for mvQCA.")
     if (which>length(x$solutions)) stop("Which is too large.")
     sol <- x$solutions[[which]]
     ## only conduct for one solution indicated by which.
