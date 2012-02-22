@@ -53,7 +53,7 @@ fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
   There is a sort method and a consistGaps method for the fs_truthTable object.
 }
 \value{
-  An object of class "truthTable" and "fs_truthTable".
+  An object of class "fs_truthTable" and "truthTable".
 }
 \references{
   Ragin. Charles. 2009. Qualitative Comparative Analyais Using Fuzzy

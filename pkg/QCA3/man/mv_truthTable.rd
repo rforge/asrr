@@ -42,7 +42,7 @@ mv_truthTable(mydata, outcome, conditions, method = c("deterministic",
   Refer to \code{\link{cs_truthTable}} for for more details.
 }
 \value{
-  An object of class "truthTable" and "mv_truthTable".
+  An object of class "mv_truthTable" and "truthTable".
 }
 \references{
   Ragin, Charles. 2000. Fuzzy-Set Social Science. Pp109-116. University Of Chicago Press.

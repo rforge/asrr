@@ -94,7 +94,7 @@ cs_truthTable(mydata, outcome, conditions,method = c("deterministic",
   There is a sort method method for the truthTable object.
 }
 \value{
-  An object of class "truthTable" and "cs_trutbTable". A list with 5
+  An object of class "cs_trutbTable" and "truthTable". A list with 5
   components:
   \item{truthTable}{a data frame presenting a truthTable.}
   \item{outcome}{The name of outcome variable. length-1 character.}

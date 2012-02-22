@@ -134,7 +134,7 @@ cs_truthTable <- function(mydata, outcome, conditions,
     }
     allExpress
     ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=nlevels,call=match.call())
-    class(ans) <- c("truthTable","cs_truthTable")
+    class(ans) <- c("cs_truthTable","truthTable")
     ans
 }
 
@@ -249,7 +249,7 @@ mv_truthTable <- function(mydata, outcome, conditions,
     }
     allExpress
     ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=nlevels,call=match.call())
-    class(ans) <- c("truthTable","mv_truthTable")
+    class(ans) <- c("mv_truthTable","truthTable")
     ans
 }
 
@@ -308,7 +308,7 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
     }
     rownames(allExpress) <- apply(allExpress[,conditions],1, implicant2Id, nlevels=rep(2,length(conditions)))
     ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=rep(2,length(conditions)),call=match.call())
-    class(ans) <- c("truthTable","fs_truthTable")
+    class(ans) <- c("fs_truthTable","truthTable")
     ans
 }
 
