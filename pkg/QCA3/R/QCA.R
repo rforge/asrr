@@ -621,7 +621,7 @@ print.summary.QCA <- function(x,digits=3,traditional=FALSE,...){
     cat(sprintf("Total number of cases: %i\n",x$N))
     cat(sprintf("Number of cases [1]: %i\n",x$N1))
     cat(sprintf("Number of cases [0]: %i\n",x$N0))
-    if (x$call$explain=="positive") cat("Explaining cases [1].\n") else  cat("Explain cases [0].\n")
+    if (x$call$explain=="positive" || is.null(x$call$explain)) cat("Explaining cases [1].\n") else  cat("Explain cases [0].\n")
     for (i in seq_len(length(PIs))) {
       cat("\n----------------\n")
       cat(sprintf("Prime implicant No. %i with %i implicant(s)\n\n",i,PIs[[i]]$N))

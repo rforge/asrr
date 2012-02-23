@@ -35,8 +35,9 @@ consistency(x,...)
   \item{alternative}{
     specify the relationship between x and y.
   }
-  \item{traditional}{logical, use traditional symbol to present the
-    solution when it is TRUE. Otherwise, use Tosmana-style symbol.}
+  \item{data}{The original data which are used to generate the QCA object.}
+  \item{which}{length-1 positive integer to select a solution from the QCA object.}
+  \item{type}{The type of coverage.}
   \item{\ldots}{not used currently.}
 }
 \details{

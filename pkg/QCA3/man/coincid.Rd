@@ -15,7 +15,9 @@ overlap(x, y)
 }
 
 \arguments{
-  \item{x}{For coincide, x is a dataframe of crip set or fuzzy set data, which ranges from
+  \item{x}{x is a dataframe of crip set or fuzzy set data, which ranges from
+  0 to 1.}
+  \item{y}{y is a dataframe of crip set or fuzzy set data, which ranges from
   0 to 1.}
   \item{standardized}{When TRUE, produce the standardized coincidence scores.}
   \item{use}{The method of handling missing data. "complete" means
