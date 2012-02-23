@@ -83,7 +83,7 @@ coverage(pmin(1-CoD$demex,1-CoD$econdev),1-CoD$cod,'greater')
 # not socioeconomic developed society without prior democratic experience
 
 ## coverage and consistency for QCA object
-#rownames(CoD) <- CoD$label
+rownames(CoD) <- CoD$label
 tb6.4 <- reduce(CoD,'cod',c('econdev','eduhi','ethlihom','close','demex','nocom'),exp="positive",remainder='include',pre="fs")
 coverage(tb6.4, CoD)
 coverage(tb6.4, CoD,"unique")

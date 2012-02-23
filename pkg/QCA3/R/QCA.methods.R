@@ -61,7 +61,7 @@ consistency.QCA <- function(x, data, which=1, ...){
         cond1 <- conds[idx1[idx1[,1]==i,2]]
         dat1 <- data[,cond1,drop=FALSE]
         cond0 <- conds[idx0[idx0[,1]==i,2]]
-        dat0 <- 1-data[,cond0,drop=FALSE]
+        if (length(cond0)>0) dat0 <- 1-data[,cond0,drop=FALSE] else dat0 <- data[,cond0,drop=FALSE] ## empty data frame
         if (ncol(dat1)>0 & ncol(dat0)>0) {
             soli <- cbind(dat1,dat0)
         } else if(ncol(dat1)==0) {
@@ -106,7 +106,7 @@ rawCoverageQCA <- function(x, data, which=1){
         cond1 <- conds[idx1[idx1[,1]==i,2]]
         dat1 <- data[,cond1,drop=FALSE]
         cond0 <- conds[idx0[idx0[,1]==i,2]]
-        dat0 <- 1-data[,cond0,drop=FALSE]
+        if (length(cond0)>0) dat0 <- 1-data[,cond0,drop=FALSE] else dat0 <- data[,cond0,drop=FALSE] ## empty data frame
         if (ncol(dat1)>0 & ncol(dat0)>0) {
             soli <- cbind(dat1,dat0)
         } else if(ncol(dat1)==0) {
@@ -142,7 +142,7 @@ uniqueCoverageQCA <- function(x, data, which=1){
         cond1 <- conds[idx1[idx1[,1]==i,2]]
         dat1 <- data[,cond1,drop=FALSE]
         cond0 <- conds[idx0[idx0[,1]==i,2]]
-        dat0 <- 1-data[,cond0,drop=FALSE]
+        if (length(cond0)>0) dat0 <- 1-data[,cond0,drop=FALSE] else dat0 <- data[,cond0,drop=FALSE] ## empty data frame
         if (ncol(dat1)>0 & ncol(dat0)>0) {
             soli <- cbind(dat1,dat0)
         } else if(ncol(dat1)==0) {
