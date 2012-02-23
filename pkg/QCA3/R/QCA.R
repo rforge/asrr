@@ -607,7 +607,7 @@ summary.QCA <- function(object,traditional=TRUE,show.case=TRUE,...){
         res
     })
     ans <- list(N=N_total,N1=N_positive,N0=N_negative,Ndup=as.numeric(cases["Ndup",]),
-                coverage=coverage,prop=prop,PIs=PIs,call=object$call,cases=cases["PI",])
+                Ncoverage=coverage,prop.total=prop,PIs=PIs,call=object$call,cases=cases["PI",])
     class(ans) <- "summary.QCA"
     ans
 }
@@ -621,22 +621,28 @@ print.summary.QCA <- function(x,digits=3,traditional=FALSE,...){
     cat(sprintf("Total number of cases: %i\n",x$N))
     cat(sprintf("Number of cases [1]: %i\n",x$N1))
     cat(sprintf("Number of cases [0]: %i\n",x$N0))
-    if (x$call$explain=="positive" || is.null(x$call$explain)) cat("Explaining cases [1].\n") else  cat("Explain cases [0].\n")
+    if (x$call$explain=="positive" || is.null(x$call$explain)) {
+      cat("Explaining [1]\n")
+      Nexplained <- x$N1
+      } else  {
+        cat("Explain cases [0]\n")
+        Nexplained <- x$N0
+        }
     for (i in seq_len(length(PIs))) {
       cat("\n----------------\n")
       cat(sprintf("Prime implicant No. %i with %i implicant(s)\n\n",i,PIs[[i]]$N))
       writeLines(strwrap(PIs[[i]]$PI))
-      writeLines(strwrap(sprintf("Number of case: %s\n",paste(x$coverage[,i],collapse=" + "))))
+      cat("\n")
+      writeLines(strwrap(sprintf("Number of cases: %s\n",paste(x$Ncoverage[,i],collapse=" + "))))
       ## number of case (sum is not the number of explained cases owning to cases covered by multiple PIs)
-      writeLines(strwrap(sprintf("%% of total cases: %s = %s \n",
-                  paste(round(x$prop[,i],digits),collapse=" + "),
-                  round(sum(x$prop[,i]),digits)
+      writeLines(strwrap(sprintf("Percentage of explained cases: %s\n",
+                  paste(paste(round(x$Ncoverage[,i]/Nexplained*100,digits),"%",sep=""),collapse=" + ")
                                  )
                          )
                  )
       ## prop
-      writeLines(strwrap(sprintf("No. of cases by multiple PIs: %s (%s%%)\n",x$Ndup[i],
-                                 round(x$Ndup[i]/x$N*100,digits))))
+      writeLines(strwrap(sprintf("Cases covered by multiple PIs: %s (%s%%)\n",x$Ndup[i],
+                                 round(x$Ndup[i]/Nexplained * 100,digits))))
       ## dup case
       writeLines(strwrap(sprintf("Cases: %s \n",x$cases[i])))
     }
