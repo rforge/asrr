@@ -829,7 +829,8 @@ implicantsToDF <- function(x, conditions){
     dat
 }
 
-boolIntersect <- function(x, string=TRUE){
+boolIntersect <- function(..., string=TRUE){
+    x <- paste(unlist(list(...)),collapse="+")
     condition <- toupper(unique(strsplit(x,"[*+]")[[1]]))
     nlevel <- rep(2, length(condition))
     DF <- implicantsToDF(x,condition)

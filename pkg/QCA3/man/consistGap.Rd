@@ -1,6 +1,5 @@
-﻿\name{consistGap}
+\name{consistGap}
 \alias{consistGap}
-\encoding{UTF-8}
 \title{
 Consistency gaps between configurations
 }
@@ -22,12 +21,12 @@ The truthTable is sorted according to consistency and outcome first before calcu
 \value{
 A data frame with 6 columns, with ConsistGap the most important variable.}
 \references{
-Schneider, C. & Wagemann, C. 2010. Standards of Good Practice in Qualitative Comparative Analysis (QCA) and Fuzzy-Sets. Comparative Sociology, 9 (3): 397–418.
+Schneider, C. & Wagemann, C. 2010. Standards of Good Practice in Qualitative Comparative Analysis (QCA) and Fuzzy-Sets. Comparative Sociology, 9 (3): 397-418.
 }
 \author{
 Ronggui HUANG}
 \seealso{
-\link{setOUT}, link{fs_truthTable}
+\link{setOUT}, \link{fs_truthTable}
 }
 \examples{
 fst <- fs_truthTable(Lipset_fs,"Survived.FZ",c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ",
