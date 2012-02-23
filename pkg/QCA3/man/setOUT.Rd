@@ -24,6 +24,9 @@ Should note that "freq1" and "freq0" are not affected, so QCA methods reliant on
 \value{
 A new truthTable with a new outcome.
 }
+\seealso{
+\link{consistGap}
+}
 \author{Ronggui HUANG}
 \examples{
 fst <- fs_truthTable(Lipset_fs,"Survived.FZ",c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ",

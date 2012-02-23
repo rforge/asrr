@@ -333,7 +333,7 @@ sort.truthTable <- function (x, decreasing = TRUE, criterion="OUT", ...) {
 
 consistGap <- function(x){
     if (!inherits(x,"fs_truthTable")) stop("x must be an object of class 'fs_truthTable'.")
-    x <- sort(x,criterion="OUT")
+    x <- sort(sort(x),criterion="OUT")
     gaps <- c(NA,abs(diff(x$truthTable$Consistency)))
     ans <- cbind(x$truthTable[,c("OUT","freq1","freq0","NCase","Consistency")],ConsistGap=gaps)
     ## ans$MaxGap <- ""
