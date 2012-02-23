@@ -58,10 +58,6 @@ consistency(x,...)
 \value{
   For default method of coverage and consistency, the value is a
   length-1 numeric vector.
-
-  For QCA method of coverage, it is a list of data frame. Each data
-  frame represent coverage of one solution. It contains three columns,
-  namely implicant, raw and unique (coverage in terms of number of case).
 }
 \references{
   Ragin, C. 2006. Set Relations in Social Research: Evaluating Their
