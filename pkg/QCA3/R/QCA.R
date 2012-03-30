@@ -217,7 +217,8 @@ reduceByOne <- function(IDs,nlevels){
 
 
 reduce2 <- function(IDs,nlevels){
-
+    ## IDs MUST be that of commbination?
+    ## otherwise, use subCommbination to discover them first.?
   reduced <- function(IDs,nlevels){
     ## helper function
     index=reduceByOne(IDs,nlevels=nlevels)
@@ -258,6 +259,7 @@ reduce2 <- function(IDs,nlevels){
 
 PIChart <- function(primeImplicants,explained=NULL){
     ## primeImplicants with attr of "explained" if explained is NULL
+    ## rows are primeimplicants and columns are original combinations
     if (is.null(explained)){
         explained <- attr(primeImplicants,"explained")
     }
@@ -267,8 +269,11 @@ PIChart <- function(primeImplicants,explained=NULL){
     for (i in seq_len(nr)){
         for (j in seq_len(nc)){
             ## idx <- !is.na(primeImplicants[i,])
-            idx <- !is.dontcare(primeImplicants[i,])
-            ans[i,j] <- isTRUE(all.equal(primeImplicants[i,][idx],explained[j,][idx]))
+            if (FALSE) { ## comment out the old method
+                idx <- !is.dontcare(primeImplicants[i,])
+                ans[i,j] <- isTRUE(all.equal(primeImplicants[i,][idx],explained[j,][idx]))
+            }
+            ans[i,j] <- isSuperSet(primeImplicants[i,], explained[j,])
         }
     }
     ans
@@ -316,6 +321,7 @@ reduce.truthTable <- function(x,
                               remainders=c("exclude","include"),
                               contradictions=c("remainders","positive","negative"),
                               dontcare=c("remainders","positive","negative"),
+                              cdontcare=c("remainders","positive","negative"),
                               keepTruthTable=TRUE,...)
 {
     call <- match.call()
@@ -327,7 +333,8 @@ reduce.truthTable <- function(x,
     explain <- match.arg(explain)
     remainders <- match.arg(remainders)
     contradictions <- match.arg(contradictions)
-    dontcare <- match.arg(dontcare)
+    dontcare <- match.arg(dontcare) ## dontcare in outcome
+    conddontcare <- match.arg(cdontcare) ## dontcare in condition
     if (keepTruthTable) {
         truthTable <- mydata[mydata[["OUT"]]!="?",] ## subset(mydata,OUT!="?")
         ## to avoid unbined global variable of OUT, do not use subset(mydata, OUT...)
@@ -349,6 +356,7 @@ reduce.truthTable <- function(x,
       idExclude <- apply(dat1,1,implicant2Id,nlevels=nlevels)
     }
     if (nrow(explained)==0) stop("No configuration is associated with the explained outcome.")
+
     if (remainders=="include"){
         ## if necessary conditons -> add some remainders to dat0
         superSets1 <- apply(dat1, 1, superSet,nlevels=nlevels)
@@ -362,10 +370,27 @@ reduce.truthTable <- function(x,
         if (explain=="negative") primesId <- setdiff(superSets0,superSets1)
         primesId <- ereduce1(primesId,nlevels=nlevels)
     } else if (remainders=="exclude") {
-        if (explain=="positive") primesId <- apply(dat1,1,implicant2Id,nlevels=nlevels)
-        if (explain=="negative") primesId <- apply(dat0,1,implicant2Id,nlevels=nlevels)
+        if (conddontcare=="remainders") { ## added on 30/3/2012
+            ## how to handle dontcare in conditions?
+            dontcare.idx <- apply(explained, 1, function(x) any(is.dontcare(x)))
+            dontcare.case <- explained[dontcare.idx,]
+            primesIdP <- apply(explained[!dontcare.idx,], 1, implicant2Id, nlevels=nlevels)
+            ## explained of processed cases
+            dontcare.IDs <- apply(dontcare.case,1,subCombination,nlevels=nlevels)
+            dontcare.IDs <- unique(unlist(dontcare.IDs))
+            primesId <- unique(union(primesIdP,dontcare.IDs))
+        } else if (conddontcare=="positive"){
+            dat1 <- explained
+            dat1[is.dontcare(explained)] <- 1
+            primesId <- apply(dat1, 1, implicant2Id, nlevels = nlevels)
+        } else if (conddontcare=="negative"){
+            dat0 <- explained
+            dat0[is.dontcare(explained)] <- 0
+            primesId <- apply(dat0, 1, implicant2Id, nlevels = nlevels)
+        }
         primesId <- reduce2(primesId,nlevels=nlevels)
     }
+
     primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
     PIChart <- PIChart(primeImplicants,explained)
     sl <- solvePIChart(PIChart)
@@ -385,6 +410,7 @@ reduce.formula <- function(x, data,
                            remainders=c("exclude","include"),
                            contradictions=c("remainders","positive","negative"),
                            dontcare=c("remainders","positive","negative"),
+                           cdontcare=c("remainders","positive","negative"),
                            preprocess=c("cs_truthTable","fs_truthTable","mv_truthTable"),
                            keepTruthTable=TRUE,...
                            )
@@ -404,11 +430,12 @@ reduce.formula <- function(x, data,
     remainders <- match.arg(remainders)
     contradictions <- match.arg(contradictions)
     dontcare <- match.arg(dontcare)
+    conddontcare <- match.arg(cdontcare) ## dontcare in condition
     preprocess <- match.arg(preprocess)
     dots <- list(...)
     x <- do.call(preprocess,c(list(mydata=data, outcome=outcome,conditions=conditions),dots))
     ans <- do.call(reduce.truthTable,list(x=x,explain=explain,remainders=remainders,
-                                          contradictions=contradictions,dontcare=dontcare,
+                                          contradictions=contradictions,dontcare=dontcare,cdontcare=cdontcare,
                                           keepTruthTable=keepTruthTable,dots))
     ans$call <- call
     ans
@@ -420,6 +447,7 @@ reduce.data.frame <- function(x, outcome, conditions,
                               remainders=c("exclude","include"),
                               contradictions=c("remainders","positive","negative"),
                               dontcare=c("remainders","positive","negative"),
+                              cdontcare=c("remainders","positive","negative"),
                               preprocess=c("cs_truthTable","fs_truthTable","mv_truthTable"),
                               keepTruthTable=TRUE,
                               ...)
@@ -430,11 +458,12 @@ reduce.data.frame <- function(x, outcome, conditions,
     remainders <- match.arg(remainders)
     contradictions <- match.arg(contradictions)
     dontcare <- match.arg(dontcare)
+    conddontcare <- match.arg(cdontcare) ## dontcare in condition
     preprocess <- match.arg(preprocess)
     dots <- list(...)
     x <- do.call(preprocess,c(list(mydata=x, outcome=outcome,conditions=conditions),dots))
     ans <- do.call(reduce.truthTable,list(x=x,explain=explain,remainders=remainders,
-                                          contradictions=contradictions,dontcare=dontcare,
+                                          contradictions=contradictions,dontcare=dontcare,cdontcare=cdontcare,
                                           keepTruthTable=keepTruthTable,dots))
     ans$call <- call
     ans

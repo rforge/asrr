@@ -28,15 +28,10 @@ McCammon & Van Dyke. 2010. Applying Qualitative Comparative Analysis to Empirica
 }
 \examples{
 data(McCammonVanDyke)
-workdat <- McCammonVanDyke
-workdat[workdat==-9] <- 0
-reduce(workdat,"coalition",c("ideology","threats","opportunity","ties","resources"))
+reduce(McCammonVanDyke,"coalition",c("ideology","threats","opportunity","ties","resources"),cdontcare='negative')
 ## result in figure 13.2
 
-workdat <- McCammonVanDyke
-idx <- apply(workdat, 1, function(x) any(x==-9))
-ans <- reduce(workdat[!idx,],"coalition",c("ideology","threats","opportunity","ties","resources"))
-constrReduce(ans,include=workdat[idx,1:5])
+reduce(McCammonVanDyke,"coalition",c("ideology","threats","opportunity","ties","resources"),cdontcare='remainder')
 ## result in figure 13.3
 }
 \keyword{datasets}
