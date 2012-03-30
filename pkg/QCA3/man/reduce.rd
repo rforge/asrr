@@ -21,6 +21,7 @@ reduce(x,...)
        remainders = c("exclude","include"),
        contradictions = c("remainders","positive","negative"),
        dontcare = c("remainders", "positive", "negative"),
+       cdontcare=c("remainders","positive","negative"),
        keepTruthTable = TRUE,...)
 
 \method{reduce}{data.frame}(x, outcome, conditions,
@@ -28,6 +29,7 @@ reduce(x,...)
         remainders = c("exclude", "include"),
         contradictions = c("remainders", "positive", "negative"),
         dontcare = c("remainders", "positive", "negative"),
+        cdontcare=c("remainders","positive","negative"),
         preprocess = c("cs_truthTable", "fs_truthTable",
         "mv_truthTable"),
        keepTruthTable = TRUE, ...)
@@ -36,6 +38,7 @@ reduce(x,...)
       remainders = c("exclude", "include"),
       contradictions = c("remainders", "positive", "negative"),
       dontcare = c("remainders", "positive", "negative"),
+      cdontcare=c("remainders","positive","negative"),
       preprocess = c("cs_truthTable", "fs_truthTable", "mv_truthTable"),
       keepTruthTable = TRUE, ...)
 }
@@ -47,12 +50,14 @@ reduce(x,...)
   \item{explain}{a character string specifying the cases to be
     explained. Must one of "positive" or "negative".}
   \item{remainders}{a character string specifying how to deal with
-    remainders. Must one of "exclude" or "include".}
+    outcome remainders. Must one of "exclude" or "include".}
   \item{contradictions}{a character string specifying how to deal with
     contraditory configurations. Must one of "remainders","positive" or
     "negative"}
-  \item{dontcare}{a character string specifying how to deal with
-    dontcare cases. Must one of "remainders", "positive", "negative"}
+  \item{dontcare}{a character string specifying how to deal with cases of
+    dontcare outcome. Must one of "remainders", "positive", "negative"}
+  \item{cdontcare}{a character string specifying how to deal with cases of
+    dontcare conditions. Must one of "remainders", "positive", "negative"}
   \item{preprocess}{a character string specifying the function for
     preprocessing data, which turns raw data to a truthTable. Must one
     of \code{cs_truthTable}, \code{fs_truthTable} or \code{mv_truthTable}.}
@@ -80,9 +85,6 @@ reduce(x,...)
   It is good practices to generate and examine a truthTable, then use
   truthTable method of reduce to do the boolean minimization.
 
-  Since version 0.0-3, reduce uses enhanced internal function ereduce1
-  (which uses enhanced internal function esubset). It has been tested
-  and yields the same result (see tests directory for details).
 }
 \value{
   An object of class "QCA". It is essentailly a list of 10 components.
@@ -150,6 +152,10 @@ reduce(x,...)
   uses proximately 500 to 600 Mb memory in typical QCA study. I emphasis
   "typical" because the exact scenario also depends on the number of
   observed configurations.
+
+  Since version 0.0-3, reduce uses enhanced internal function ereduce1
+  (which uses enhanced internal function esubset). It has been tested
+  and yields the same result (see tests directory for details).
 }
 \seealso{
 \code{\link[QCA]{factorize}}, \code{\link{SA}}, \code{\link{CSA}},

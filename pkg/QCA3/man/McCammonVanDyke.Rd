@@ -2,7 +2,7 @@
 \alias{McCammonVanDyke}
 \docType{data}
 \title{
-Social movement coalition studies
+Social movement coalition
 }
 \description{
 Data set in McCammon and Van Dyke's meta-analysis of studies on social movement coalition
