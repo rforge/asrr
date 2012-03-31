@@ -74,7 +74,7 @@ consistency.QCA <- function(x, data, which=1, ...){
         ans[i,"consistency"] <- consistency(x=fzx,y=data[,outcome])
     }
     ans[i+1,"consistency"] <- consistency(x=apply(solX,1,max),y=data[,outcome])
-    implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevel=x$nlevel,conds))
+    implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevels=x$nlevels,conds))
     rownames(ans) <- c(implicantName,"[solution]")
     ans
 }
@@ -119,7 +119,7 @@ rawCoverageQCA <- function(x, data, which=1){
         ans[i,"rawCoverage"] <- coverage(x=fzx,y=data[,outcome])
     }
     ans[i+1,"rawCoverage"] <- coverage(x=apply(solX,1,max),y=data[,outcome])
-    implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevel=x$nlevel,conds))
+    implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevels=x$nlevels,conds))
     rownames(ans) <- c(implicantName,"[solution]")
     ans
 }
@@ -158,7 +158,7 @@ uniqueCoverageQCA <- function(x, data, which=1){
         notifz <- apply(solX[,-i],1, max)
         ans[i,"uniqueCoverage"] <- ans[Nimplicant+1,"uniqueCoverage"] - coverage(x=notifz, y=data[,outcome])
     }
-    implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevel=x$nlevel,conds))
+    implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevels=x$nlevels,conds))
     rownames(ans) <- c(implicantName,"[solution]")
     ans
 }
