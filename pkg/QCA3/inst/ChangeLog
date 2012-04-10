@@ -1,3 +1,7 @@
+2012-04-10
+	* add data set of Stokke
+	* solve issues caused by updated version of QCA by removing it from Suggestions.
+
 2012-03-31
 	* correct an argument to pass check, correct a dataset name
 	* correct the name of changelog

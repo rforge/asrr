@@ -162,30 +162,6 @@ reduce(x,...)
   \code{\link{constrReduce}}
 }
 \examples{
-if (require(QCA)){
-data(Osa,package="QCA")
-## QCA package is required to run this example
-Osa$OUT2 <- Osa$OUT ## OUT is reserved word in QCA3
-## the same as examples of QCA:::qmcc
-conditions <- c("DYNA","ACCES","INFLU","ELITE","SOCIAL")
-reduce(Osa,"OUT2",conditions,explain="positive",remaind="exclude")
-reduce(Osa,"OUT2",conditions,explain="positive",contradictions="positive",remaind="include")
-ans <-
-  reduce(Osa,"OUT2",conditions,explain="positive",contradictions="negative",remaind="include")
-simplifyingAssumption(ans) ## or SA(ans)
-reduce(Osa,"OUT2",conditions,explain="negative",contradictions="negative",remaind="include")
-
-## Results of Osa and Corduneanu-Huci (2003)
-reduce(Osa,"OUT2",conditions,explain="pos",contrad="neg",remaind="exclude")
-# table 1 in page 617
-reduce(Osa,"OUT2",conditions,explain="neg",contrad="pos",remaind="exclude")
-# table 2 of page 621
-reduce(Osa,"OUT2",conditions,explain="positive",contradictions="pos",remaind="incl")
-# maximum reduction in page 623
-reduce(Osa,"OUT2",conditions[1:4],explain="pos",contradictions="neg",remaind="excl")
-# Appendix 2 in page 629
-}
-
 ## csQCA, mvQCA and fsQCA examples from "Configuraional comparative Methods"
 ## csQCA
 conditions <- c("GNPCAP", "URBANIZA", "LITERACY", "INDLAB", "GOVSTAB")

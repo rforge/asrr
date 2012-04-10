@@ -84,52 +84,23 @@ newSol <- excludeCSA(ans2[2],CSA(ans1,ans2[2]))
 identical(newSol$solutions, ans2[3]$solutions)
 ## they are the same.
 
-if (require(QCA)){
-##Use easy counterfactuals to get an intermediate solution (Ragin 2008:chapter 9)
-data(Stokke,package="QCA")
-comp <- reduce(Stokke,"Y",c("A","C","S","I","R"),explain="positive")
-pars <- reduce(Stokke,"Y",c("A","C","S","I","R"),explain="positive",remaind="include")
+## Use easy counterfactuals to get an intermediate solution (Ragin 2008:chapter 9)
+comp <- reduce(Stokke,"success",c("advice","commitment","shadow",'inconvenience',"reverberation"),explain="positive")
+pars <- reduce(Stokke,"success",c("advice","commitment","shadow",'inconvenience',"reverberation"),explain="positive",remaind="include")
 sa <- SA(pars)
 ## determins easy counterfactuals
 ## method 1 is to manually construct the easy counterfactuals
 easy1 <- rbind(
-c(1,-9,1,-9,1), # A*S*R
-c(1,1,1,0,-9), # A*C*S*i
-c(1,-9,-9,0,-9) # A*i
+c(1,-9,1,-9,1), # ADVICE*SHADOW*REVERBERATION
+c(1,1,1,0,-9), # ADVICE*COMMITMENT*SHADOW*inconvenience
+c(1,-9,-9,0,-9) # ADVICE*inconvenience
 )
 easy1 <- as.data.frame(easy1)
 constrReduce(comp,include=easy1)
 ## method 2 uses implicantsToDF faciliates such construction
-easy2 <- implicantsToDF(x="A*S*R+A*C*S*i+A*i",conditions=c("A","C","S","I","R"))
+easy2 <- implicantsToDF(x="ADVICE*SHADOW*REVERBERATION+ADVICE*COMMITMENT*SHADOW*inconvenience+ADVICE*inconvenience",
+                        conditions=c("advice","commitment","shadow",'inconvenience',"reverberation"))
 constrReduce(comp,include=easy2)
 ## end of Ragin (2009:chapter 9) example
-
-## example 1
-data(Yamasaki,package="QCA")
-ans0 <- reduce(Yamasaki,"AGENDA",names(Yamasaki)[1:5],"negative","include") ## 5 solutions
-ans1 <- reduce(Yamasaki,"AGENDA",names(Yamasaki)[1:5],"positive","include")
-(csa2 <- CSA(ans0[2],ans1)) ## get and show CSAs
-(ans02 <- constrReduce(ans0[2],exclude=csa2$solutions[[1]]))
-## impose constraint
-CSA(ans02,ans1) ## no CSA now
-
-ans02b <- excludeCSA(ans0[2],csa2)
-CSA(ans02b,ans1) ## no CSA
-## note that ans02b is more parsimonious than ans02
-## since ans02b includes further reminders.
-
-## example 2
-data(Osa,package="QCA") ## QCA package is required to run this example
-conditions <- c("DYNA","ACCES","INFLU","ELITE","SOCIAL")
-Osa$OUT2 <- Osa$OUT ## OUT is reserved word in QCA3.
-a <- reduce(Osa, outcome = "OUT2", conditions = conditions, explain = "negative", remainders = "ex", contradictions = "negative")
-b <- reduce(Osa, outcome = "OUT2", conditions = conditions, explain = "negative", remainders = "include", contradictions = "negative")
-
-# there are two solutions in b, let's focus on the first only.
-b1 <- b[1]
-sa <- SA(b1) ## simplifying assumptions
-constrReduce(a,inc=sa$solutions[[1]]) ## == b1
-constrReduce(b1,exc=sa$solutions[[1]]) ## ==a1
-}
 }
 
