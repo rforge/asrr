@@ -1,4 +1,7 @@
-2012-04-10
+2012-04-13
+	* add vignette template
+	
+2012-04-10 (version 0.0-5)
 	* add data set of Stokke
 	* solve issues caused by updated version of QCA by removing it from Suggestions.
 

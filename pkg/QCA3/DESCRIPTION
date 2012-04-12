@@ -1,8 +1,8 @@
 Package: QCA3
 Type: Package
 Title: Yet another package for Qualitative Comparative Analysis
-Version: 0.0-5
-Date: 2011-10-19
+Version: 0.0-6
+Date: 2012-04-13
 Author: Ronggui HUANG
 Maintainer: Ronggui HUANG<ronggui.huang@gmail.com>
 Imports: lpSolve
