@@ -1,0 +1,59 @@
+\documentclass[a4paper]{article}
+\usepackage{a4wide,graphicx,color}
+\usepackage[authoryear,round,longnamesfirst]{natbib}
+\usepackage{hyperref}
+\usepackage{underscore}
+
+\definecolor{Red}{rgb}{0.7,0,0}
+\definecolor{Blue}{rgb}{0,0,0.8}
+
+
+\begin{document}
+
+\SweaveOpts{engine=R,eps=FALSE}
+%\VignetteIndexEntry{Qualitative Comparative Analysis with QCA3}
+%\VignetteDepends{QCA3,lpSolve}
+%\VignetteKeywords{qualitative comparative analysis}
+%\VignettePackage{QCA3}
+
+<<preliminaries,echo=FALSE,results=hide>>=
+library(QCA3)
+options(SweaveHooks=list(twofig=function() {par(mfrow=c(1,2))},
+                         twofig2=function() {par(mfrow=c(2,1))},
+                         onefig=function() {par(mfrow=c(1,1))}))
+@
+
+\title{Qualitative Comparative Analysis with QCA3}
+\author{Ronggui Huang}
+\date{}
+\maketitle
+
+\section{Introduction}
+QCA3 can do various types of qualitative comparative analysis, namely crisp set QCA, fuzzy set QCA and multi-value QCA. In fact, all examples in \cite{RihouxRagin2009} can be fully reproduced by QCA3 package.
+
+\section{Crisp set QCA}
+
+The first step is to construct a truth table and examine it.
+<<>>=
+(cst <- cs_truthTable(Lipset_cs,outcome="SURVIVAL",
+                      condition=c("GNPCAP", "URBANIZA", "LITERACY", "INDLAB", "GOVSTAB")))
+@
+
+The truth table is constructed by cs_truthTable automatically. However, you can also manually override the outcome by function of setOUT.
+
+At this moment, the researcher needs to to handle contradictory
+configurations if any. Once you have a truth table without
+contradictory configuration or you have come up a strategy to handle
+them, you can move to the next step, minimization of the truth table without including remainders. 
+The default is to explain positive outcome.
+<<>>=
+reduce(cst)
+@
+If negative outcome is to be explained, you need to specify the explain argument.
+<<>>=
+reduce(cst, explain="negative")
+@
+
+\bibliography{QCA3}
+\bibliographystyle{abbrvnat}
+\end{document}
