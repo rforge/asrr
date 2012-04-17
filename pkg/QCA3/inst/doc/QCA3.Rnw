@@ -29,7 +29,9 @@ options(SweaveHooks=list(twofig=function() {par(mfrow=c(1,2))},
 \maketitle
 
 \section{Introduction}
-QCA3 can do various types of qualitative comparative analysis, namely crisp set QCA, fuzzy set QCA and multi-value QCA. In fact, all examples in \cite{RihouxRagin2009} can be fully reproduced by QCA3 package.
+QCA3 can do various types of qualitative comparative analysis, namely crisp set QCA, fuzzy set QCA and multi-value QCA.
+
+All examples in \cite{RihouxRagin2009} can be fully reproduced by QCA3 package.
 
 \section{Crisp set QCA}
 
@@ -44,12 +46,13 @@ The truth table is constructed by cs_truthTable automatically. However, you can 
 At this moment, the researcher needs to to handle contradictory
 configurations if any. Once you have a truth table without
 contradictory configuration or you have come up a strategy to handle
-them, you can move to the next step, minimization of the truth table without including remainders. 
-The default is to explain positive outcome.
+them, you can move to the next step, minimization of the truth table without including remainders.
+The default value of explain argument is set to 'positive', which explains positive outcome.
 <<>>=
 reduce(cst)
 @
-If negative outcome is to be explained, you need to specify the explain argument.
+If negative outcome needs to be explained,the explain argument should
+be set to 'negative'.
 <<>>=
 reduce(cst, explain="negative")
 @
