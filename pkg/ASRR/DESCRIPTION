@@ -6,7 +6,7 @@ Date: 2009-01-10
 Author: Ronggui HUANG
 Maintainer: Ronggui HUANG<ronggui.huang@gmail.com>
 Depends: QCA3
-Suggests: sem, boot, CoCo, survival, ASAtable
+Suggests: sem, boot, CoCo, survival, ASAtable,mgcv
 Imports: lpSolve, foreign, MASS, car
 Description: Miscellaneous functions for sociological research. 
 License: BSD

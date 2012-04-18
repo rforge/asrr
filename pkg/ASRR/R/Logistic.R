@@ -1,6 +1,8 @@
 ginfluence <- function(object) {
+## author: Ronggui HUANG
 ## disgnostics for logistic regression based on covariate patterns, which is impleted in Stata
 ## described in Hosmer, D. W. & Lemeshow, S. Applied Logistic Regression. John Wiley & Sons, 2000
+## object is a logistic model fitted by glm()
     if (!(object$family$family == "binomial" && object$family$link == "logit")) {
         stop("Object is not a logistic model.")
     }
@@ -33,7 +35,7 @@ ginfluence <- function(object) {
     djs1 <- -1*sqrt(2*m[dj.s1]*abs(log(1-prob[dj.s1])))
     dj.s2 <- which(yj==m)
     djs2 <- sqrt(2*m[dj.s2]*abs(log(prob[dj.s2])))
-    deviance <- rep(NA,length(y))
+    deviance <- rep(NA,length(y)) ## deviance residuals
     deviance[dj.s1] <- djs1
     deviance[dj.s2] <- djs2
     dj.others <- -1* c(dj.s1,dj.s2)

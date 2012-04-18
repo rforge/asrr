@@ -1,0 +1,37 @@
+fitstat.glm <- function(x, ...) {
+    na <- na.action(x)
+    if (is.null(na)) x.base <- update(x,.~1)
+    else x.base <- update(x,.~1,subset=-na.action(x))
+    if (x$family$family == "binomial" && (x$family$link %in% c("logit","probit"))){
+        y <- x$y
+        pr <- predict(x,type="response")
+        Efron.R2 <- 1 - sum((y-pr)^2) / sum((y-mean(y))^2)
+        ystar <- predict(x, type="link")
+        Vystar <- var(ystar)
+        M.Z.R2 <-  if (x$family$link == "logit"){
+            Vystar/(Vystar+pi^2/3)
+        } else {
+            Vystar/(Vystar+1)
+        }
+        yhat <- as.numeric(pr >= 0.5)
+        tab <- table(x$y, yhat)
+        maxrow <- max(rowSums(tab))
+        Count.R2 <- sum(diag(tab))/sum(tab)
+        Count.Adj.R2 <- (sum(diag(tab))-maxrow)/(sum(tab)-maxrow)
+        L.full <- logLik(x)
+        L.base <- logLik(x.base)
+        Deviance=deviance(x)
+        if (attr(L.full,"n")!= attr(L.base,"n")) stop("The number of obs in the intercept only model differs.")
+        N <- attr(L.full,"n")
+        K <- attr(L.full,"df")
+        attributes(L.full) <- attributes(L.base) <- NULL
+        McFadden.R2 <- 1-(L.full/L.base)
+        McFadden.Adj.R2 <- 1-((L.full-K)/L.base)
+        ML.R2 <- 1 - exp(2*(L.base-L.full)/N) ## AKA. Cox-Snell
+        Cragg.Uhler.R2 <- ML.R2/(1-exp(2*L.base/N)) ## AKA Nagelkerke
+        ans <- list(Count.R2=Count.R2, Count.Adj.R2=Count.Adj.R2,Efron.R2=Efron.R2, M.Z.R2=M.Z.R2,
+                    McFadden.R2=McFadden.R2,McFadden.Adj.R2=McFadden.Adj.R2,
+                    ML.R2=ML.R2,Cragg.Uhler.R2=Cragg.Uhler.R2,Deviance=Deviance)
+    ans
+    }
+}

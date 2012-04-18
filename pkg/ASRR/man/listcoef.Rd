@@ -23,7 +23,7 @@ listcoef(x, ...)
   model and poisson model. It is recommended to set argument x and y to
   TRUE when the model is estimated. \code{listcoef} needs model matrix
   and response to calculate various statistics.
-  
+
   Definition of notation is as follow: (1) SDofX is the standard deviation
   of X. (2)SDofY is the standard deviation of Y.
 }
@@ -42,8 +42,8 @@ Long, J. S.2001. Regression Models for Categorical Dependent Variables Using Sta
 HUANG Ronggui
 }
 \examples{
-listcoef(lm(income~east+talent+allowance+time4Public,data=FuWeiHuang2007))
+data(Mroz,package="car")
 
-listcoef(glm(rich~talent+WorkersInCity+east+allowance,
-             data=FuWeiHuang2007,fam=binomial))
+m <- glm(lfp~k5+k618+age+wc+hc+lwg+inc,data=Mroz,fam=binomial)
+listcoef(m)
 }
