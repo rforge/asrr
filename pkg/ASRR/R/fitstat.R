@@ -75,7 +75,8 @@ fitstat.polr <- function(x,...){
     AIC <- (-2*L.full+2*P)/N ## definition of Long(1997:109)
     AICplusN <- AIC*N
     BIC1 <- Deviance - (N-P)*log(N)
-    BIC2 <- -2*(L.full-L.base) + (P-1)*log(N) ## P-1 is number of IVs
+    BIC2 <- -2*(L.full-L.base) + (P - length(x$lev) + 1)*log(N)
+    ## number of IVs=df-(No.y.levels-1)
     Vystar <- var(x$lp)
     M.Z.R2 <-  if (x$method == "logistic"){
         Vystar/(Vystar+pi^2/3)
