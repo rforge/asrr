@@ -43,7 +43,6 @@ HUANG Ronggui
 }
 \examples{
 data(Mroz,package="car")
-
 m <- glm(lfp~k5+k618+age+wc+hc+lwg+inc,data=Mroz,fam=binomial)
 listcoef(m)
 }

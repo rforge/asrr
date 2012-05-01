@@ -35,4 +35,8 @@ Ronggui HUANG
 \seealso{
   \code{listcoef}
 }
-%\examples{}
+\examples{
+data(Mroz,package="car")
+m <- glm(lfp~k5+k618+age+wc+hc+lwg+inc,data=Mroz,fam=binomial)
+fitstat(m)
+}

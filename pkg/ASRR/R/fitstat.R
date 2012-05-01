@@ -1,7 +1,28 @@
 ## need improvement when weight is not NULL, esp. N changes
 
+print.fitstat <- function(x, ...){
+    cat(
+        "\n",
+        sprintf("McFadden R2           = %f \n",x$McFadden.R2),
+        sprintf("McFadden Adj R2       = %f \n",x$McFadden.Adj.R2),
+        sprintf("ML R2                 = %f \n",x$ML.R2),
+        sprintf("Cragg & Uhler R2      = %f \n",x$Cragg.Uhler.R2),
+        if (!is.na(x$Efron.R2)){
+        sprintf("Efron R2              = %f \n",x$Efron.R2)},
+        sprintf("McKelvey & Zavoina R2 = %f \n",x$M.Z.R2),
+        sprintf("Count R2              = %f \n",x$Count.R2),
+        sprintf("Count Adj R2          = %f \n",x$Count.Adj.R2),
+        sprintf("AIC                   = %f \n",x$AIC),
+        sprintf("AIC*n                 = %f \n",x$AICplusN),
+        sprintf("BIC                   = %f \n",x$BIC1),
+        sprintf("BIC'                  = %f \n",x$BIC2),
+        "\n Note:The maxinum of ML R2 is less than 1. \n"
+        )
+}
+
 fitstat.glm <- function(x, ...) {
     na <- na.action(x)
+    if (!is.null(x$weight)) stop("It has not been implemented for weighted models.")
     if (is.null(na)) x.base <- update(x,.~1)
     else x.base <- update(x,.~1,subset=-na.action(x))
     LRT <- anova(x.base, x, test="LRT")
