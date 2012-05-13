@@ -19,42 +19,74 @@ Dnull <- function(y, damp=.01){
 	ans
 }
 
-Dnec <- function(y, x, damp=.01, error=.05) {
+fsgof.nec <- function(y, x, damp=.01, error=.05) {
 	yZ <- zTransform(y,damp=damp)
 	xZ <- zTransform(x,damp=damp)
 	d <- as.numeric(y > x)
 	ssd <- sum(d*(yZ - xZ)^2)
-	df <- sum(y > x)
-	msd <- ssd/df
+	df1 <- sum(y > x)
+	df2 <- length(y)
+	para <- c(df1,df2)
+	attr(para,"names") <- c("num df","denom df")
+	msd <- ssd/df1
 	emsd <- error^2*4
-	ans <- list(ssd=ssd,df=df,msd=msd)
+	estimate <- c(ssd,msd,emsd)
+	attr(estimate,"names") <- c("SSD","MSD","EMSD") ## EMSD=EXPECTED MEAN SQUARE DISTANCE
+	F <- msd/emsd
+	attr(F,"names") <- "F"
+	pval <- pf(F,df1, df2, lower=FALSE)
+	ans <- list(estimate=estimate,statistic=F,parameter=para,p.value=pval,
+	method="Test of Causual Necessity.",data.name="y and x")
+	class(ans) <- "htest"
 	ans
 }
 
-Dsuff <- function(y, x, damp=.01, error=.05) {
+fsgof.suff <- function(y, x, damp=.01, error=.05) {
 	xZ <- zTransform(x,damp=damp)
 	yZ <- zTransform(y,damp=damp)
 	d <- as.numeric(y > x)
 	ssd <- sum((1-d)*(yZ - xZ)^2)
-	df <- sum(y < x)
-	msd <- ssd/df
+	df1 <- sum(y < x)
+	df2 <- length(y)
+	para <- c(df1,df2)
+	attr(para,"names") <- c("num df","denom df")
+	msd <- ssd/df1
 	emsd <- error^2*4
+	estimate <- c(ssd,msd,emsd)
+	attr(estimate,"names") <- c("SSD","MSD","EMSD") ## EMSD=EXPECTED MEAN SQUARE DISTANCE
 	F <- msd/emsd
-	ans <- list(ssd=ssd,df=df,msd=msd, emsd=emsd,F=F)
+	attr(F,"names") <- "F"
+	pval <- pf(F,df1, df2, lower=FALSE)
+	ans <- list(estimate=estimate,
+	statistic=F,parameter=para,p.value=pval,
+	method="Test of Causual Sufficiency.",data.name="y and x")
+	class(ans) <- "htest"
 	ans
 }
 
-Dsuffnec <- function(y, x, damp=.01, error=.05) {
+fsgof.suffnec <- function(y, x, damp=.01, error=.05) {
 	xZ <- zTransform(x,damp=damp)
 	yZ <- zTransform(y,damp=damp)
 	d <- as.numeric(y > x)
 	ssd <- sum(d*(yZ - xZ)^2) + sum((1-d)*(yZ - xZ)^2)
-	df <- length(y)
-	msd <- ssd/df
+	df1 <- df2 <- length(y)
+	para <- c(df1,df2)
+	attr(para,"names") <- c("num df","denom df")
+	msd <- ssd/df1
 	emsd <- error^2*4
-	ans <- list(ssd=ssd,df=df,msd=msd)
+	estimate <- c(ssd,msd,emsd)
+	attr(estimate,"names") <- c("SSD","MSD","EMSD") ## EMSD=EXPECTED MEAN SQUARE DISTANCE
+	F <- msd/emsd
+	attr(F,"names") <- "F"
+	pval <- pf(F,df1, df2, lower=FALSE)
+	ans <- list(estimate=estimate,
+	statistic=F,parameter=para,p.value=pval,
+	method="Test of Causual Sufficiency and Necessity.",data.name="y and x")
+	class(ans) <- "htest"
 	ans
 }
 
-##y=c(0.8,0.5,0.5,0.4)
-##x=c(0.7,0.3,0.4,0.45)
+##y=c(0.8,0.5,0.5,0.4); x=c(0.7,0.3,0.4,0.45)
+#fsgof.nec(y,x)
+#fsgof.suff(y,x)
+#fsgof.suffnec(y,x)
