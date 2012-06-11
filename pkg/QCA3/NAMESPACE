@@ -1,7 +1,7 @@
 export(boolIntersect, directCalibration,
        constrReduce,coincid,consistency, consistGap, coverage, CSA, cs_truthTable,
        excludeCSA,
-       findNoCSA, fs_truthTable, fsnot, fsplot,implicantsToDF,
+       findNoCSA, fs_truthTable, fsnot, fsplot,fsgof.test, fsgof.descr,implicantsToDF,
        mv_truthTable,
        reduce, remainderReduce,
        SA, simplifyingAssumption, suffnec, setOUT,
@@ -12,6 +12,7 @@ S3method(consistency, QCA)
 S3method(consistency, default)
 S3method(print, coincid)
 S3method(print, QCA)
+S3method(print, SA)
 S3method(plot, QCA)
 S3method(print, suffnec)
 S3method(print, summary.QCA)

@@ -748,6 +748,21 @@ CSA <- function(object1,object0){
    object1
 }
 
+print.SA <- function (x, traditional = TRUE) 
+{
+    if (length(x$solutions[[1]])==0) cat("No Simplifying Assumption",fill = TRUE) else {
+    PIs <- prettyPI(x, traditional = traditional)
+    Nec <- commonConfiguration(x, traditional = traditional)
+    cat("Simplifying Assumptions",fill = TRUE)
+    for (i in seq_len(length(PIs))) {
+        cat("\n----------------\n")
+        cat(sprintf("Prime implicant No. %i with %i implicant(s)\n\n", 
+            i, PIs[[i]]$N))
+        writeLines(strwrap(PIs[[i]]$PI))
+        cat(sprintf("\nCommon configuration: %s\n", Nec[[i]]))
+    }
+  }
+}
 
 '[.QCA' <- function(object,which){
   if (!all(which %in% seq_len(length(object$solutions)))) stop("which is out of range.")
