@@ -578,7 +578,7 @@ prettyPI <- function(object,traditional=TRUE,...){
   ans
 } ## end of prettyPI()
 
-print.QCA <- function(x,traditional=TRUE,show.truthTable=TRUE,...){
+print.QCA <- function(x,traditional=TRUE,show.truthTable=FALSE,...){
     cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
     PIs <- prettyPI(x,traditional=traditional)
     Nec <- commonConfiguration(x,traditional=traditional)

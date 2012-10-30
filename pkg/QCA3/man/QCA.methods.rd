@@ -11,7 +11,7 @@
 \usage{
 \method{plot}{QCA}(x,...)
 
-\method{print}{QCA}(x, traditional = TRUE, show.truthTable = TRUE, ...)
+\method{print}{QCA}(x, traditional = TRUE, show.truthTable = FALSE, ...)
 
 \method{summary}{QCA}(object, traditional = TRUE, show.case = TRUE, ...)
 
