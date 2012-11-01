@@ -11,7 +11,7 @@
 \begin{document}
 
 \SweaveOpts{engine=R,eps=FALSE}
-%\VignetteIndexEntry{Qualitative Comparative Analysis with QCA3}
+%\VignetteIndexEntry{Qualitative Comparative Analysis using QCA3}
 %\VignetteDepends{QCA3,lpSolve}
 %\VignetteKeywords{qualitative comparative analysis}
 %\VignettePackage{QCA3}
@@ -123,6 +123,10 @@ SA(ansNeg)
 
 %\section{fsQCA}
 
+\section{Session Information}
+<<>>=
+sessionInfo()
+@
 \bibliography{QCA3}
 \bibliographystyle{abbrvnat}
 \end{document}
