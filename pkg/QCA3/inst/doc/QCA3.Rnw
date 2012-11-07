@@ -25,7 +25,7 @@ options(SweaveHooks=list(twofig=function() {par(mfrow=c(1,2))},
 
 \title{Qualitative Comparative Analysis with QCA3}
 \author{Ronggui Huang}
-\date{Oct. 2012}
+\date{\today}
 \maketitle
 
 \section{Introduction}
@@ -121,7 +121,35 @@ ansNeg <- reduce(cst, explain="negative", remainders="include")
 SA(ansNeg)
 @
 
-%\section{fsQCA}
+\section{fsQCA}
+Before jumping into fsQCA, it is always a good idea to explore the
+bivariate relationship between outcome and condition variables. The
+key measures are sufficiency scores and necessary scores. The suffnec
+function takes a data frame as input and produces both sufficiency
+scores and necessary scores matrices.
+
+<<>>=
+suffnec(Lipset_fs[,c("Survived.FZ","Developed.FZ","Urban.FZ",
+                     "Literate.FZ","Industrial.FZ", "Stable.FZ")])
+@
+
+In the above command, Lipset_fs is the name of a data frame. Here I use
+the "[" operator to extract a relevant subset, which is then passed to suffnec.
+
+You can use a graph to depict the set-theoretic consistency and
+coverage. The function fsplot provides a friendly interface. For
+example, if you want to examine whether development and
+urbanization are sufficient for regime survival, you can use the following command.
+
+<<fig=TRUE>>=
+fsplot(Survived.FZ~Developed.FZ+Urban.FZ,data=Lipset_fs)
+@
+
+The fsplot use a formula interface. The left hand side variable is the
+outcome variable. The right hand side variables are explanatory
+variables. When more than one variables are in the right hand side,
+the fuzzy set operation of "and" is performed before calculating
+consistency and coverage score.
 
 \section{Session Information}
 <<>>=
