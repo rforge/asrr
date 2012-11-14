@@ -23,7 +23,7 @@ options(SweaveHooks=list(twofig=function() {par(mfrow=c(1,2))},
                          onefig=function() {par(mfrow=c(1,1))}))
 @
 
-\title{Qualitative Comparative Analysis with QCA3}
+\title{Qualitative Comparative Analysis using QCA3}
 \author{Ronggui Huang}
 \date{\today}
 \maketitle
@@ -34,7 +34,12 @@ crisp set QCA, fuzzy set QCA and multi-value QCA.
 It also allows inclusion of simplifying assumptions and can produce
 intermediate solutions.
 
-All examples in \cite{RihouxRagin2009} can be fully reproduced by QCA3 package.
+All examples in \cite{RihouxRagin2009} can be fully reproduced by QCA3
+package. To reproduce the following examples, you need to load the
+QCA3 package first.
+<<>>=
+library(QCA3)
+@
 
 \section{Crisp set QCA}
 
@@ -121,8 +126,8 @@ ansNeg <- reduce(cst, explain="negative", remainders="include")
 SA(ansNeg)
 @
 
-\section{fsQCA}
-Before jumping into fsQCA, it is always a good idea to explore the
+\section{fuzzy set QCA}
+Before jumping into fuzzy set QCA (fsQCA), it is always a good idea to explore the
 bivariate relationship between outcome and condition variables. The
 key measures are sufficiency scores and necessary scores. The suffnec
 function takes a data frame as input and produces both sufficiency

@@ -748,7 +748,7 @@ CSA <- function(object1,object0){
    object1
 }
 
-print.SA <- function (x, traditional = TRUE) 
+print.SA <- function (x, traditional = TRUE)
 {
     if (length(x$solutions[[1]])==0) cat("No Simplifying Assumption",fill = TRUE) else {
     PIs <- prettyPI(x, traditional = traditional)
@@ -756,7 +756,7 @@ print.SA <- function (x, traditional = TRUE)
     cat("Simplifying Assumptions",fill = TRUE)
     for (i in seq_len(length(PIs))) {
         cat("\n----------------\n")
-        cat(sprintf("Prime implicant No. %i with %i implicant(s)\n\n", 
+        cat(sprintf("Prime implicant No. %i with %i implicant(s)\n\n",
             i, PIs[[i]]$N))
         writeLines(strwrap(PIs[[i]]$PI))
         cat(sprintf("\nCommon configuration: %s\n", Nec[[i]]))
@@ -894,26 +894,25 @@ boolIntersect <- function(..., string=TRUE){
     invisible(ans)
 }
 
-thresholdssetter <- function(x,nthreshold=1,value=TRUE,method="average",thresholds=NULL,dismethod="euclidean",print.table=TRUE){
+thresholdssetter <- function(x, nthreshold=1, method="average", dismethod="euclidean", thresholds=NULL, plot=TRUE){
   ## method -> see mehtod of hclust
-  if (is.null(thresholds)){
-    nx <- sort(x)
-    idx <- cutree(hclust(dist(nx,method=dismethod),method=method),nthreshold+1)
-    ans <-  sapply(seq_len(nthreshold),FUN=function(each) (max(nx[idx==each])+min(nx[idx==(each+1)]))/2)
-  } else {
-    if (any(thresholds >= max(x,na.rm=TRUE))) stop("Thresholds are too large.")
-    if (any(thresholds < min(x,na.rm=TRUE))) stop("Thresholds are too small.")
-    ans <- thresholds
-  }
-  if (value){
-    threshold <- ans
-    ans <- unclass(cut(x,c(min(x,na.rm=TRUE)-1,ans,max(x,na.rm=TRUE)),include.lowest=T)) - 1
+    if (is.null(thresholds)){
+        nx <- sort(x)
+        idx <- cutree(hclust(dist(nx,method=dismethod),method=method),nthreshold+1)
+        thresholds <-  sapply(seq_len(nthreshold),FUN=function(each) (max(nx[idx==each])+min(nx[idx==(each+1)]))/2)
+    } else {
+        if (any(thresholds >= max(x,na.rm=TRUE))) stop("Thresholds are too large.")
+        if (any(thresholds < min(x,na.rm=TRUE))) stop("Thresholds are too small.")
+    }
+    ans <- unclass(cut(x,c(min(x,na.rm=TRUE)-1, thresholds, max(x,na.rm=TRUE)),include.lowest=T)) - 1
     ## use min-1, so it works even the thresholds equal min
-    if (print.table) print(table(ans))
     attr(ans,"levels") <- NULL
-    attr(ans,"threshold") <- threshold
-  }
-  if (print.table && value) invisible(ans) else ans
+    attr(ans,"thresholds") <- thresholds
+    if (plot) {
+        barplot(table(ans), ylab="Number of cases")
+        box()
+    }
+    ans
 }
 
 ## EssentialPI <- function(PI){
