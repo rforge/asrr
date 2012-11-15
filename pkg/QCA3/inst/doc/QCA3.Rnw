@@ -31,27 +31,27 @@ options(SweaveHooks=list(twofig=function() {par(mfrow=c(1,2))},
 \section{Introduction}
 QCA3 can do various types of qualitative comparative analysis, namely
 crisp set QCA, fuzzy set QCA and multi-value QCA.
-It also allows inclusion of simplifying assumptions and can produce
+It allows inclusion of simplifying assumptions and can produce
 intermediate solutions.
 
-All examples in \cite{RihouxRagin2009} can be fully reproduced by QCA3
+All examples in \cite{RihouxRagin2009} can be reproduced by QCA3
 package. To reproduce the following examples, you need to load the
-QCA3 package first.
+QCA3 package first by
 <<>>=
 library(QCA3)
 @
 
 \section{Crisp set QCA}
 
-Before you conduct csQCA with QCA3, you need to import your dataset into R. If
+Before conducting crisp set QCA (csQCA) with QCA3, you need to import your dataset into R. If
 your data is in Excel format, I would recommend you to export the data
 to a csv file and import the csv file into R by read.csv function. In
-this article, all datasets are shipped with the QCA3 package, and I
+this article, all datasets are shipped with the QCA3 package, thus I
 will skip the steps of data import.
 
 In crisp set QCA (csQCA), all variables are binary (0 or
 1). The dataset in this example is Lipset_cs. The first step is to
-construct a truth table and examine it. You can use the function of
+construct a truth table. You can use the function of
 cs_truthTable to do it.
 
 <<>>=
@@ -67,31 +67,34 @@ legitimate name in R.
 
 In this command, Lipset_cs is the data frame which contains all the variables. The
 argument of outcome specificifies the explained variable, say "SURVIVAL"
-in this example (note you need to enclose SURVIVAL with
+in this example (note that you need to enclose SURVIVAL with
 quotation mark). The argument of condition specificies the explanatory
 variables. It is a string vector, each element of which is a
-condition. At least two conditions are needed. In this example, five
-conditions are provided. All variables, be outcome or condition, are
+condition or explanatory variable. At least two conditions are needed. In this example, five
+conditions are provided. All variables, be outcome or conditions, are
 in the data frame of Lipset_cs. For more details, you can refer to the
 help page of cs_truthTable.
 
-The truth table is constructed by cs_truthTable automatically.
+The truth table is constructed by cs_truthTable in an automatic manner.
 However, you can also manually override the outcome by function of
 setOUT, but I will not go through the details here.
 
-At this moment, you  need to to handle contradictory
-configurations if any. Once you have a truth table without
+At this moment, you need to examine the truth table closely. Perhaps,
+it is a good idea to make connections between the truth table and the
+detailed empirical evidence about each case. Special attention should
+be paid to contradictory configurations, and you  need to to handle
+such contradictory configurations if any. Once you have a truth table without
 contradictory configuration or you have come up a strategy to handle
-them, you can move to the next step, minimization of the truth table without including remainders.
-
-All you need to to is to pass the truth table, cst, produced previously, to the reduce function.
+them, you can move to the next step, minimization of the truth table
+without remainders. All you need to d is to pass the truth table, cst,
+produced previously, to the reduce function.
 <<>>=
 reduce(cst)
 @
 
 The default explains positive outcome (in this case,
 SURVIVAL=1). If you want to explain negative outcome, you need to set
-the argument of explain to "negative". That is our third step.
+the argument of explain to "negative", which is the third step.
 
 <<>>=
 reduce(cst, explain="negative")
@@ -99,7 +102,7 @@ reduce(cst, explain="negative")
 
 By default, remainders are not used and no simplifying assumption is
 made. The fourth step is to get the most parsimonious solution to
-positive outcome by including remainders. All you need to
+positive outcome by including remainders. All you need to do is to
 set the argument of remainders to "include".
 
 <<>>=
@@ -114,12 +117,12 @@ reduce(cst, explain="negative", remainders="include")
 @
 
 Now, you may wonder what remainders have been included. It is always a
-good idea to examine it. To do so, you need to assign the return of
+good idea to examine them. To do so, you need to assign the return of
 reduce to an object first. Take the explanation of negative outcome
 for example. Let assign it to an object called ansNeg. Then you can
 pass ansNeg to the function of SA, which will return a list of
-remainders used in the minimization, which are also called simplifying
-assuptions. It shows that 18 remainders are included.
+remainders used in the minimization (which are also called simplifying
+assuptions). It shows that 18 remainders have been included.
 
 <<>>=
 ansNeg <- reduce(cst, explain="negative", remainders="include")
@@ -127,6 +130,9 @@ SA(ansNeg)
 @
 
 \section{fuzzy set QCA}
+\subsection{Calibration}
+
+\subsection{Exploration}
 Before jumping into fuzzy set QCA (fsQCA), it is always a good idea to explore the
 bivariate relationship between outcome and condition variables. The
 key measures are sufficiency scores and necessary scores. The suffnec
@@ -147,14 +153,19 @@ example, if you want to examine whether development and
 urbanization are sufficient for regime survival, you can use the following command.
 
 <<fig=TRUE>>=
-fsplot(Survived.FZ~Developed.FZ+Urban.FZ,data=Lipset_fs)
+fsplot(Survived.FZ~fsand(Developed.FZ, Urban.FZ),data=Lipset_fs)
 @
 
 The fsplot use a formula interface. The left hand side variable is the
-outcome variable. The right hand side variables are explanatory
-variables. When more than one variables are in the right hand side,
-the fuzzy set operation of "and" is performed before calculating
-consistency and coverage score.
+outcome variable. The right hand side is explanatory
+variable. When the explanatory variable is a conjunctural condition,
+you can use fsand to get the conjunctural condition before
+plotting. In the above example, the right hand side is
+fsand(Developed.FZ, Urban.FZ, which suggests that
+Developed.FZ*Urban.FZ is regarded as a conjunctural condition.
+
+The consistency and coverage scores are displayed in the figure, which
+eases the interpretation of the result.
 
 \section{Session Information}
 <<>>=

@@ -52,10 +52,11 @@ fsplot(formula, data, main = "fuzzy set plot", xlab = NULL, ylab = NULL,...)
 Ronggui HUANG
 }
 \seealso{
-See Also as \code{\link{coverage}}, \code{\link{consistency}}
+See Also as \code{\link{coverage}}, \code{\link{consistency},
+  \code{\link{fsand}}, \code{\link{fsnot}}}
 }
 \examples{
 fsplot(cod~econdev,data=CoD)
-fsplot(cod~eduhi,data=CoD) ## low consistency, cautious when interpret coverage
-fsplot(cod~econdev+eduhi+ethlihom+close,data=CoD)
+fsplot(cod~eduhi,data=CoD) # low consistency, cautious when interpret coverage
+fsplot(cod~fsand(econdev,eduhi,ethlihom,close),data=CoD)
 }
