@@ -21,9 +21,9 @@ This is the fuzzy set version of Lipset data on Breakdown/survival of democracy 
     \item{\code{Urban}}{The degree of urbanization.}
     \item{\code{Urban.FZ}}{Fuzzy set score of Urban.}
     \item{\code{Literate}}{The degree of literate a county is.}
-    \item{\code{Literate.FZ}}{Fuzze set score of Literate.}
+    \item{\code{Literate.FZ}}{Fuzzy set score of Literate.}
     \item{\code{Industrial}}{The degree of industrialization.}
-    \item{\code{Industrial.FZ}}{Fuzze set score of Industrial}
+    \item{\code{Industrial.FZ}}{Fuzzy set score of Industrial}
     \item{\code{Unstable}}{The degree of political instablity.}
     \item{\code{Stable.FZ}}{Fuzzy set score of political stability.}
   }

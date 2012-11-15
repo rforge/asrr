@@ -131,9 +131,44 @@ SA(ansNeg)
 
 \section{fuzzy set QCA}
 \subsection{Calibration}
+Fuzzy set QCA (fsQCA) requires fuzzy set scores, which range from 0 to
+1. The fuzzy membership scores can be directly assigned according to
+substantive knowledge about the cases at hand.
+
+Often, researchers have interval measures and need to convert such
+measures into fuzzy membership scores. This process is called
+caliberation, which is described in \cite{Ragin2008}. The QCA3 package
+implements the direct method of caliberation. This method requires
+researchers to choose three anchors, namely fullin, fullout and
+crossover values. The fullin value is recoded as fuzzy set score of
+0.953. The fullout value is recoded as fuzzy set score of 0.03, and
+the crossover value is recoded as fuzzy set score of 0.5
+\footnote{0.953 and 0.03 are chosen because the log odds of them are 3
+  and -3 respectively, which are approximate to the description in
+  \cite{Ragin2008}. However, users should note that the result is
+  slightly different from fs/QCA because exact log odds of the fullin and
+  fullout fuzzy membership scores rather than 3 and -3 are used in the
+  QCA3 package.}. Researchers must choose the three anchors based on
+substantive knowledge. One you have the fullin, fullout and corssover
+values, you can caliberate the fuzzy set scores by the
+directCaliberate function.
+
+For example, the data frame of Lipset_fs has an interval variable of
+Developed, and the following command caliberate it with three anchors of
+900 (fullin), 400 (fullout), and 500 (crossover).
+<<>>=
+directCalibration(Lipset_fs$Developed,fullin=900,fullout=400, crossover=550)
+@
+
+You can also add the returned fuzzy set score to the data frame (Lipset_fs) as a
+variable (DFZ) by,
+
+<<eval=FALSE>>=
+Lipset_fs$DFZ <- directCalibration(Lipset_fs$Developed,900,400, 550)
+@
 
 \subsection{Exploration}
-Before jumping into fuzzy set QCA (fsQCA), it is always a good idea to explore the
+Before jumping into fuzzy set QCA, it is always a good idea to explore the
 bivariate relationship between outcome and condition variables. The
 key measures are sufficiency scores and necessary scores. The suffnec
 function takes a data frame as input and produces both sufficiency
@@ -161,7 +196,7 @@ outcome variable. The right hand side is explanatory
 variable. When the explanatory variable is a conjunctural condition,
 you can use fsand to get the conjunctural condition before
 plotting. In the above example, the right hand side is
-fsand(Developed.FZ, Urban.FZ, which suggests that
+fsand(Developed.FZ, Urban.FZ), which suggests that
 Developed.FZ*Urban.FZ is regarded as a conjunctural condition.
 
 The consistency and coverage scores are displayed in the figure, which
