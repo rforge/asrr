@@ -155,7 +155,7 @@ uniqueCoverageQCA <- function(x, data, which=1){
     }
     ans[Nimplicant+1,"uniqueCoverage"] <- coverage(x=apply(solX,1,max),y=data[,outcome])
     for (i in seq(Nimplicant)){
-        notifz <- apply(solX[,-i],1, max)
+        notifz <- apply(solX[, -i, drop=FALSE],1, max)
         ans[i,"uniqueCoverage"] <- ans[Nimplicant+1,"uniqueCoverage"] - coverage(x=notifz, y=data[,outcome])
     }
     implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevels=x$nlevels,conds))

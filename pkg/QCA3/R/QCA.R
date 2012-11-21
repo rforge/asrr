@@ -400,7 +400,7 @@ reduce.truthTable <- function(x,
                 solutionsIDX=sl,primeImplicants=primeImplicants,
                 truthTable=truthTable,explained=explained,outcome=x$outcome,
                 idExclude=idExclude,nlevels=nlevels,
-                PIChart=PIChart, call=call)
+                PIChart=PIChart, call=call, data=x$data)
     class(ans) <- c("QCA")
     ans
 }
@@ -615,7 +615,7 @@ summary.QCA <- function(object,traditional=TRUE,show.case=TRUE,...){
         N_total <- sum(truthTable["NCase"])
         N_positive <- sum(truthTable["freq1"])
         N_negative <- sum(truthTable["freq0"])
-        N <- apply(object$PIChart,1,function(each)sum(each * NCase))
+        N <- apply(object$PIChart, 1, function(each) sum(each * NCase))
         coverage <- apply(object$solutionsIDX,2,function(each) N[each])
         ## a matrix, each column represents one solution
         rownames(coverage) <- paste("PI",seq_len(nrow(coverage)),sep=".")
@@ -635,8 +635,14 @@ summary.QCA <- function(object,traditional=TRUE,show.case=TRUE,...){
         res <- c(PI=ans,Ndup=N_duplicated)
         res
     })
+    gof <- list()
+    for (i in seq(length(object$solutions))) {
+        gof[[i]] <- cbind(consistency(object, data=object$data, which=i),
+                        coverage(object,data=object$data, type="raw", which=i),
+                        coverage(object,object$data,type="unique", which=i))
+    }
     ans <- list(N=N_total,N1=N_positive,N0=N_negative,Ndup=as.numeric(cases["Ndup",]),
-                Ncoverage=coverage,prop.total=prop,PIs=PIs,call=object$call,cases=cases["PI",])
+                Ncoverage=coverage,prop.total=prop,PIs=PIs,call=object$call,cases=cases["PI",], gof=gof)
     class(ans) <- "summary.QCA"
     ans
 }
@@ -661,6 +667,8 @@ print.summary.QCA <- function(x,digits=3,traditional=FALSE,...){
       cat("\n----------------\n")
       cat(sprintf("Prime implicant No. %i with %i implicant(s)\n\n",i,PIs[[i]]$N))
       writeLines(strwrap(PIs[[i]]$PI))
+      cat("\nGoodness of fit", fill=TRUE)
+      print(x$gof[[i]])
       cat("\n")
       writeLines(strwrap(sprintf("Number of cases: %s\n",paste(x$Ncoverage[,i],collapse=" + "))))
       ## number of case (sum is not the number of explained cases owning to cases covered by multiple PIs)

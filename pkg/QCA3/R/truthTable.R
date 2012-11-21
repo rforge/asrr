@@ -133,7 +133,7 @@ cs_truthTable <- function(mydata, outcome, conditions,
         allExpress$Cases[allExpress$OUT!="C"] <- gsub("\\[|\\]","",allExpress$Cases[allExpress$OUT!="C"]) ## mark contr case
     }
     allExpress
-    ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=nlevels,call=match.call())
+    ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=nlevels,call=match.call(), data=mydata)
     class(ans) <- c("cs_truthTable","truthTable")
     ans
 }
@@ -248,7 +248,7 @@ mv_truthTable <- function(mydata, outcome, conditions,
         allExpress$Cases[allExpress$OUT!="C"] <- gsub("\\[|\\]","",allExpress$Cases[allExpress$OUT!="C"]) ## mark contr case
     }
     allExpress
-    ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=nlevels,call=match.call())
+    ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=nlevels,call=match.call(),data=mydata)
     class(ans) <- c("mv_truthTable","truthTable")
     ans
 }
@@ -307,13 +307,14 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
         allExpress <- allExpress[allExpress$OUT != "?",,drop=FALSE]
     }
     rownames(allExpress) <- apply(allExpress[,conditions],1, implicant2Id, nlevels=rep(2,length(conditions)))
-    ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=rep(2,length(conditions)),call=match.call())
+    ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=rep(2,length(conditions)),call=match.call(),data=mydata)
     class(ans) <- c("fs_truthTable","truthTable")
     ans
 }
 
 print.truthTable <- function(x,...){
     x <- unclass(x)
+    cat(sprintf("%s configurations\n=====\n", nrow(x$truthTable)))
     print(x$truthTable)
 }
 
