@@ -167,7 +167,7 @@ variable (DFZ) by,
 Lipset_fs$DFZ <- directCalibration(Lipset_fs$Developed,900,400, 550)
 @
 
-\subsection{Exploration}
+\subsection{Exploratory Analysis}
 Before jumping into fuzzy set QCA, it is always a good idea to explore the
 bivariate relationship between outcome and condition variables. The
 key measures are sufficiency scores and necessary scores. The suffnec
@@ -201,6 +201,51 @@ Developed.FZ*Urban.FZ is regarded as a conjunctural condition.
 
 The consistency and coverage scores are displayed in the figure, which
 eases the interpretation of the result.
+
+\subsection{Fuzzy set truth table and minimization}
+At this point, we have made up our minds concerning the
+conditions, and we can construct a fuzzy set truth table for further
+analysis. In the textbook example, five conditions are chosen, and the
+consistency threshold is set to 0.7.
+
+<<>>=
+conditions <- c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ", "Stable.FZ")
+fst <- fs_truthTable(Lipset_fs,"Survived.FZ", conditions, consistency=0.7)
+print(fst)
+@
+
+The above commands construct a fuzzy set truth table, assign it to an
+object called fst, and then print it. Next, we simplify the
+truth table through Boolean minimization.
+
+<<>>=
+fsans <- reduce(fst)
+print(fsans)
+@
+
+The print method only shows minimal information, but the summary
+method shows futher information on the goodness of fit.
+<<>>=
+summary(fsans)
+@
+
+There is an update method for QCA object, so you can use the following
+command to get a result including remainders in the minimization process.
+<<>>=
+update(fsans, remainders="include")
+@
+
+In fsQCA, it is always a good idea to generate a new variable indicating
+the fuzzy set membership in the negation set using fsnot. Using this new fuzzy
+set score to construct a new fuzzy set truth table and minimize it.
+
+<<>>=
+Lipset_fs$Not.Survived <- fsnot(Lipset_fs$Survived.FZ)
+fst2 <- fs_truthTable(Lipset_fs,"Not.Survived", conditions, consistency=0.7)
+print(fst2)
+fsans2 <- reduce(fst2)
+summary(fsans2)
+@
 
 \section{Session Information}
 <<>>=
