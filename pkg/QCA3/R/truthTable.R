@@ -331,8 +331,12 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
 
 print.truthTable <- function(x,...){
     x <- unclass(x)
-    cat(sprintf("%s configurations with distribution of:", nrow(x$truthTable)))
-    print(table(x$truthTable$OUT))
+    cat("configuration distribution")
+    config <- table(x$truthTable$OUT)
+    print(addmargins(config))
+    cat("case distribution\n")
+    case <- aggregate(NCase~OUT,data=a$truthTable,FUN=sum)
+    print(case)
     cat("=====\n")
     print(x$truthTable)
 }
