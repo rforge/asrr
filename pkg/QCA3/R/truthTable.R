@@ -304,16 +304,21 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
   allExpress$freq1 <- sapply(case_cons,function(x) length(x$obsCon))
   allExpress$freq0 <- sapply(case_cons,function(x) length(x$obsIncon))
   allExpress$NCase <- sapply(case_cons,function(x) length(unlist(x)))
-  allExpress$OUT <- "C"
-  allExpress$OUT[(allExpress$NCase >= ncases_cutoff) & (allExpress$Consistency > consistency_cutoff) & (allExpress$freq1 >= allExpress$NCase*prop_cutoff)]<-"1"
-  allExpress$OUT[(allExpress$NCase >= ncases_cutoff) & (allExpress$Consistency <= consistency_cutoff) & (allExpress$freq0 >= allExpress$NCase*prop_cutoff)]<-"0"
-  allExpress$OUT[allExpress$NCase < ncases_cutoff] <-"?"
+  allExpress$OUT <- ""
+  allExpress$OUT[allExpress$NCase < ncases_cutoff] <-"?"  
+  allExpress$OUT[(allExpress$freq0 < allExpress$NCase*prop_cutoff) & (allExpress$freq1 < allExpress$NCase*prop_cutoff)]<-"C"
+  allExpress$OUT[(allExpress$OUT == "") & (allExpress$Consistency >= consistency_cutoff)]<-"1"
+  allExpress$OUT[allExpress$OUT == ""]<-"0"
   allExpress <- allExpress[,c(seq_len(length(conditions)),(length(conditions)+4):(length(conditions)+7),(length(conditions)+1):(length(conditions)+3))]
   ## reorder allExpress
   if (show.cases){
     if (is.null(cases)) cases <- rownames(mydata) else cases <- mydata[,cases]
     cases <- gsub(",","_",cases)
-    allExpress$Cases <- apply(score_mat,2,function(x) paste(cases[which( x > membership_cutoff)],sep="",collapse=","))
+    # allExpress$Cases <- apply(score_mat,2,function(x) paste(cases[which( x > membership_cutoff)],sep="",collapse=","))
+    obsConLab <- sapply(case_cons,function(x) paste(cases[x$obsCon], collapse=","))
+    obsInConLab <- sapply(case_cons,function(x) paste(cases[x$obsIncon], collapse=","))
+    allExpress$Cases <- paste(obsConLab, obsInConLab, sep="/")
+    ## put inconsistent cases in bracket
   }
   if (!complete) {
     allExpress <- allExpress[allExpress$OUT != "?",,drop=FALSE]
