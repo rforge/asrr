@@ -331,7 +331,9 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
 
 print.truthTable <- function(x,...){
     x <- unclass(x)
-    cat(sprintf("%s configurations\n=====\n", nrow(x$truthTable)))
+    cat(sprintf("%s configurations with distribution of:", nrow(x$truthTable)))
+    print(table(x$truthTable$OUT))
+    cat("=====\n")
     print(x$truthTable)
 }
 
