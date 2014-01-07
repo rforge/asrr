@@ -335,8 +335,8 @@ print.truthTable <- function(x,...){
     config <- table(x$truthTable$OUT)
     print(addmargins(config))
     cat("case distribution\n")
-    case <- aggregate(NCase~OUT,data=a$truthTable,FUN=sum)
-    print(case)
+    case <- aggregate(NCase~OUT,data=x$truthTable,FUN=sum)
+    print(case, row.names=FALSE)
     cat("=====\n")
     print(x$truthTable)
 }
@@ -374,3 +374,7 @@ setOUT <- function(x, rownames, value){
     x$truthTable[idx,"OUT"] <- value
     x
 }
+
+fsor <- function(...) apply(sapply(list(...), function(x) x),1, max)
+
+fsand <- function(...) apply(sapply(list(...), function(x) x),1, min)
