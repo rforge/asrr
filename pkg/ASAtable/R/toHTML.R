@@ -221,8 +221,8 @@ toHTML.default <- function(
 {
   if (!is.matrix(x)) x <- as.matrix(x)
   x <- format(x,digits=digits) ## turn x to charater matrix anyway.
-  ##如果分组，分组信息作为一部分，表的具体内容作为一个部分，附加的内容作为一个新的部分，将注释作为最后部分�?
-  ##用于增加一个列，使得group之间的横线不相互连在一起。需要注意这一列的宽度设置很小�?
+  ##如果分组，分组信息作为一部分，表的具体内容作为一个部分，附加的内容作为一个新的部分，将注释作为最后部分???
+  ##用于增加一个列，使得group之间的横线不相互连在一起。需要注意这一列的宽度设置很小???
   CSS.def <- CSSgenerator(fontsize,indent,tablewidth,lwidth,firstline)
   HTML.def <- sprintf(
 "<HTML lang='%s'>
@@ -232,7 +232,7 @@ toHTML.default <- function(
 </HEAD>",lang, date(),codepage)
   CAPTION.def <- sprintf("<p style='text-align:center'> %s </p>", caption)
   TBEGIN.def <- sprintf("<TABLE cellspacing=0 cellpadding=0 border=0 align='center' style='width: %s '>",tablewidth)
-  ##是否有对列进行分组，并计算组�?
+  ##是否有对列进行分组，并计算组???
   hasgroup=FALSE
   if (!is.null(cgroup)) {
     hasgroup <- TRUE
@@ -264,7 +264,7 @@ toHTML.default <- function(
     colspan <- cbind(1,insertCol(t(n.cgroup),ncolgroup=rep(1,length(cgroup)),elements=1))
     cl.mat.stub <- matrix("CGROUP",nrow=nrow(colspan),ncol=ncol(colspan))
     nonbotind <- seq_len(ncol(cl.mat.stub)-1)[seq_len(ncol(cl.mat.stub)-1) %%2 ==1]
-    ##index，指出哪些列是不需要底边框的�?
+    ##index，指出哪些列是不需要底边框的???
     cl.mat.stub[,nonbotind] <- "SEPCOL"
     cl.mat.stub[1,1] <- "SEPCOLLEFT"
     STUBCOL1 <- R2HTMLtable(newcgroup,row.title=stub.title,colspan=colspan,class.mat=cl.mat.stub)
@@ -281,7 +281,7 @@ toHTML.default <- function(
   }##如果没有rownames，则增加
   new.x <- if (hasgroup){
     insertCol(mat=x,ncolgroup=n.cgroup,elements="&nbsp;",insertcolnames="&nbsp;")
-  } else {x} ##如果对列分组，则需要先调整表的内容�?
+  } else {x} ##如果对列分组，则需要先调整表的内容???
   if (!is.null(rgroup)) {
     rgroup <- lapply(rgroup,function(xx) if (is.null(xx)) rep(NA,NCOL(x)) else xx)
     rgroup <- t(as.data.frame(rgroup))
@@ -299,7 +299,7 @@ toHTML.default <- function(
     ## idx2 <- idx[seq(from=NROW(x)+1,to=length(idx))]
   }
   cl.body1 <- matrix("BODYCELL",nrow=nrow(new.x)+1,ncol=ncol(new.x)+1)
-  ##如果R2HTMLtable中的row.title和col.title为NULL，需要进一步处�?
+  ##如果R2HTMLtable中的row.title和col.title为NULL，需要进一步处???
   if (hasgroup) cl.body1[1,]<- "BODYCELLBOTTOM"
   if (!hasgroup) cl.body1[1,]<- "BODYCELLBOTH"
   cl.body1[2:nrow(cl.body1),1]  <- "STUBCOLMAIN"
@@ -330,7 +330,7 @@ toHTML.default <- function(
     }
     TBODYY <- R2HTMLtable(new.y,row.title=row.title.y,colspan=cbind(1,colspan.y),class.mat=cl.bodyY)
 } else TBODYY <- NULL
-  ##放用于增加新的信息。x的列数与z的列数相�?
+  ##放用于增加新的信息。x的列数与z的列数相???
   if (!is.null(z)){
     if (!is.matrix(z)) stop("z must be a matrix.")
     if (mode(z)=="numeric") z <- gsub(" ","&nbsp;",format(formatC(z,digits=digits,format="f"),justify="right"),fixed=TRUE)
@@ -345,9 +345,9 @@ toHTML.default <- function(
     cl.bodyZ[Nrow,] <- paste(cl.bodyZ[Nrow,],"BOTTOM",sep="")
     TBODYZ <- R2HTMLtable(new.z,row.title=row.title.z,class.mat=cl.bodyZ)
   } else TBODYZ <- NULL
-  ##处理表格的注�?
-  if (!is.null(note)) note <- gsub("\n","<br>",note,fixed=TRUE)#将\n换为HTML的换行符�?
-  totalcol <- if (hasgroup) sum(n.cgroup)+length(cgroup) else NCOL(x)+1 #因为有一列是从rownames来的�?
+  ##处理表格的注???
+  if (!is.null(note)) note <- gsub("\n","<br>",note,fixed=TRUE)#将\n换为HTML的换行符???
+  totalcol <- if (hasgroup) sum(n.cgroup)+length(cgroup) else NCOL(x)+1 #因为有一列是从rownames来的???
   NOTE.def <- paste(
                     "<TR><TD CLASS=FOOTNOTE COLSPAN=",
                     totalcol,
@@ -376,7 +376,7 @@ toHTML.default <- function(
   }
   if (.Platform$OS.type != "windows") msword <- FALSE
   if (msword){
-    ##是否输出到word�?.如果charset不设置，会乱码�?
+    ##是否输出到word???.如果charset不设置，会乱码???
     svViews:::WordOpen()
     svViews:::WordGotoEnd()
     svViews:::WordInsertPara()
@@ -441,7 +441,7 @@ toHTML.modelList <- function(
     add.info <- rbind(add.info,gof)
   }
   if (is.null(group.name)) {
-   model_name <- paste(paste(prefix,seq_len(nmodel)+begin.numering-1,sep=" "),sapply(x,function(x) as.character(formula(x$call)[[2]])),sep="<br>")
+   model_name <- paste(paste(prefix,seq_len(nmodel)+begin.numering-1,sep=" "),sapply(x,function(x) as.character(formula(x$call))[[2]]),sep="<br>")
    ## as level 1 col.title
    } else model_name <- paste(paste(prefix,seq_len(nmodel)+begin.numering-1,sep=" "),group.name,sep="<br>")
   model_summary_coef <- lapply(x,coeffun)
@@ -478,7 +478,7 @@ toHTML.modelList <- function(
 formatCoef <- function(x,...)
 {
   ## format coef matrix: 1) each element has the same number of chars; 2) add asterisk according to p-value
-  ## digits: exact digits. very small number will be trimmed as 0�?
+  ## digits: exact digits. very small number will be trimmed as 0???
   has.p <- c("Pr(>|t|)","Pr(>|z|)") %in% colnames(x)
   if (have.P <- any (has.p))  model_p <- x[,c("Pr(>|t|)","Pr(>|z|)")[which(has.p)]]
   x <- format(eval(quote(formatC(x,digits=digits,format="f")),list(x=x),parent.frame(2)),justif="right")
