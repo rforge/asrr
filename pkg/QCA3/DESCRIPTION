@@ -5,7 +5,7 @@ Version: 0.0-6
 Date: 2012-04-13
 Author: Ronggui HUANG
 Maintainer: Ronggui HUANG<ronggui.huang@gmail.com>
-Imports: lpSolve
+Imports: lpSolveAPI
 Suggests: venneuler
 Description: A set of functions for Qualitative Comparative Analysis (QCA). It can be used for various types of QCA (csQCA, mvQCA fsQCA and crip set TQCA  and time-serious QCA). It has methods for simplifying assumption, contradictory simplifying assumption.
 License: BSD

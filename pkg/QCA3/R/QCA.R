@@ -279,36 +279,57 @@ PIChart <- function(primeImplicants,explained=NULL){
     ans
 }
 
-solvePIChart <- function (PIChart, method=c("combn"))
-    ## method=c("combn","combinations")
-    ## for large number of conditions, gtolls may be faster
-    ## until it is necessary, used combn only since combn doesn't depend on third party package
-{
-    ## modified version of QCA:::solveChart
-    if (!is.logical(PIChart)) {
-        stop("Please use a logical matrix, such as an object returned by PIChart.\n")
-    }
-    if (all(dim(PIChart) > 1)) {
-        lpobj <- lpSolve:::lp(direction="min", objective.in=rep(1, nrow(PIChart)),const.mat=t(PIChart),const.dir=">=",1,all.bin=TRUE)
-        if (lpobj$status!=0) stop("Can not solve this PMChart.")
-        k <- sum(lpobj$solution)  ## lpobj$solution is one possible solution, but not all.
-        method <- match.arg(method)
-        if (method=="combn")  {
-            combos <- combn(nrow(PIChart), k)
-        }
-        ## else if (method=="combinations") {
-        ##     options(expressions=500000)
-        ##     combos <- t(gtools:::combinations(nrow(PIChart), k))
-        ## }
-        ## until it is necessary, used combn only since combn doesn't depend on third party package
-        sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(PIChart[idx,,drop = FALSE])>0)),drop=FALSE]
-    }
-    else {
-        sol.matrix <- matrix(seq_len(nrow(PIChart)),ncol=1)
-    }
-    sol.matrix ## now always return a matrix
-}
+# solvePIChart <- function (PIChart, method=c("combn"))
+#     ## method=c("combn","combinations")
+#     ## for large number of conditions, gtolls may be faster
+#     ## until it is necessary, used combn only since combn doesn't depend on third party package
+# {
+#     ## modified version of QCA:::solveChart
+#     if (!is.logical(PIChart)) {
+#         stop("Please use a logical matrix, such as an object returned by PIChart.\n")
+#     }
+#     if (all(dim(PIChart) > 1)) {
+#         lpobj <- lpSolve:::lp(direction="min", objective.in=rep(1, nrow(PIChart)),const.mat=t(PIChart),const.dir=">=",1,all.bin=TRUE)
+#         if (lpobj$status!=0) stop("Can not solve this PMChart.")
+#         k <- sum(lpobj$solution)  ## lpobj$solution is one possible solution, but not all.
+#         method <- match.arg(method)
+#         if (method=="combn")  {
+#             combos <- combn(nrow(PIChart), k)
+#         }
+#         ## else if (method=="combinations") {
+#         ##     options(expressions=500000)
+#         ##     combos <- t(gtools:::combinations(nrow(PIChart), k))
+#         ## }
+#         ## until it is necessary, used combn only since combn doesn't depend on third party package
+#         sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(PIChart[idx,,drop = FALSE])>0)),drop=FALSE]
+#     }
+#     else {
+#         sol.matrix <- matrix(seq_len(nrow(PIChart)),ncol=1)
+#     }
+#     sol.matrix ## now always return a matrix
+# }
 
+solvePIChart <- function(chart){
+  ## chart: Prime implicants x Primitive Expression
+  if (all(dim(chart) > 1)) {
+    nPrime <- nrow(chart)
+    lp  <- make.lp(0, nPrime)
+    apply(chart, 2, function(xt) add.constraint(lp, xt, type = ">=", rhs=1))
+    set.type(lp,1:nPrime, "binary")
+    name.lp(lp, "Simplifying a PIChart")
+    # http://lpsolve.r-forge.r-project.org/
+    conv <- solve(lp)
+    if (conv!=0) stop("optimal solution not found")
+    ans <- get.variables(lp)
+    k <- sum(ans)
+    combos <- combn(nrow(chart), k)
+    sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(chart[idx,,drop = FALSE])>0)),drop=FALSE]
+  }
+  else {
+    sol.matrix <- matrix(seq_len(nrow(chart)),ncol=1)
+  }
+  sol.matrix ## now always return a matrix
+}
 
 reduce <- function(x,...){
     call <- match.call()
@@ -617,6 +638,7 @@ summary.QCA <- function(object,traditional=TRUE,show.case=TRUE,...){
         N_negative <- sum(truthTable["freq0"])
         N <- apply(object$PIChart, 1, function(each) sum(each * NCase))
         coverage <- apply(object$solutionsIDX,2,function(each) N[each])
+        if (!is.matrix(coverage)) coverage <- as.matrix(coverage)
         ## a matrix, each column represents one solution
         rownames(coverage) <- paste("PI",seq_len(nrow(coverage)),sep=".")
         colnames(coverage) <- paste("S",seq_len(ncol(coverage)),sep=".")
