@@ -292,37 +292,8 @@ PIChart <- function(primeImplicants,explained=NULL){
   ans
 }
 
-# solvePIChart <- function (PIChart, method=c("combn"))
-#     ## method=c("combn","combinations")
-#     ## for large number of conditions, gtolls may be faster
-#     ## until it is necessary, used combn only since combn doesn't depend on third party package
-# {
-#     ## modified version of QCA:::solveChart
-#     if (!is.logical(PIChart)) {
-#         stop("Please use a logical matrix, such as an object returned by PIChart.\n")
-#     }
-#     if (all(dim(PIChart) > 1)) {
-#         lpobj <- lpSolve:::lp(direction="min", objective.in=rep(1, nrow(PIChart)),const.mat=t(PIChart),const.dir=">=",1,all.bin=TRUE)
-#         if (lpobj$status!=0) stop("Can not solve this PMChart.")
-#         k <- sum(lpobj$solution)  ## lpobj$solution is one possible solution, but not all.
-#         method <- match.arg(method)
-#         if (method=="combn")  {
-#             combos <- combn(nrow(PIChart), k)
-#         }
-#         ## else if (method=="combinations") {
-#         ##     options(expressions=500000)
-#         ##     combos <- t(gtools:::combinations(nrow(PIChart), k))
-#         ## }
-#         ## until it is necessary, used combn only since combn doesn't depend on third party package
-#         sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(PIChart[idx,,drop = FALSE])>0)),drop=FALSE]
-#     }
-#     else {
-#         sol.matrix <- matrix(seq_len(nrow(PIChart)),ncol=1)
-#     }
-#     sol.matrix ## now always return a matrix
-# }
 
-solvePIChart <- function(chart, All=TRUE){
+solvePIChart <- function(chart, all.sol=TRUE){
   ## chart: Prime implicants x Primitive Expression
   if (all(dim(chart) > 1)) {
     nPrime <- nrow(chart)
@@ -335,7 +306,7 @@ solvePIChart <- function(chart, All=TRUE){
     conv <- solve(lp)
     if (conv!=0) stop("optimal solution not found")
     ans <- get.variables(lp)
-    if (All) {
+    if (all.sol) {
     k <- sum(ans)
     combos <- combn(nrow(chart), k)
     sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(chart[idx,,drop = FALSE])>0)),drop=FALSE]
@@ -361,7 +332,7 @@ reduce.truthTable <- function(x,
                               contradictions=c("remainders","positive","negative"),
                               dontcare=c("remainders","positive","negative"),
                               cdontcare=c("remainders","positive","negative"),
-                              keepTruthTable=TRUE,...)
+                              keepTruthTable=TRUE, all.sol = FALSE, ...)
 {
     call <- match.call()
     call[[1]] <- as.name("reduce")
@@ -432,7 +403,7 @@ reduce.truthTable <- function(x,
 
     primeImplicants <- id2Implicant(primesId ,nlevels=nlevels,names=conditions)
     PIChart <- PIChart(primeImplicants,explained)
-    sl <- solvePIChart(PIChart)
+    sl <- solvePIChart(PIChart, all.sol=all.sol)
     solutions <- apply(sl,2,function(idx)primeImplicants[idx,])
     commonSolutions <- apply(sl,1,function(idx) {if (length(id <- unique(idx))==1) id })
     ans <- list(solutions=solutions,commonSolutions=commonSolutions,
@@ -451,7 +422,7 @@ reduce.formula <- function(x, data,
                            dontcare=c("remainders","positive","negative"),
                            cdontcare=c("remainders","positive","negative"),
                            preprocess=c("cs_truthTable","fs_truthTable","mv_truthTable"),
-                           keepTruthTable=TRUE,...
+                           keepTruthTable=TRUE, all.sol = FALSE, ...
                            )
 {
     ## x is a formula
@@ -488,8 +459,7 @@ reduce.data.frame <- function(x, outcome, conditions,
                               dontcare=c("remainders","positive","negative"),
                               cdontcare=c("remainders","positive","negative"),
                               preprocess=c("cs_truthTable","fs_truthTable","mv_truthTable"),
-                              keepTruthTable=TRUE,
-                              ...)
+                              keepTruthTable=TRUE, all.sol = FALSE, ...)
 {
     call <- match.call()
     call[[1]] <- as.name("reduce")
@@ -503,7 +473,7 @@ reduce.data.frame <- function(x, outcome, conditions,
     x <- do.call(preprocess,c(list(mydata=x, outcome=outcome,conditions=conditions),dots))
     ans <- do.call(reduce.truthTable,list(x=x,explain=explain,remainders=remainders,
                                           contradictions=contradictions,dontcare=dontcare,cdontcare=cdontcare,
-                                          keepTruthTable=keepTruthTable,dots))
+                                          keepTruthTable=keepTruthTable,all.sol=all.sol, dots))
     ans$call <- call
     ans
 }
