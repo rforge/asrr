@@ -258,25 +258,38 @@ reduce2 <- function(IDs,nlevels){
 }
 
 PIChart <- function(primeImplicants,explained=NULL){
-    ## primeImplicants with attr of "explained" if explained is NULL
-    ## rows are primeimplicants and columns are original combinations
-    if (is.null(explained)){
-        explained <- attr(primeImplicants,"explained")
-    }
-    nr <- nrow(primeImplicants)
-    nc <- nrow(explained)
-    ans <- matrix(logical(0),nrow=nr,ncol=nc)
-    for (i in seq_len(nr)){
-        for (j in seq_len(nc)){
-            ## idx <- !is.na(primeImplicants[i,])
-            if (FALSE) { ## comment out the old method
-                idx <- !is.dontcare(primeImplicants[i,])
-                ans[i,j] <- isTRUE(all.equal(primeImplicants[i,][idx],explained[j,][idx]))
-            }
-            ans[i,j] <- isSuperSet(primeImplicants[i,], explained[j,])
-        }
+  ## primeImplicants with attr of "explained" if explained is NULL
+  ## rows are primeimplicants and columns are original combinations
+  toName <- function(x){
+    NROW <- nrow(x)
+    ans <- c()
+    nlevels <- rep(2, ncol(x))
+    nm <-names(x)
+    for (i in 1:NROW){
+      ans <- c(ans, QCA3:::toString(x[i, ], TRUE, nlevels, nm))
     }
     ans
+  }
+  
+  if (is.null(explained)){
+    explained <- attr(primeImplicants,"explained")
+  }
+  nr <- nrow(primeImplicants)
+  nc <- nrow(explained)
+  ans <- matrix(logical(0),nrow=nr,ncol=nc)
+  for (i in seq_len(nr)){
+    for (j in seq_len(nc)){
+      ## idx <- !is.na(primeImplicants[i,])
+      if (FALSE) { ## comment out the old method
+        idx <- !is.dontcare(primeImplicants[i,])
+        ans[i,j] <- isTRUE(all.equal(primeImplicants[i,][idx],explained[j,][idx]))
+      }
+      ans[i,j] <- isSuperSet(primeImplicants[i,], explained[j,])
+    }
+  }
+  rownames(ans) <- toName(primeImplicants)
+  colnames(ans) <- toName(explained)
+  ans
 }
 
 # solvePIChart <- function (PIChart, method=c("combn"))
@@ -309,21 +322,26 @@ PIChart <- function(primeImplicants,explained=NULL){
 #     sol.matrix ## now always return a matrix
 # }
 
-solvePIChart <- function(chart){
+solvePIChart <- function(chart, All=TRUE){
   ## chart: Prime implicants x Primitive Expression
   if (all(dim(chart) > 1)) {
     nPrime <- nrow(chart)
     lp  <- make.lp(0, nPrime)
     apply(chart, 2, function(xt) add.constraint(lp, xt, type = ">=", rhs=1))
     set.type(lp,1:nPrime, "binary")
+    set.objfn(lp,rep(1,nPrime))
     name.lp(lp, "Simplifying a PIChart")
     # http://lpsolve.r-forge.r-project.org/
     conv <- solve(lp)
     if (conv!=0) stop("optimal solution not found")
     ans <- get.variables(lp)
+    if (All) {
     k <- sum(ans)
     combos <- combn(nrow(chart), k)
     sol.matrix <- combos[, apply(combos, 2, function(idx) all(colSums(chart[idx,,drop = FALSE])>0)),drop=FALSE]
+    } else {
+      sol.matrix <- matrix(which(ans==1), ncol=1)   
+    }
   }
   else {
     sol.matrix <- matrix(seq_len(nrow(chart)),ncol=1)
