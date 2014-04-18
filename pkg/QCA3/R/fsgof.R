@@ -35,7 +35,7 @@ fsgof.nec <- function(y, x, damp=.01, error=.05) {
 	attr(estimate,"names") <- c("SSD","MSD","EMSD") ## EMSD=EXPECTED MEAN SQUARE DISTANCE
 	F <- msd/emsd
 	attr(F,"names") <- "F"
-	pval <- pf(F,df1, df2, lower=FALSE)
+	pval <- pf(F,df1, df2, lower.tail=FALSE)
 	ans <- list(estimate=estimate,statistic=F,parameter=para,p.value=pval,
 	method="Test of Causual Necessity.",data.name=dn)
 	class(ans) <- "htest"
@@ -58,7 +58,7 @@ fsgof.suff <- function(y, x, damp=.01, error=.05) {
 	attr(estimate,"names") <- c("SSD","MSD","EMSD") ## EMSD=EXPECTED MEAN SQUARE DISTANCE
 	F <- msd/emsd
 	attr(F,"names") <- "F"
-	pval <- pf(F,df1, df2, lower=FALSE)
+	pval <- pf(F,df1, df2, lower.tail=FALSE)
 	ans <- list(estimate=estimate,
 	statistic=F,parameter=para,p.value=pval,
 	method="Test of Causual Sufficiency.",data.name=dn)
@@ -81,7 +81,7 @@ fsgof.suffnec <- function(y, x, damp=.01, error=.05) {
 	attr(estimate,"names") <- c("SSD","MSD","EMSD") ## EMSD=EXPECTED MEAN SQUARE DISTANCE
 	F <- msd/emsd
 	attr(F,"names") <- "F"
-	pval <- pf(F,df1, df2, lower=FALSE)
+	pval <- pf(F,df1, df2, lower.tail=FALSE)
 	ans <- list(estimate=estimate,
 	statistic=F,parameter=para,p.value=pval,
 	method="Test of Causual Sufficiency and Necessity.",data.name=dn)

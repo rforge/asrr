@@ -446,7 +446,7 @@ reduce.formula <- function(x, data,
     x <- do.call(preprocess,c(list(mydata=data, outcome=outcome,conditions=conditions),dots))
     ans <- do.call(reduce.truthTable,list(x=x,explain=explain,remainders=remainders,
                                           contradictions=contradictions,dontcare=dontcare,cdontcare=cdontcare,
-                                          keepTruthTable=keepTruthTable,dots))
+                                          keepTruthTable=keepTruthTable, all.sol = FALSE, dots))
     ans$call <- call
     ans
 }

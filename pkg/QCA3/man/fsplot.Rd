@@ -27,7 +27,7 @@ fsplot(formula, data, main = "fuzzy set plot", xlab = NULL, ylab = NULL,...)
   \item{ylab}{
     a title for the y axis
   }
-  \item{\dots}{ other arguments passed to \code{plot}.}
+  \item{\dots}{ other arguments passed to plot}
 }
 \details{
   This function is useful for exploratory analysis. If a recipe is a
