@@ -115,24 +115,11 @@ reduce(x,...)
   Caramani, Daniele. 2009. "Introduction to the comparative method with
   Boolean algebra." Sage.
 
-  Cronqvist, Lasse and  Berg-Schlosser, Dirk. 2009. Multi-Value QCA
-  (mvQCA). In Configuraional comparative Methods: qualitative
-  comparative analysis (QCA) and related techniques. ed by Benoit RiHoux
-  and Charles Ragin. Sage.
-
-  Ragin. Charles. 2009. Qualitative Comparative Analyais Using Fuzzy
-  Sets (fsQCA). In Configuraional comparative Methods: qualitative
-  comparative analysis (QCA) and related techniques. ed by Benoit RiHoux
-  and Charles Ragin. Sage.
-
-  Rihoux, Benoit and De Meur, Gisele. 2009. Crip-Set Qualitative Comparative Analysi
-  (csQCA). In Configuraional comparative Methods: qualitative
-  comparative analysis (QCA) and related techniques. ed by Benoit RiHoux
-  and Charles Ragin. Sage.
-
+  Benoit RiHoux and Charles Ragin (eds). 2009. Configuraional comparative Methods: 
+  qualitative comparative analysis (QCA) and related techniques. Sage.
 
   Dusa, Adrian. 2007. Enhancing Quine-McCluskey,
-  \url{http://www.compasss.org/files/WPfiles/Dusa2007a.pdf}
+  \url{www.compasss.org/wpseries/Dusa2007b.pdf}
 
   Ragin, Charles. 2000. Fuzzy-Set Social Science. University Of Chicago Press.
 
