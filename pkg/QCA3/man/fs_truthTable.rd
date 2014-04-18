@@ -6,9 +6,10 @@
   Constructing a truthTable from fuzzy set score.
 }
 \usage{
-fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,consistency_cutoff = 0.8,
-              prop_cutoff=1, show.cases =TRUE,quiet =FALSE,
-             cases = NULL, complete=FALSE,...)
+fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,
+              consistency_cutoff = 0.8, prop_cutoff=1, 
+              show.cases =TRUE,quiet = FALSE,
+              cases = NULL, complete=FALSE,...)
 
 \method{sort}{fs_truthTable}(x, decreasing = TRUE, criterion = "Consistency", ...)
 }
@@ -67,11 +68,13 @@ fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,consistency_cutoff 
 \author{Ronggui HUANG}
 \seealso{\code{\link{reduce}}, \code{\link{cs_truthTable}} and  \code{\link{fs_truthTable}}}
 \examples{
-fs_truthTable(Lipset_fs,"Survived.FZ",c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ",
-"Stable.FZ"),cases="Country",consistency_cutoff=0.7)
+fs_truthTable(Lipset_fs,"Survived.FZ",
+             c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ", "Stable.FZ"),
+             cases="Country",consistency_cutoff=0.7)
 
-fst <- fs_truthTable(Lipset_fs,"Survived.FZ",c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ",
-"Stable.FZ"),cases="Country",consistency_cutoff=0.7,complete=TRUE)
+fst <- fs_truthTable(Lipset_fs,"Survived.FZ",
+             c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ", "Stable.FZ"),
+             cases="Country",consistency_cutoff=0.7,complete=TRUE)
 
 sort(sort(fst),criterion="OUT")
 

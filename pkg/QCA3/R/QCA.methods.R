@@ -154,9 +154,15 @@ uniqueCoverageQCA <- function(x, data, which=1){
         solX[,i] <- fzx
     }
     ans[Nimplicant+1,"uniqueCoverage"] <- coverage(x=apply(solX,1,max),y=data[,outcome])
-    for (i in seq(Nimplicant)){
+    if (length(Nimplicant)==1){
+      ## only with one recipe
+      ans[1,"uniqueCoverage"] <- coverage(x=solX[,1], y=data[,outcome])
+    } else {
+      ## with mutiple recipes
+      for (i in seq(Nimplicant)){
         notifz <- apply(solX[, -i, drop=FALSE],1, max)
         ans[i,"uniqueCoverage"] <- ans[Nimplicant+1,"uniqueCoverage"] - coverage(x=notifz, y=data[,outcome])
+      }
     }
     implicantName <- apply(sol,1,function(obj) toString(obj,traditional=TRUE,nlevels=x$nlevels,conds))
     rownames(ans) <- c(implicantName,"[solution]")

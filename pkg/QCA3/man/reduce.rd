@@ -150,48 +150,58 @@ reduce(x,...)
   \code{\link{constrReduce}}
 }
 \examples{
-## csQCA, mvQCA and fsQCA examples from "Configuraional comparative Methods"
+## examples from "Configuraional comparative Methods"
 ## csQCA
 conditions <- c("GNPCAP", "URBANIZA", "LITERACY", "INDLAB", "GOVSTAB")
-reduce(Lipset_cs,"SURVIVAL",conditions,explain="positive",remainder="exclude",case="CASEID")
+reduce(Lipset_cs,"SURVIVAL",conditions,explain="positive",
+       remainder="exclude",case="CASEID")
 ## or use formula
 reduce(SURVIVAL~GNPCAP+URBANIZA+LITERACY+INDLAB+GOVSTAB,Lipset_cs,
        explain="positive",remainder="exclude",case="CASEID")
 ## Formula 1 in Rihoux and De Meur(2009:57)
-reduce(Lipset_cs,"SURVIVAL",conditions,explain="negative",remainder="exclude",case="CASEID")
+reduce(Lipset_cs,"SURVIVAL",conditions,explain="negative",
+       remainder="exclude", case="CASEID")
 ## Formula 3 in Rihoux and De Meur(2009:59)
-ans1 <-
- reduce(Lipset_cs,"SURVIVAL",conditions,explain="positive",remainder="include",case="CASEID")
+ans1 <- reduce(Lipset_cs,"SURVIVAL",conditions,explain="positive",
+               remainder="include", case="CASEID")
 print(ans1) ## Formula 4 in Rihoux and De Meur(2009:60)
 SA(ans1) ## 5 simplifying assumptions in p61
-ans0 <-
- reduce(Lipset_cs,"SURVIVAL",conditions,explain="negative",remainder="include",case="CASEID")
+ans0 <-  reduce(Lipset_cs,"SURVIVAL",conditions,explain="negative",
+              remainder="include",case="CASEID")
 print(ans0) ## Formula 5 in Rihoux and De Meur(2009:61)
 SA(ans0) ## 18 simplifying assumptions
 
 ## mvQCA
 conditions <- c("GNPCAP", "URBANIZA", "LITERACY", "INDLAB")
-reduce(Lipset_mv,"SURVIVAL",conditions,explain="positive",remainder="exclude",case="CASEID",prep="mv_truthTable")
+reduce(Lipset_mv,"SURVIVAL", conditions, explain="positive",
+       remainder="exclude", prep="mv_truthTable")
 ## formula 1 Cronqvist and Berg-Schlosser(2009:80)
-ans1 <-
-  reduce(Lipset_mv,"SURVIVAL",conditions,explain="positive",remainder="include",case="CASEID",prep="mv_truthTable")
+ans1 <- reduce(Lipset_mv,"SURVIVAL",conditions,explain="positive",
+               remainder="include", case="CASEID",prep="mv_truthTable")
 print(ans1) ## formula 2 in Cronqvist and Berg-Schlosser(2009:81)
 SA(ans1) ## 9 SAs (see end note 7)
-reduce(Lipset_mv,"SURVIVAL",conditions,explain="negative",remainder="exclude",case="CASEID",prep="mv_truthTable")
+reduce(Lipset_mv,"SURVIVAL",conditions,explain="negative",
+      remainder="exclude", case="CASEID",prep="mv_truthTable")
 ## formula 3 in Cronqvist and Berg-Schlosser(2009:81)
-ans0 <-
-  reduce(Lipset_mv,"SURVIVAL",conditions,explain="negative",remainder="include",contrad="positive",case="CASEID",prep="mv_truthTable")
+ans0 <- reduce(Lipset_mv,"SURVIVAL",conditions,explain="negative",
+              remainder="include",contrad="positive",
+              case="CASEID",prep="mv_truthTable")
 print(ans0) ## formula 4 in Cronqvist and Berg-Schlosser(2009:81)
 SA(ans0) ## 7 SAs (see end note 9)
 
 ## fsQCA
-conditions <- c("Developed.FZ","Urban.FZ","Literate.FZ","Industrial.FZ", "Stable.FZ")
-reduce(Lipset_fs,"Survived.FZ",conditions,explain="positive",remaind="exclude",prepro="fs",consistency=0.7)
+conditions <- c("Developed.FZ","Urban.FZ","Literate.FZ",
+                "Industrial.FZ", "Stable.FZ")
+reduce(Lipset_fs,"Survived.FZ",conditions,explain="positive",
+       remaind="exclude", prepro="fs",consistency=0.7)
 ## Formula 1 in Ragin (2009:112)
-reduce(Lipset_fs,"Survived.FZ",conditions,explain="positive",remaind="include",prepro="fs",consistency=0.7)
+reduce(Lipset_fs,"Survived.FZ",conditions,explain="positive",
+       remaind="include", prepro="fs",consistency=0.7)
 ## Formula 2 in Ragin (2009:114)
-reduce(Lipset_fs,"Survived.FZ",conditions,explain="negative",remaind="exclude",prepro="fs",consistency=0.7)
+reduce(Lipset_fs,"Survived.FZ",conditions,explain="negative",
+       remaind="exclude", prepro="fs",consistency=0.7)
 ## Formula 5 in Ragin (2009:115)
-reduce(Lipset_fs,"Survived.FZ",conditions,explain="negative",remaind="include",prepro="fs",consistency=0.7)
+reduce(Lipset_fs,"Survived.FZ",conditions,explain="negative",
+       remaind="include", prepro="fs",consistency=0.7)
 ## Formula 6 in Ragin (2009:117)
 }
