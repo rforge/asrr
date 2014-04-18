@@ -266,7 +266,7 @@ PIChart <- function(primeImplicants,explained=NULL){
     nlevels <- rep(2, ncol(x))
     nm <-names(x)
     for (i in 1:NROW){
-      ans <- c(ans, QCA3:::toString(x[i, ], TRUE, nlevels, nm))
+      ans <- c(ans, toString(x[i, ], TRUE, nlevels, nm))
     }
     ans
   }
@@ -766,7 +766,7 @@ CSA <- function(object1,object0){
    object1
 }
 
-print.SA <- function (x, traditional = TRUE)
+print.SA <- function (x, traditional = TRUE, ...)
 {
     if (length(x$solutions[[1]])==0) cat("No Simplifying Assumption",fill = TRUE) else {
     PIs <- prettyPI(x, traditional = traditional)

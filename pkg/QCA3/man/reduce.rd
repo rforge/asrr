@@ -22,7 +22,7 @@ reduce(x,...)
        contradictions = c("remainders","positive","negative"),
        dontcare = c("remainders", "positive", "negative"),
        cdontcare=c("remainders","positive","negative"),
-       keepTruthTable = TRUE,...)
+       keepTruthTable = TRUE,all.sol = FALSE,...)
 
 \method{reduce}{data.frame}(x, outcome, conditions,
         explain = c("positive", "negative"),
@@ -32,7 +32,7 @@ reduce(x,...)
         cdontcare=c("remainders","positive","negative"),
         preprocess = c("cs_truthTable", "fs_truthTable",
         "mv_truthTable"),
-       keepTruthTable = TRUE, ...)
+       keepTruthTable = TRUE,all.sol = FALSE, ...)
 
 \method{reduce}{formula}(x, data, explain = c("positive", "negative"),
       remainders = c("exclude", "include"),
@@ -40,7 +40,7 @@ reduce(x,...)
       dontcare = c("remainders", "positive", "negative"),
       cdontcare=c("remainders","positive","negative"),
       preprocess = c("cs_truthTable", "fs_truthTable", "mv_truthTable"),
-      keepTruthTable = TRUE, ...)
+      keepTruthTable = TRUE,all.sol = FALSE, ...)
 }
 \arguments{
   \item{x}{a R object, it could be a truthTable, data frame or a formula}
@@ -63,6 +63,7 @@ reduce(x,...)
     of \code{cs_truthTable}, \code{fs_truthTable} or \code{mv_truthTable}.}
   \item{keepTruthTable}{logical, when TRUE the returned object keeps
     the truthTable}
+  \item{all.sol}{if FALSE, only solution from lpSolveAPI will be returned}
   \item{\dots}{ other arguments passed to a function.}
 }
 \details{

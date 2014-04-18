@@ -32,7 +32,7 @@ reduce(HuangGui2009,"outcome",c("network","big","grievance","ha","BBS"),"pos",ca
 ans1 <- reduce(HuangGui2009,"outcome",c("network","big","grievance","ha","BBS"),"pos",case="code",rem="include")
 SA(ans1)
 reduce(HuangGui2009,"outcome",c("network","big","grievance","ha","BBS"),"neg",case="code")
-ans2 <- reduce(HuangGui2009,"outcome",c("network","big","grievance","ha","BBS"),"neg",case="code",rem="incl")
+ans2 <- reduce(HuangGui2009,"outcome",c("network","big","grievance","ha","BBS"),"neg",case="code",rem="incl",all.sol=TRUE)
 CSA(ans1,ans2[3])
 SA(ans2[3])
 }

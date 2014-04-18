@@ -12,7 +12,7 @@
 
 \SweaveOpts{engine=R,eps=FALSE}
 %\VignetteIndexEntry{Qualitative Comparative Analysis using QCA3}
-%\VignetteDepends{QCA3,lpSolve}
+%\VignetteDepends{QCA3,lpSolveAPI}
 %\VignetteKeywords{qualitative comparative analysis}
 %\VignettePackage{QCA3}
 

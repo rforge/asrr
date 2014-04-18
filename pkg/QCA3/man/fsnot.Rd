@@ -1,5 +1,6 @@
 \name{fsnot}
 \alias{fsnot}
+\alias{fsand}
 \title{
   The not opertor for a fuzzy set score.
 }

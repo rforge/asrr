@@ -7,10 +7,10 @@ plot.QCA <- function(x,...){
     if (pmatch(explain,"positive",0)==1) Case <- truthTable[rownames(truthTable) %in% rownames(x$explained),]
     if (pmatch(explain,"negative",0)==1) Case <- truthTable[rownames(truthTable) %in% rownames(x$explained),]
     conditions <- names(x$explained)
-    idExplained <- apply(Case[,names(x$explained)],1,QCA3:::implicant2Id,nlevel=x$nlevels)
+    idExplained <- apply(Case[,names(x$explained)], 1, implicant2Id,nlevel=x$nlevels)
     ids <- rep(idExplained,Case$N)
     Coverage <- apply(x$solutions[[1]],1, function(x) {
-        common <- intersect(QCA3:::esubSet(x),ids)
+        common <- intersect(esubSet(x),ids)
         ## subSet or subCombination?
         ids[ids %in% common]
     }

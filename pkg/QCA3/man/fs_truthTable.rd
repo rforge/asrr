@@ -22,7 +22,6 @@ fs_truthTable(mydata, outcome, conditions, ncases_cutoff = 1,consistency_cutoff 
   \item{consistency_cutoff}{Cutoff point of consistenty score, cases with
     consistency score greater than cutoff point are regarded as OUT=1. }
   \item{prop_cutoff}{proportion of consistent/inconsistent cases.}
-  \item{complete}{prints the complete truth table, including configurations without empirical cases.}
   \item{show.cases}{show the rownames from the original dataset for each
     combination of conditions.}
   \item{quiet}{Not used currently.}

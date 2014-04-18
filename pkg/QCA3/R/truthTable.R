@@ -323,7 +323,7 @@ fs_truthTable <- function(mydata, outcome, conditions,ncases_cutoff=1,consistenc
   if (!complete) {
     allExpress <- allExpress[allExpress$OUT != "?",,drop=FALSE]
   }
-  rownames(allExpress) <- apply(allExpress[,conditions],1, QCA3:::implicant2Id, nlevels=rep(2,length(conditions)))
+  rownames(allExpress) <- apply(allExpress[,conditions],1, implicant2Id, nlevels=rep(2,length(conditions)))
   ans <- list(truthTable=allExpress,outcome=outcome,conditions=conditions,nlevels=rep(2,length(conditions)),call=match.call(),data=mydata)
   class(ans) <- c("fs_truthTable","truthTable")
   ans
