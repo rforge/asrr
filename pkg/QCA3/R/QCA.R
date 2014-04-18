@@ -633,11 +633,11 @@ summary.QCA <- function(object,traditional=TRUE,show.case=TRUE,...){
         prop <- coverage/N_total
     }
     cases <- apply(object$solutionsIDX,2,function(each) {
-        ByNPIs <- colSums(object$PIChart[each,])
+        ByNPIs <- colSums(object$PIChart[each,,drop=FALSE])
         ## cases covered by ByNPIs PIs
         N_duplicated <- sum(NCase*(ByNPIs-1))
         ## cases covered by multiple PIs
-        idx <- object$PIChart[each,]
+        idx <- object$PIChart[each,,drop=FALSE]
         CasesWithN <- paste("(",ByNPIs,")",Cases,sep="")
         ans <- apply(idx,1,function(idx2) paste(CasesWithN[which(idx2)],sep="", collapse=" "))
         ## group cases for each config
